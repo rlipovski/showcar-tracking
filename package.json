@@ -1,0 +1,16 @@
+{
+  "name": "showcar-tracking",
+  "version": "0.0.1",
+  "description": "showcar-tracking ================",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.as24.local:Consumer/showcar-tracking.git"
+  },
+  "author": "AS24ChameleonTeam@autoscout24.com",
+  "license": "closed source",
+  "private": true
+}
