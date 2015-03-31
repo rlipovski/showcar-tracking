@@ -4,7 +4,6 @@ module.exports = function (grunt) {
         karma: {
             options: {
                 configFile: 'karma.conf.js',
-                runnerPort: 9999,
                 browsers: ['PhantomJS', 'Chrome', 'IE9', 'Firefox']
             },
             dist: {
