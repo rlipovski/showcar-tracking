@@ -1,34 +1,41 @@
 module.exports = function (config) {
     config.set({
-        frameworks: ['mocha', 'chai'],
+        frameworks: ['mocha', 'sinon', 'chai'],
         files: [
             'test/**/*.js',
-            { pattern: 'src/**/*.js', watched: true, included: false, served: true }
+            { pattern: 'src/**/*.js', watched: true, included: false, served: false }
         ],
-        reporters: ['progress'],
+        basePath: '',
+        port: 9900,
+        //reporters: ['progress'],
         colors: true,
         logLevel: config.LOG_INFO,
         autoWatch: true,
         browsers: ['PhantomJS'],
 
         preprocessors: {
-            'test/**/*.js': ['webpack'],
-            './index.js': ['webpack'],
-            'src/**/*.js': ['webpack']
+            'test/**/*.js': ['webpack']
         },
 
         webpack: {
             devtool: 'inline-source-map',
             stats: false,
-            debug: false,
+            debug: true,
             profile: false,
             progress: false
+        },
+
+        webpackMiddleware: {
+            stats: false
         },
 
         plugins: [
             'karma-webpack',
             'karma-mocha',
             'karma-chai',
+            'karma-sinon',
+            require('karma-sinon'),
+            //'karma-sinon-chai',
             'karma-phantomjs-launcher',
             'karma-chrome-launcher',
             'karma-firefox-launcher',

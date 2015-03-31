@@ -2,7 +2,7 @@
   "name": "showcar-tracking",
   "version": "0.0.1",
   "description": "showcar-tracking ================",
-  "main": "index.js",
+  "main": "src/index.js",
   "scripts": {
     "test": "grunt test"
   },
@@ -26,6 +26,8 @@
     "karma-ie-launcher": "^0.1.5",
     "karma-mocha": "^0.1.10",
     "karma-phantomjs-launcher": "^0.1.4",
+    "karma-sinon": "^1.0.4",
+    "karma-sinon-chai": "^0.3.0",
     "karma-spec-reporter": "0.0.18",
     "karma-teamcity-reporter": "^0.1.2",
     "karma-webpack": "^1.5.0",
@@ -34,5 +36,10 @@
     "sinon": "^1.14.1",
     "webpack": "^1.7.3",
     "webpack-dev-server": "^1.8.0"
+  },
+  "dependencies": {
+    "amp-index-of": "^1.1.0",
+    "amp-merge": "^1.0.0",
+    "cookies-js": "^1.2.1"
   }
 }
