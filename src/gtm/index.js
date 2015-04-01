@@ -1,6 +1,7 @@
 var merge = require('amp-merge');
+
 var gtm = require('./googletagmanager');
-var containerId = require('./containerId');
+var containerId = require('./getGtmContainerId')(location.hostname);
 var viewport = require('./viewport');
 
 var pagename;
