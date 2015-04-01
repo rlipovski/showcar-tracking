@@ -10,6 +10,7 @@ var oneDay = 24 * 60 * 60 * 1000;
 
 function readCookie(name) {
     // format of the cookie:
+    // timeStamp(no separator here)firstVisit#lastPaidCampaign#currentVisit
     // cookieDate(0-13)medium,source,campaign,timestamp#medium,source,campaign,timestamp#medium,source,campaign,timestamp
 
     var now = +new Date();

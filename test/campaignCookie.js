@@ -69,6 +69,7 @@ describe('Campaign cookie:', function(){
 
 		describe('coming through a non-paid campaign', function() {
 			it('should set an appropritate cookie and GTM data when coming from a not paid campaign', function() {
+				// URL: http://www.autoscout24.de/?utm_medium=medium&utm_source=source&utm_campaign=campaign
 				utmMock.expects('getParameters').returns({ source: 'source', medium: 'medium', campaign: 'campaign' });
 				campaign.updateCampaignCookie();
 				var cookieValue = cookies.get(cookieName);
@@ -82,7 +83,7 @@ describe('Campaign cookie:', function(){
 		});
 
 		describe('coming through a paid campaign', function() {
-			it('should set an appropritate cookie and GTM data when coming from a not paid campaign', function() {
+			it('should set an appropritate cookie and GTM data when coming from a paid campaign', function() {
 				utmMock.expects('getParameters').returns({ source: 'source', medium: 'aff', campaign: 'campaign' });
 				campaign.updateCampaignCookie();
 				var cookieValue = cookies.get(cookieName);
@@ -180,7 +181,7 @@ describe('Campaign cookie:', function(){
 			});
 		});
 
-		describe('First visit through paid campain', function() {
+		describe('First visit through paid campain then through direct', function() {
 			it('second visit after 30 minutes of inactivity', function() {
 				cookies.set(cookieName, '1221679155520cpc,source,campaign,1221679155520#cpc,source,campaign,1221679155520#cpc,source,campaign,1221679155520');
 				campaign.updateCampaignCookie();
