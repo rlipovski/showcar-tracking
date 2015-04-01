@@ -1,8 +1,7 @@
 var cookies = require('cookies-js');
+var isValidDate = require('amp-is-date');
 
 var utm = require('./utm');
-
-var isValidDate = require('../../isValidDate');
 var tld = require('../../tld');
 
 var cAge = 90;
@@ -43,7 +42,7 @@ function readCookie(name) {
         },
 
         updateCurrentVisit: function() {
-            var utmParams = utm.getParameters();
+            var utmParams = utm.getParameters(location.search);
             this.currentVisit = [utmParams.medium, utmParams.source, utmParams.campaign, now];
             this.firstVisit = this.firstVisit || this.currentVisit;
 
@@ -102,16 +101,14 @@ function readCookie(name) {
 
 function writeCookie(cookie) {
     var now = +new Date();
-    var domain = '.autoscout24.' + tld;
-    var expDate = new Date();
-    expDate.setDate(expDate.getDate() + cAge);
+    var domain = '.' + location.hostname.split('.').slice(-2).join('.');
 
     var formattedValue = now + '' + cookie.content.slice(0,3).join('#');
-    var options = { expires: expDate, path: '/' };
-
-    if (location.protocol.indexOf('http') >= 0 && location.hostname.indexOf('autoscout24') >= 0) {
-        options.domain = domain;
-    }
+    var options = {
+        expires: cAge * 24 * 60 * 60,
+        path: '/',
+        domain: location.hostname.indexOf('localhost') >= 0 ? '' : domain
+    };
 
     cookies.set(cookie.name, formattedValue, options);
 }

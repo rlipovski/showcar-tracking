@@ -39,6 +39,7 @@
   },
   "dependencies": {
     "amp-index-of": "^1.1.0",
+    "amp-is-date": "^1.0.1",
     "amp-merge": "^1.0.0",
     "cookies-js": "^1.2.1"
   }

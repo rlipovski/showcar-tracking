@@ -1,9 +1,9 @@
 var qs = require('querystring');
-var queryParams = qs.parse(location.search) || {};
 var indexOf = require('amp-index-of');
 
 module.exports = {
-    getParameters: function() {
+    getParameters: function(locationSearch) {
+        var queryParams = qs.parse(locationSearch.replace('?', '')) || {};
         var utm = {
             medium: queryParams.gclid
                 ? 'gclid'

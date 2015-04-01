@@ -23,10 +23,10 @@ module.exports = {
         });
     },
 
-    detailview: function() {
+    detailview: function(url) {
         sendRequest({
             source: 'pv',
-            url: location.href
+            url: url || location.href
         });
     },
 
