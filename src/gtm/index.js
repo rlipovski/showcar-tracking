@@ -18,7 +18,9 @@ function generateCommonParams(data) {
     }
 
     var commonPageName = [mergedPagename.country, mergedPagename.market, mergedPagename.category, mergedPagename.group, mergedPagename.pageid]
-        .filter(function(x) { return x; })
+        .filter(function (x) {
+            return x;
+        })
         .join('/');
 
     if (mergedPagename.layer) {
@@ -62,11 +64,11 @@ function trackPageview(data) {
     if (firstPageview) {
         gtm.loadContainer(containerId);
         require('./campaign').updateCampaignCookie();
-        gtm.push({event: 'common_data_ready'});
-        gtm.push({event: 'data_ready'});
+        gtm.push({ event: 'common_data_ready' });
+        gtm.push({ event: 'data_ready' });
         firstPageview = false;
     } else {
-        gtm.push({event: 'pageview'});
+        gtm.push({ event: 'pageview' });
     }
 }
 
