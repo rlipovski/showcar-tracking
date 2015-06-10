@@ -1,4 +1,4 @@
-var cookies = require('cookies-js');
+var cookies = require('./customCookie');
 var isValidDate = require('amp-is-date');
 
 var utm = require('./utm');

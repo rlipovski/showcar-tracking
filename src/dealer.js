@@ -1,4 +1,4 @@
-var cookies = require('cookies-js');
+var cookies = require('./gtm/campaign/customCookie');
 var visitorId = cookies.get('as24Visitor');
 
 function sendRequest(params) {
