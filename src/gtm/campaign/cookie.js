@@ -1,4 +1,4 @@
-var cookies = require('./customCookie');
+var cookies = require('../../cookieHelper');
 var isValidDate = require('amp-is-date');
 
 var utm = require('./utm');
@@ -55,7 +55,7 @@ function readCookie(name) {
     };
 
     try {
-        var rawValue = cookies.get(name);
+        var rawValue = cookies.read(name);
 
         if (!rawValue) {
             return cookie;

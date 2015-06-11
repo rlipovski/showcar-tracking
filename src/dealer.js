@@ -1,5 +1,5 @@
-var cookies = require('./gtm/campaign/customCookie');
-var visitorId = cookies.get('as24Visitor');
+var cookies = require('./cookieHelper');
+var visitorId = cookies.read('as24Visitor');
 
 function sendRequest(params) {
     if (!visitorId) { return; }
