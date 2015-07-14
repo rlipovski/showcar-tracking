@@ -36,5 +36,3 @@ ut.push = function() {
 };
 
 ut.forEach(processCommand);
-
-ut.length = 0;
