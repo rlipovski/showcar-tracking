@@ -23,24 +23,27 @@ module.exports = {
         });
     },
 
-    detailview: function(url) {
+    detailview: function(url, id) {
         sendRequest({
             source: 'pv',
-            url: url || location.href
+            url: url || location.href,
+            id: id
         });
     },
 
-    topcarview: function() {
+    topcarview: function(id) {
         sendRequest({
             source: 'ha',
-            url: location.href
+            url: location.href,
+            id: id
         });
     },
 
-    phone: function() {
+    phone: function(id) {
         sendRequest({
             source: 'mc',
-            url: location.href
+            url: location.href,
+            id: id
         });
     }
 };
