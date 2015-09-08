@@ -2,7 +2,6 @@ var cookies = require('../../cookieHelper');
 var isValidDate = require('amp-is-date');
 
 var utm = require('./utm');
-var tld = require('../../tld');
 
 var cAge = 90;
 var oneDay = 24 * 60 * 60 * 1000;
