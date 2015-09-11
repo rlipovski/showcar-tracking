@@ -23,27 +23,42 @@ module.exports = {
         });
     },
 
-    detailview: function(url, id) {
-        sendRequest({
-            source: 'pv',
-            url: url || location.href,
-            id: id
-        });
+    detailview: function(url) {
+        var parser = document.createElement('a');
+        parser.href = url;
+        var matches = parser.pathname.match(/-([\d]+)$/i);
+
+        if (matches && matches.length === 2) {
+            var id = matches[1];
+            sendRequest({
+                source: 'pv',
+                url: url || location.href,
+                id: id
+            });
+        }
     },
 
-    topcarview: function(id) {
-        sendRequest({
-            source: 'ha',
-            url: location.href,
-            id: id
-        });
+    topcarview: function() {
+        var matches = location.pathname.match(/-([\d]+)$/i);
+        if (matches && matches.length === 2) {
+            var id = matches[1];
+            sendRequest({
+                source: 'ha',
+                url: location.href,
+                id: id
+            });
+        }
     },
 
-    phone: function(id) {
-        sendRequest({
-            source: 'mc',
-            url: location.href,
-            id: id
-        });
+    phone: function() {
+        var matches = location.pathname.match(/-([\d]+)$/i);
+        if (matches && matches.length === 2) {
+            var id = matches[1];
+            sendRequest({
+                source: 'mc',
+                url: location.href,
+                id: id
+            });
+        }
     }
 };
