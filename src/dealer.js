@@ -25,7 +25,7 @@ module.exports = {
 
     detailview: function(url) {
         var parser = document.createElement('a');
-        parser.href = url;
+        parser.href = url || location.href;
         var matches = parser.pathname.match(/-([\d]+)$/i);
 
         if (matches && matches.length === 2) {
