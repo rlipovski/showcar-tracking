@@ -4,7 +4,7 @@ var visitorId = cookies.read('as24Visitor');
 function sendRequest(params) {
     if (!visitorId) { return; }
 
-    params.visitorId = visitorId;
+    params.visitor = visitorId;
     params.ticks = +new Date();
 
     var paramsStr = Object.keys(params).map(function(key) {
