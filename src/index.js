@@ -1,6 +1,8 @@
 var gtm = require('./gtm');
 var dealer = require('./dealer');
 
+require('./trackingElement');
+
 module.exports = {
     gtm: gtm,
     dealer: dealer

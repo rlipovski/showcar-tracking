@@ -49,6 +49,8 @@
 	var gtm = __webpack_require__(1);
 	var dealer = __webpack_require__(18);
 	
+	__webpack_require__(19);
+	
 	module.exports = {
 	    gtm: gtm,
 	    dealer: dealer
@@ -813,6 +815,28 @@
 	        }
 	    }
 	};
+
+/***/ },
+/* 19 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	var as24tracking = Object.assign(Object.create(HTMLElement.prototype), {
+	
+	    el: null,
+	    supportedActions: ['set', 'click', 'pageview'],
+	    supportedTypes: ['gtm'],
+	
+	    createdCallback: function createdCallback() {
+	        this.el = $(this);
+	    },
+	    getAdditionalProperties: function getAdditionalProperties() {}
+	});
+	
+	document.registerElement('as24-tracking', {
+	    prototype: as24tracking
+	});
 
 /***/ }
 /******/ ]);
