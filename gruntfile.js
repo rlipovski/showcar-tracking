@@ -1,36 +1,25 @@
-module.exports = function (grunt) {
+module.exports = function(grunt) {
+    var moduleName = "ui";
+    var loadConfig = function (name, module) {
+        var result = {};
+        module = module || moduleName || "module";
+        name = name.indexOf(".") > -1 ? name : name + ".conf";
+        result[module] = require("./config/" + name + ".js");
+        return result;
+    };
 
     grunt.initConfig({
-        karma: {
-            options: {
-                configFile: 'karma.conf.js',
-                browsers: ['PhantomJS', 'Chrome', 'IE9', 'Firefox']
-            },
-            dist: {
-                singleRun: true,
-                reporters: 'progress'
-            },
-            teamcity: {
-                singleRun: true,
-                reporters: 'teamcity'
-            },
-            dev: {
-                reporters: 'spec',
-                browsers: ['PhantomJS']
-            }
-        },
-
-        eslint: {
-            src: ['src/**/*.js'],
-            //tests: ['test/**/*.js']
-        }
+        webpack: loadConfig("webpack"),
+        watch: loadConfig("watch"),
+        karma: loadConfig("karma"),
+        eslint: loadConfig("eslint")
     });
 
-    grunt.registerTask('test', ['eslint', 'karma:dist']);
-    grunt.registerTask('build', ['eslint', 'karma:dist']);
-    grunt.registerTask('teamcity-build', ['eslint', 'karma:teamcity']);
-    grunt.registerTask('dev', ['karma:dev']);
-    grunt.registerTask('default', 'build');
+    grunt.registerTask("build", ["webpack"]);
 
-    require('matchdep').filterDev('grunt-*').forEach(grunt.loadNpmTasks);
+    grunt.registerTask("default", ["build"]);
+
+    require('load-grunt-tasks')(grunt, {
+        pattern: ['grunt-*', "!grunt-cli"]
+    });
 };
