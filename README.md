@@ -9,8 +9,11 @@ the query parameters ipl and ipc. As you can see here:
 
     http://www.autoscout24.de/auto-verkaufen/?ipc=cc:insertion-home&ipl=teaser
 
-* ipc:
-* ipl:
+* ipc: Group or positioning of a feature under test
+* ipl: Describes the feature itself
+
+Example: Tracking of the CMS box containing price estimation IPC: home-cmsbox IPL: vehicle-evaluation
+
 
 GTM will automatically take care of tracking the given values. You just have to insert the two parameters into the URL of the
 target of the action. e.g. in the href-attribute of a link.
