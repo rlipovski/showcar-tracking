@@ -49,14 +49,13 @@
 	var gtm = __webpack_require__(1);
 	var dealer = __webpack_require__(18);
 	
-	__webpack_require__(19);
-	
 	module.exports = {
 	    gtm: gtm,
 	    dealer: dealer
 	};
 	
 	function processCommand(data) {
+	    console.log(data);
 	    var fn, args;
 	
 	    if (data[0] === 'pagename') {
@@ -86,6 +85,8 @@
 	};
 	
 	ut.forEach(processCommand);
+	
+	__webpack_require__(19);
 
 /***/ },
 /* 1 */
@@ -824,7 +825,7 @@
 	
 	var as24tracking = Object.assign(Object.create(HTMLElement.prototype), {
 	    el: null,
-	    debug: true,
+	    inDev: true,
 	    supportedActions: ['set', 'click', 'pageview'],
 	    supportedTypes: ['gtm', 'pagename'],
 	    reservedWords: ['as24-tracking-id', 'type', 'action', 'as24-tracking-value', 'as24-tracking-click-target'],
@@ -845,7 +846,7 @@
 	
 	        if (type === 'gtm' && action === 'click') {
 	            $(this.el.attr('as24-tracking-click-target')).on('click', function () {
-	                return _this.track.apply(_this, args);
+	                return _this.track(args);
 	            });
 	            return;
 	        }
@@ -854,7 +855,7 @@
 	            args.splice(1, 1);
 	        }
 	
-	        this.track.apply(this, args);
+	        this.track(args);
 	    },
 	    getAdditionalProperties: function getAdditionalProperties() {
 	        var _this2 = this;
@@ -870,15 +871,11 @@
 	            return prev;
 	        }, values);
 	    },
-	    track: function track() {
-	        if (this.debug) {
-	            var _console;
-	
-	            (_console = console).log.apply(_console, arguments);
+	    track: function track(args) {
+	        if (this.inDev) {
+	            console.log(args);
 	        } else {
-	            var _ut;
-	
-	            (_ut = ut).push.apply(_ut, arguments);
+	            ut.push(args);
 	        }
 	    }
 	});
