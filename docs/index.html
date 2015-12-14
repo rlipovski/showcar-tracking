@@ -6,18 +6,9 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/zepto/1.1.6/zepto.min.js"></script>
     <script src="../dist/showcar-tracking.js"></script>
 
-
+<!--
     <as24-tracking ></as24-tracking>
-
-    <!--
-    ut.push(['gtm', 'click',{linkgroup:'HackList',linkid:'V1 (abundance): ' + itemId + '|' + abundance}]);
-    -->
-    <as24-tracking type="gtm" action="click" as24-tracking-click-target="#id" ... />
-
-    <!--
-    ut.push(['gtm', 'set', {'test_experiments.tt5': 'NetGross:Variation1'}]);
-    -->
-    <as24-tracking type="gtm" action="set"  ... />
+-->
 
     <!--
     ut.push(['pagename', @Html.Raw(Json.Encode(new PageNameViewModel("vm-webapp", Model.ClassifiedType == ArticleType.Bike ? "moto" : "uc", "dealerratings")))]);
@@ -25,21 +16,42 @@
     -->
 
     <as24-tracking type="pagename" country="de" market="all-webapp" category="all" />
-    <as24-tracking type="pagename" value="{"country":"de","market":"all-webapp","category":"all","pageid":"home","layer":"","attribute":null,"group":null,"environment":"live","language":"de"}" />
+    <as24-tracking type="pagename" as24-tracking-value='{"country":"de","market":"all-webapp","category":"all","pageid":"home","layer":"","attribute":null,"group":null,"environment":"live","language":"de"}' />
+    <as24-tracking type="pagename" foo="bar" as24-tracking-value='{"country":"de","market":"all-webapp","category":"all","pageid":"home","layer":"","attribute":null,"group":null,"environment":"live","language":"de"}' />
+
+    <!--
+    ut.push(['gtm', 'set', {'test_experiments.tt5': 'NetGross:Variation1'}]);
+    -->
+    <!--
+        <as24-tracking type="gtm" action="set" test_experiments.tt5="NetGross:Variation1" />
+    -->
+
+
+    <!--
+    ut.push(['gtm', 'click',{linkgroup:'HackList',linkid:'V1 (abundance): ' + itemId + '|' + abundance}]);
+    -->
+<!--
+    <as24-tracking type="gtm" action="click" as24-tracking-click-target="#id" linkgroup="HackList" linkid="V1 (abundance)" />
+-->
+
+
 
     <!--
     ut.push(['gtm', 'pageview']);
     -->
+<!--
     <as24-tracking type="gtm" action="pageview" />
+-->
 
     <!--
     ut.push(['dealer', 'listview', @Html.Raw(Json.Encode(Model.ListItems.Select(i => Convert.ToInt32(i.VehicleId))))]);
     -->
-    <as24-tracking type="dealer" action="listview" ... />
+<!--
+    <as24-tracking type="dealer" action="listview" />
+-->
 
+    </head>
+    <body>
 
-</head>
-<body>
-
-</body>
-</html>
+    </body>
+    </html>
