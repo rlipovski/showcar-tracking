@@ -828,7 +828,7 @@
 	    inDev: true,
 	    supportedActions: ['set', 'click', 'pageview'],
 	    supportedTypes: ['gtm', 'pagename'],
-	    reservedWords: ['as24-tracking-id', 'type', 'action', 'as24-tracking-value', 'as24-tracking-click-target'],
+	    reservedWords: ['type', 'action', 'as24-tracking-value', 'as24-tracking-click-target'],
 	
 	    createdCallback: function createdCallback() {
 	        var _this = this;
