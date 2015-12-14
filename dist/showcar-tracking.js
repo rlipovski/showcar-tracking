@@ -837,7 +837,11 @@
 	
 	        var type = this.el.attr('type');
 	        var action = this.el.attr('action');
-	        var args = [type, action, values];
+	        var args = [type, action];
+	
+	        if (Object.keys(values).length > 0) {
+	            args.push(values);
+	        }
 	
 	        if (type === 'gtm' && action === 'click') {
 	            $(this.el.attr('as24-tracking-click-target')).on('click', function () {
@@ -850,14 +854,15 @@
 	            args.splice(1, 1);
 	        }
 	
-	        if (!this.dev) {
-	            this.track.apply(this, args);
-	        }
+	        this.track.apply(this, args);
 	    },
 	    getAdditionalProperties: function getAdditionalProperties() {
 	        var _this2 = this;
 	
 	        var values = JSON.parse(this.el.attr('as24-tracking-value')) || {};
+	        if (Array.isArray(values)) {
+	            return values;
+	        }
 	        return Array.from(this.el[0].attributes).filter(function (element) {
 	            return !(_this2.reservedWords.indexOf(element.nodeName) > -1);
 	        }).reduce(function (prev, curr) {

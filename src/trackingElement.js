@@ -11,7 +11,11 @@ var as24tracking = Object.assign(Object.create(HTMLElement.prototype), {
 
         var type = this.el.attr('type');
         var action = this.el.attr('action');
-        var args = [type, action, values];
+        var args = [type, action];
+
+        if (Object.keys(values).length > 0) {
+            args.push(values);
+        }
 
         if (type === 'gtm' && action === 'click') {
             $(this.el.attr('as24-tracking-click-target')).on('click', () => this.track(...args));
@@ -22,13 +26,14 @@ var as24tracking = Object.assign(Object.create(HTMLElement.prototype), {
             args.splice(1, 1);
         }
 
-        if (!this.dev) {
-            this.track(...args);
-        }
+        this.track(...args);
     },
 
     getAdditionalProperties() {
         var values = JSON.parse(this.el.attr('as24-tracking-value')) || {};
+        if (Array.isArray(values)) {
+            return values;
+        }
         return Array.from(this.el[0].attributes)
             .filter((element) => !(this.reservedWords.indexOf(element.nodeName) > -1))
             .reduce((prev, curr) => {
