@@ -823,42 +823,58 @@
 	'use strict';
 	
 	var as24tracking = Object.assign(Object.create(HTMLElement.prototype), {
-	
-	    dev: true,
 	    el: null,
+	    debug: true,
 	    supportedActions: ['set', 'click', 'pageview'],
 	    supportedTypes: ['gtm', 'pagename'],
-	    reservedWords: ['as24-tracking-id', 'type', 'action', 'as24-tracking-value'],
+	    reservedWords: ['as24-tracking-id', 'type', 'action', 'as24-tracking-value', 'as24-tracking-click-target'],
 	
 	    createdCallback: function createdCallback() {
+	        var _this = this;
+	
 	        this.el = $(this);
 	        var values = this.getAdditionalProperties();
 	
 	        var type = this.el.attr('type');
 	        var action = this.el.attr('action');
-	
 	        var args = [type, action, values];
+	
+	        if (type === 'gtm' && action === 'click') {
+	            $(this.el.attr('as24-tracking-click-target')).on('click', function () {
+	                return _this.track.apply(_this, args);
+	            });
+	            return;
+	        }
+	
 	        if (type === 'pagename') {
-	            args.slice(1, 1);
+	            args.splice(1, 1);
 	        }
 	
 	        if (!this.dev) {
-	            var _ut;
-	
-	            (_ut = ut).push.apply(_ut, args);
+	            this.track.apply(this, args);
 	        }
 	    },
 	    getAdditionalProperties: function getAdditionalProperties() {
-	        var _this = this;
+	        var _this2 = this;
 	
 	        var values = JSON.parse(this.el.attr('as24-tracking-value')) || {};
-	        values = Array.from(this.el[0].attributes).filter(function (element) {
-	            return !(_this.reservedWords.indexOf(element.nodeName) > -1);
+	        return Array.from(this.el[0].attributes).filter(function (element) {
+	            return !(_this2.reservedWords.indexOf(element.nodeName) > -1);
 	        }).reduce(function (prev, curr) {
 	            prev[curr.nodeName] = curr.nodeValue;
 	            return prev;
 	        }, values);
-	        return values;
+	    },
+	    track: function track() {
+	        if (this.debug) {
+	            var _console;
+	
+	            (_console = console).log.apply(_console, arguments);
+	        } else {
+	            var _ut;
+	
+	            (_ut = ut).push.apply(_ut, arguments);
+	        }
 	    }
 	});
 	
