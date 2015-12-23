@@ -49,13 +49,7 @@
 	var gtm = __webpack_require__(1);
 	var dealer = __webpack_require__(18);
 	
-	module.exports = {
-	    gtm: gtm,
-	    dealer: dealer
-	};
-	
 	function processCommand(data) {
-	    console.log(data);
 	    var fn, args;
 	
 	    if (data[0] === 'pagename') {
@@ -87,6 +81,12 @@
 	ut.forEach(processCommand);
 	
 	__webpack_require__(19);
+	
+	module.exports = {
+	    gtm: gtm,
+	    dealer: dealer,
+	    ut: ut
+	};
 
 /***/ },
 /* 1 */
@@ -825,7 +825,7 @@
 	
 	var as24tracking = Object.assign(Object.create(HTMLElement.prototype), {
 	    el: null,
-	    inDev: true,
+	    inDev: false,
 	    supportedActions: ['set', 'click', 'pageview'],
 	    supportedTypes: ['gtm', 'pagename'],
 	    reservedWords: ['type', 'action', 'as24-tracking-value', 'as24-tracking-click-target'],

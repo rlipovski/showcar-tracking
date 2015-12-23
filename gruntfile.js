@@ -9,13 +9,17 @@ module.exports = function(grunt) {
     };
 
     grunt.initConfig({
-        webpack: loadConfig("webpack"),
+        webpack: {
+            default: loadConfig("webpack")['ui'],
+            docs: loadConfig("webpack-docs")['ui']
+        },
         watch: loadConfig("watch"),
         karma: loadConfig("karma"),
         eslint: loadConfig("eslint")
     });
 
-    grunt.registerTask("build", ["webpack"]);
+    grunt.registerTask("build", ["webpack:default"]);
+    grunt.registerTask("docs", ["webpack:docs"]);
 
     grunt.registerTask("default", ["build"]);
 

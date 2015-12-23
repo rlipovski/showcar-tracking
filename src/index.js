@@ -1,14 +1,7 @@
 var gtm = require('./gtm');
 var dealer = require('./dealer');
 
-
-module.exports = {
-    gtm: gtm,
-    dealer: dealer
-};
-
 function processCommand(data) {
-console.log(data);
     var fn, args;
 
     if (data[0] === 'pagename') {
@@ -40,3 +33,9 @@ ut.push = function() {
 ut.forEach(processCommand);
 
 require('./trackingElement');
+
+module.exports = {
+    gtm: gtm,
+    dealer: dealer,
+    ut: ut
+};
