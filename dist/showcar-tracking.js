@@ -844,18 +844,18 @@
 	            args.push(values);
 	        }
 	
-	        if (type === 'gtm' && action === 'click') {
-	            $(this.el.attr('as24-tracking-click-target')).on('click', function () {
-	                return _this.track(args);
-	            });
-	            return;
-	        }
-	
 	        if (type === 'pagename') {
 	            args.splice(1, 1);
 	        }
 	
-	        this.track(args);
+	        var clickTarget = this.el.attr('as24-tracking-click-target');
+	        if (clickTarget !== null && clickTarget !== '') {
+	            $(this.el.attr('as24-tracking-click-target')).on('click', function () {
+	                return _this.track(args);
+	            });
+	        } else {
+	            this.track(args);
+	        }
 	    },
 	    getAdditionalProperties: function getAdditionalProperties() {
 	        var _this2 = this;

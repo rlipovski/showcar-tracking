@@ -30,9 +30,19 @@
     ut.push(['gtm', 'click',{linkgroup:'HackList',linkid:'V1 (abundance): ' + itemId + '|' + abundance}]);
     -->
     <as24-tracking type="gtm" action="click" as24-tracking-click-target="#myButton" linkgroup="HackList" linkid="V1 (abundance)" />
-    <button id="myButton">trackIt</button>
+    <button id="myButton">trackIt (gtm click tracking)</button>
 
+    <!--
+    ut.push(['gtm', 'pageview']);
+    -->
+    <as24-tracking type="gtm" action="pageview" as24-tracking-click-target="#myButton2" />
+    <button id="myButton2">trackIt (gtm pageview)</button>
 
+    <!--
+    ut.push(['pagename', {"country":"de","market":"all-webapp","category":"all","pageid":"home","layer":"","attribute":null,"group":null,"environment":"live","language":"de"}]);
+    -->
+    <as24-tracking type="pagename" as24-tracking-click-target="#myButton3" as24-tracking-value='{"country":"de","market":"all-webapp","category":"all","pageid":"home","layer":"","attribute":null,"group":null,"environment":"live","language":"de"}' />
+    <button id="myButton3">trackIt (gtm pagename)</button>
 
     <!--
     ut.push(['gtm', 'pageview']);
@@ -46,13 +56,13 @@
     ut.push(['dealer', 'listview', [281705316,281702707,281462097,281725748,237276348,281667368,281673373,281661776,281555953,281095563]]);
     -->
 
-    <as24-tracking type="dealer" action="listview" as24-tracking-value="[281705316,281702707,281462097,281725748,237276348,281667368,281673373,281661776,281555953,281095563]"/>
+    <as24-tracking type="dealer" action="listview" as24-tracking-value="[281705316,281702707,281462097,281725748,237276348,281667368,281673373,281661776,281555953,281095563]" />
 
 
     <script src="./main.js"></script>
     <script>
         $(document).ready(function() {
-            console.log(window.ut);
+            console.log('window.ut', window.ut);
         });
     </script>
     </body>

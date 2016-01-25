@@ -54,6 +54,11 @@ JavaScript way
 
     ut.push(['gtm', 'click',{linkgroup:'HackList',linkid:'V1 (abundance): ' + itemId + '|' + abundance}]);
 
+### Extended click tracking (e.g. for page load)
+
+Click tracking is possible for any `as24-tracking` tag, simply add the attribute `as24-tracking-click-target`.
+Its value needs to be a valid selector.
+
 ### Setting values
 
 Custom element way

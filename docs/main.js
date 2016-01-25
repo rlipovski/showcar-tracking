@@ -47,7 +47,7 @@
 	'use strict';
 	
 	var tracking = __webpack_require__(1);
-	var ut = tracking.ut;
+	window.ut = tracking.ut || [];
 
 /***/ },
 /* 1 */
@@ -834,7 +834,7 @@
 	
 	var as24tracking = Object.assign(Object.create(HTMLElement.prototype), {
 	    el: null,
-	    inDev: false,
+	    inDev: true,
 	    supportedActions: ['set', 'click', 'pageview'],
 	    supportedTypes: ['gtm', 'pagename'],
 	    reservedWords: ['type', 'action', 'as24-tracking-value', 'as24-tracking-click-target'],
@@ -853,18 +853,18 @@
 	            args.push(values);
 	        }
 	
-	        if (type === 'gtm' && action === 'click') {
-	            $(this.el.attr('as24-tracking-click-target')).on('click', function () {
-	                return _this.track(args);
-	            });
-	            return;
-	        }
-	
 	        if (type === 'pagename') {
 	            args.splice(1, 1);
 	        }
 	
-	        this.track(args);
+	        var clickTarget = this.el.attr('as24-tracking-click-target');
+	        if (clickTarget !== null && clickTarget !== '') {
+	            $(this.el.attr('as24-tracking-click-target')).on('click', function () {
+	                return _this.track(args);
+	            });
+	        } else {
+	            this.track(args);
+	        }
 	    },
 	    getAdditionalProperties: function getAdditionalProperties() {
 	        var _this2 = this;

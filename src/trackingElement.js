@@ -17,16 +17,16 @@ var as24tracking = Object.assign(Object.create(HTMLElement.prototype), {
             args.push(values);
         }
 
-        if (type === 'gtm' && action === 'click') {
-            $(this.el.attr('as24-tracking-click-target')).on('click', () => this.track(args));
-            return;
-        }
-
         if (type === 'pagename') {
             args.splice(1, 1);
         }
 
-        this.track(args);
+        var clickTarget = this.el.attr('as24-tracking-click-target')
+        if (clickTarget !== null && clickTarget !== '') {
+            $(this.el.attr('as24-tracking-click-target')).on('click', () => this.track(args));
+        } else {
+            this.track(args);
+        }
     },
 
     getAdditionalProperties() {
