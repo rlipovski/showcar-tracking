@@ -32,6 +32,9 @@ There are a couple of common attributes that are used to control the behavior of
 
 All other attributes are used as key-value pairs for tracking. They override values given by the as24-tracking-value attribute.
 
+If you need to use upper case characters (according to the gtm variable) inside an attribute name, you need to escape them with a leading dash.
+Example: `group_myTestAttribute` is written as `<as24-tracking group_my-test-attribute="value">`
+
 ### Page view
 
 Custom element way

@@ -876,9 +876,18 @@
 	        return Array.from(this.el[0].attributes).filter(function (element) {
 	            return !(_this2.reservedWords.indexOf(element.nodeName) > -1);
 	        }).reduce(function (prev, curr) {
-	            prev[curr.nodeName] = curr.nodeValue;
+	            var attrName = _this2.decodeAttributeName(curr.nodeName);
+	            prev[attrName] = curr.nodeValue;
 	            return prev;
 	        }, values);
+	    },
+	    decodeAttributeName: function decodeAttributeName(attrName) {
+	        if (attrName.indexOf('-') > -1) {
+	            attrName = attrName.replace(/-([a-z])/g, function (g) {
+	                return g[1].toUpperCase();
+	            });
+	        }
+	        return attrName;
 	    },
 	    track: function track(args) {
 	        if (this.inDev) {

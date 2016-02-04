@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <title></title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/es6-shim/0.34.2/es6-shim.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/document-register-element/0.5.4/document-register-element.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/zepto/1.1.6/zepto.min.js"></script>
 
     </head>
@@ -19,12 +21,15 @@
     <as24-tracking type="pagename" country="de" market="all-webapp" category="all" />
     <as24-tracking type="pagename" as24-tracking-value='{"country":"de","market":"all-webapp","category":"all","pageid":"home","layer":"","attribute":null,"group":null,"environment":"live","language":"de"}' />
     <as24-tracking type="pagename" foo="bar" as24-tracking-value='{"country":"de","market":"all-webapp","category":"all","pageid":"home","layer":"","attribute":null,"group":null,"environment":"live","language":"de"}' />
+    <as24-tracking type="pagename" country="de" market="all-webapp" category="all" />
 
     <!--
-    ut.push(['gtm', 'set', {'test_experiments.tt5': 'NetGross:Variation1'}]);
+    //to user uppercase chars in attribute names, you need to replace them with a leading -
+    //the tracking library replaces the - AND the following char with its uppercase char
+    // e.g. '-x' in the attribute name is replaced with 'X'
+    ut.push(['gtm', 'set', {'classified_customerID': 'test', 'notification_ID': ''}]);
     -->
-    <as24-tracking type="gtm" action="set" test_experiments.tt5="NetGross:Variation1" />
-
+    <as24-tracking type="gtm" action="set" classified_customer-i-d="test" notification_-i-d="" />
 
     <!--
     ut.push(['gtm', 'click',{linkgroup:'HackList',linkid:'V1 (abundance): ' + itemId + '|' + abundance}]);
