@@ -34,7 +34,7 @@ var as24tracking = Object.assign(Object.create(HTMLElement.prototype), {
         if (Array.isArray(values)) {
             return values;
         }
-        return Array.from(this.el[0].attributes)
+        return Array.prototype.slice.call(this.el[0].attributes)
             .filter((element) => !(this.reservedWords.indexOf(element.nodeName) > -1))
             .reduce((prev, curr) => {
                 var attrName = this.decodeAttributeName(curr.nodeName);
