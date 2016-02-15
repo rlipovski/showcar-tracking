@@ -41,7 +41,9 @@ function generateCommonParams(data) {
         common_attribute: mergedPagename.attribute || '',
 
         common_linkgroup: mergedPagename.linkgroup || '',
-        common_linkid: mergedPagename.linkid || ''
+        common_linkid: mergedPagename.linkid || '',
+
+        common_techState: mergedPagename.techState || ''
     };
 
     return commonData;
