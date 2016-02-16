@@ -832,7 +832,9 @@
 
 	'use strict';
 	
-	var as24tracking = Object.assign(Object.create(HTMLElement.prototype), {
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+	
+	var as24tracking = _extends(Object.create(HTMLElement.prototype), {
 	    el: null,
 	    inDev: true,
 	    supportedActions: ['set', 'click', 'pageview'],
@@ -873,7 +875,8 @@
 	        if (Array.isArray(values)) {
 	            return values;
 	        }
-	        return Array.from(this.el[0].attributes).filter(function (element) {
+	
+	        return Array.prototype.slice.call(this.el[0].attributes).filter(function (element) {
 	            return !(_this2.reservedWords.indexOf(element.nodeName) > -1);
 	        }).reduce(function (prev, curr) {
 	            var attrName = _this2.decodeAttributeName(curr.nodeName);
