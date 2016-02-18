@@ -80,7 +80,17 @@
 	
 	ut.forEach(processCommand);
 	
-	__webpack_require__(19);
+	var isRegistered = function isRegistered(name) {
+	    var registered = document.createElement(name).constructor !== HTMLElement;
+	    if (registered && window && window.console) {
+	        window.console.warn('CustomElement "' + name + '" is already registered.');
+	    }
+	    return registered;
+	};
+	
+	if (!isRegistered('as24-tracking')) {
+	    __webpack_require__(19);
+	}
 	
 	module.exports = {
 	    gtm: gtm,
@@ -135,7 +145,9 @@
 	        common_attribute: mergedPagename.attribute || '',
 	
 	        common_linkgroup: mergedPagename.linkgroup || '',
-	        common_linkid: mergedPagename.linkid || ''
+	        common_linkid: mergedPagename.linkid || '',
+	
+	        common_techState: mergedPagename.techState || ''
 	    };
 	
 	    return commonData;
