@@ -60,7 +60,12 @@ var as24tracking = Object.assign(Object.create(HTMLElement.prototype), {
 
 });
 
-
-document.registerElement('as24-tracking', {
-    prototype: as24tracking
-});
+try {
+    document.registerElement('as24-tracking', {
+        prototype: as24tracking
+    });
+} catch (e) {
+    if (window && window.console) {
+        window.console.warn('Failed to register CustomElement "as24-tracking".', e);
+    }
+}
