@@ -80,19 +80,7 @@
 	
 	ut.forEach(processCommand);
 	
-	var isRegistered = function isRegistered(name) {
-	    var registered = document.createElement(name).__proto__ !== HTMLElement.prototype;
-	
-	    if (registered && window && window.console) {
-	        window.console.warn('CustomElement "' + name + '" is already registered.');
-	    }
-	
-	    return registered;
-	};
-	
-	if (!isRegistered('as24-tracking')) {
-	    __webpack_require__(19);
-	}
+	__webpack_require__(19);
 	
 	module.exports = {
 	    gtm: gtm,
@@ -905,9 +893,15 @@
 	    }
 	});
 	
-	document.registerElement('as24-tracking', {
-	    prototype: as24tracking
-	});
+	try {
+	    document.registerElement('as24-tracking', {
+	        prototype: as24tracking
+	    });
+	} catch (e) {
+	    if (window && window.console) {
+	        window.console.warn('Failed to register CustomElement "as24-tracking".', e);
+	    }
+	}
 
 /***/ }
 /******/ ]);
