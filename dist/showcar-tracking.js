@@ -81,10 +81,12 @@
 	ut.forEach(processCommand);
 	
 	var isRegistered = function isRegistered(name) {
-	    var registered = document.createElement(name).constructor !== HTMLElement;
+	    var registered = document.createElement(name).__proto__ !== HTMLElement.prototype;
+	
 	    if (registered && window && window.console) {
 	        window.console.warn('CustomElement "' + name + '" is already registered.');
 	    }
+	
 	    return registered;
 	};
 	
@@ -227,7 +229,7 @@
 
 	'use strict';
 	
-	function _typeof(obj) { return obj && typeof Symbol !== "undefined" && obj.constructor === Symbol ? "symbol" : typeof obj; }
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
 	
 	module.exports = function isObject(obj) {
 	    var type = typeof obj === 'undefined' ? 'undefined' : _typeof(obj);
@@ -682,7 +684,7 @@
 	
 	'use strict';
 	
-	function _typeof(obj) { return obj && typeof Symbol !== "undefined" && obj.constructor === Symbol ? "symbol" : typeof obj; }
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
 	
 	var stringifyPrimitive = function stringifyPrimitive(v) {
 	  switch (typeof v === 'undefined' ? 'undefined' : _typeof(v)) {

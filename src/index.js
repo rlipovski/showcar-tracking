@@ -33,10 +33,12 @@ ut.push = function() {
 ut.forEach(processCommand);
 
 var isRegistered = function(name) {
-    var registered = document.createElement(name).constructor !== HTMLElement;
+    var registered = document.createElement(name).__proto__ !== HTMLElement.prototype;
+
     if (registered && window && window.console) {
         window.console.warn('CustomElement "' + name + '" is already registered.');
     }
+
     return registered;
 };
 
