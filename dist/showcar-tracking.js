@@ -48,6 +48,7 @@
 	
 	var gtm = __webpack_require__(1);
 	var dealer = __webpack_require__(18);
+	var dealerTatsu = __webpack_require__(19);
 	
 	function processCommand(data) {
 	    var fn, args;
@@ -68,6 +69,12 @@
 	        if (typeof fn === 'function') {
 	            fn.apply(dealer, args);
 	        }
+	    } else if (data[0] === 'dealerTatsu') {
+	        fn = dealerTatsu[data[1]];
+	        args = data.slice(2);
+	        if (typeof fn === 'function') {
+	            fn.apply(dealerTatsu, args);
+	        }
 	    }
 	}
 	
@@ -80,11 +87,12 @@
 	
 	ut.forEach(processCommand);
 	
-	__webpack_require__(19);
+	__webpack_require__(20);
 	
 	module.exports = {
 	    gtm: gtm,
 	    dealer: dealer,
+	    dealerTatsu: dealerTatsu,
 	    ut: ut
 	};
 
@@ -217,7 +225,7 @@
 
 	'use strict';
 	
-	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
+	function _typeof(obj) { return obj && typeof Symbol !== "undefined" && obj.constructor === Symbol ? "symbol" : typeof obj; }
 	
 	module.exports = function isObject(obj) {
 	    var type = typeof obj === 'undefined' ? 'undefined' : _typeof(obj);
@@ -672,7 +680,7 @@
 	
 	'use strict';
 	
-	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
+	function _typeof(obj) { return obj && typeof Symbol !== "undefined" && obj.constructor === Symbol ? "symbol" : typeof obj; }
 	
 	var stringifyPrimitive = function stringifyPrimitive(v) {
 	  switch (typeof v === 'undefined' ? 'undefined' : _typeof(v)) {
@@ -821,6 +829,64 @@
 
 /***/ },
 /* 19 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var cookies = __webpack_require__(10);
+	var visitorId = cookies.read('as24Visitor');
+	
+	function sendRequest(params) {
+	    if (!visitorId) {
+	        return;
+	    }
+	
+	    params.visitor = visitorId;
+	    params.ticks = +new Date();
+	
+	    var paramsStr = Object.keys(params).map(function (key) {
+	        return key + '=' + encodeURIComponent(params[key]);
+	    }).join('&');
+	
+	    new Image().src = 'http://tracking.autoscout24.com/parser.ashx?' + paramsStr;
+	}
+	
+	module.exports = {
+	    listview: function listview(ids) {
+	        sendRequest({
+	            id: ids.join('|'),
+	            source: 'lv',
+	            url: '/'
+	        });
+	    },
+	
+	    detailview: function detailview(id) {
+	        sendRequest({
+	            id: id,
+	            source: 'pv',
+	            url: location.href
+	        });
+	    },
+	
+	    topcarview: function topcarview(id) {
+	        sendRequest({
+	            id: id,
+	            source: 'ha',
+	            url: location.href
+	        });
+	    },
+	
+	    phone: function phone(id) {
+	        sendRequest({
+	            id: id,
+	            source: 'mc',
+	            url: location.href
+	        });
+	    }
+	};
+
+/***/ },
+/* 20 */
 /***/ function(module, exports) {
 
 	'use strict';
