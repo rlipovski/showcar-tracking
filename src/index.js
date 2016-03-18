@@ -1,5 +1,6 @@
 var gtm = require('./gtm');
 var dealer = require('./dealer');
+var dealerTatsu = require('./dealerTatsu');
 
 function processCommand(data) {
     var fn, args;
@@ -20,6 +21,12 @@ function processCommand(data) {
         if (typeof fn === 'function') {
             fn.apply(dealer, args);
         }
+    } else if (data[0] === 'dealerTatsu') {
+        fn = dealerTatsu[data[1]];
+        args = data.slice(2);
+        if (typeof fn === 'function') {
+            fn.apply(dealerTatsu, args);
+        }
     }
 }
 
@@ -37,5 +44,6 @@ require('./trackingElement');
 module.exports = {
     gtm: gtm,
     dealer: dealer,
+    dealerTatsu: dealerTatsu,
     ut: ut
 };

@@ -57,6 +57,7 @@
 	
 	var gtm = __webpack_require__(2);
 	var dealer = __webpack_require__(19);
+	var dealerTatsu = __webpack_require__(20);
 	
 	function processCommand(data) {
 	    var fn, args;
@@ -77,6 +78,12 @@
 	        if (typeof fn === 'function') {
 	            fn.apply(dealer, args);
 	        }
+	    } else if (data[0] === 'dealerTatsu') {
+	        fn = dealerTatsu[data[1]];
+	        args = data.slice(2);
+	        if (typeof fn === 'function') {
+	            fn.apply(dealerTatsu, args);
+	        }
 	    }
 	}
 	
@@ -89,11 +96,12 @@
 	
 	ut.forEach(processCommand);
 	
-	__webpack_require__(20);
+	__webpack_require__(21);
 	
 	module.exports = {
 	    gtm: gtm,
 	    dealer: dealer,
+	    dealerTatsu: dealerTatsu,
 	    ut: ut
 	};
 
@@ -830,6 +838,64 @@
 
 /***/ },
 /* 20 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var cookies = __webpack_require__(11);
+	var visitorId = cookies.read('as24Visitor');
+	
+	function sendRequest(params) {
+	    if (!visitorId) {
+	        return;
+	    }
+	
+	    params.visitor = visitorId;
+	    params.ticks = +new Date();
+	
+	    var paramsStr = Object.keys(params).map(function (key) {
+	        return key + '=' + encodeURIComponent(params[key]);
+	    }).join('&');
+	
+	    new Image().src = 'http://tracking.autoscout24.com/parser.ashx?' + paramsStr;
+	}
+	
+	module.exports = {
+	    listview: function listview(ids) {
+	        sendRequest({
+	            id: ids.join('|'),
+	            source: 'lv',
+	            url: '/'
+	        });
+	    },
+	
+	    detailview: function detailview(id) {
+	        sendRequest({
+	            id: id,
+	            source: 'pv',
+	            url: location.href
+	        });
+	    },
+	
+	    topcarview: function topcarview(id) {
+	        sendRequest({
+	            id: id,
+	            source: 'ha',
+	            url: location.href
+	        });
+	    },
+	
+	    phone: function phone(id) {
+	        sendRequest({
+	            id: id,
+	            source: 'mc',
+	            url: location.href
+	        });
+	    }
+	};
+
+/***/ },
+/* 21 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -838,7 +904,7 @@
 	
 	var as24tracking = _extends(Object.create(HTMLElement.prototype), {
 	    el: null,
-	    inDev: true,
+	    inDev: false,
 	    supportedActions: ['set', 'click', 'pageview'],
 	    supportedTypes: ['gtm', 'pagename'],
 	    reservedWords: ['type', 'action', 'as24-tracking-value', 'as24-tracking-click-target'],
