@@ -1,4 +1,7 @@
 var as24tracking = Object.assign(Object.create(HTMLElement.prototype), {
+    /**
+     * @type {Element}
+     */
     el: null,
     inDev: false,
     supportedActions: ['set', 'click', 'pageview'],
@@ -6,11 +9,10 @@ var as24tracking = Object.assign(Object.create(HTMLElement.prototype), {
     reservedWords: ['type', 'action', 'as24-tracking-value', 'as24-tracking-click-target'],
 
     createdCallback () {
-        this.el = $(this);
         var values = this.getAdditionalProperties();
 
-        var type = this.el.attr('type');
-        var action = this.el.attr('action');
+        var type = this.el.getAttribute('type');
+        var action = this.el.getAttribute('action');
         var args = [type, action];
 
         if (Object.keys(values).length > 0) {
@@ -21,21 +23,30 @@ var as24tracking = Object.assign(Object.create(HTMLElement.prototype), {
             args.splice(1, 1);
         }
 
-        var clickTarget = this.el.attr('as24-tracking-click-target')
+        var clickTarget = this.el.getAttribute('as24-tracking-click-target'); 
         if (clickTarget !== null && clickTarget !== '') {
-            $(this.el.attr('as24-tracking-click-target')).on('click', () => this.track(args));
+            document.querySelector(clickTarget).addEventListener('click', _ => this.track(args));
         } else {
             this.track(args);
         }
     },
 
     getAdditionalProperties() {
-        var values = JSON.parse(this.el.attr('as24-tracking-value')) || {};
+        var values;
+
+        try {
+            values = JSON.parse(this.el.getAttribute('as24-tracking-value'));
+        } catch(e) {
+            console.error('Failed to retrieve tracking values');
+            return [];
+        }
+
         if (Array.isArray(values)) {
             return values;
         }
-        return Array.prototype.slice.call(this.el[0].attributes)
-            .filter((element) => !(this.reservedWords.indexOf(element.nodeName) > -1))
+
+        return Array.prototype.slice.call(this.el.attributes)
+            .filter(element => this.reservedWords.indexOf(element.nodeName) === -1)
             .reduce((prev, curr) => {
                 var attrName = this.decodeAttributeName(curr.nodeName);
                 prev[attrName] = curr.nodeValue;
@@ -43,19 +54,14 @@ var as24tracking = Object.assign(Object.create(HTMLElement.prototype), {
             }, values);
     },
 
-    decodeAttributeName (attrName) {
-        if (attrName.indexOf('-') > -1) {
-            attrName = attrName.replace(/-([a-z])/g, function (g) { return g[1].toUpperCase(); });
-        }
-        return attrName;
+    decodeAttributeName(attrName) {
+        return attrName.indexOf('-') > -1
+            ? attrName.replace(/-([a-z])/g, g => g[1].toUpperCase())
+            : attrName;
     },
 
     track(args) {
-        if (this.inDev) {
-            console.log(args);
-        } else {
-            ut.push(args);
-        }
+        return this.inDev ? console.log(args) : ut.push(args);
     }
 
 });
