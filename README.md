@@ -2,6 +2,7 @@
 
 Tracking library for ShowCar-based pages
 
+It is globally available via `window.AS24.tracking`.
 
 ## Track actions that cause page loads
 If you need to track a click on an element that will cause the browser to load another page, you should use
