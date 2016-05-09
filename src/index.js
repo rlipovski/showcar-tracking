@@ -1,3 +1,9 @@
+var zepto = require('zepto-browserify');
+
+if (!window.$) {
+    window.$ = zepto.$;
+}
+
 var gtm = require('./gtm');
 var dealer = require('./dealer');
 var dealerTatsu = require('./dealerTatsu');

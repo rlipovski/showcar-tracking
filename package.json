@@ -1,6 +1,6 @@
 {
   "name": "showcar-tracking",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "showcar-tracking ================",
   "main": "src/index.js",
   "scripts": {
@@ -42,7 +42,8 @@
     "mocha": "^2.2.1",
     "sinon": "^1.14.1",
     "webpack": "^1.12.9",
-    "webpack-dev-server": "^1.14.0"
+    "webpack-dev-server": "^1.14.0",
+    "zepto-browserify": "^1.1.6-1"
   },
   "dependencies": {
     "amp-index-of": "^1.1.0",
