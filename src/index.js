@@ -41,12 +41,9 @@ ut.forEach(processCommand);
 
 require('./trackingElement');
 
-window.AS24 = window.AS24 || {};
-window.AS24.tracking = {
+module.exports = {
     gtm: gtm,
     dealer: dealer,
     dealerTatsu: dealerTatsu,
     ut: ut
 };
-
-module.exports = window.AS24;
