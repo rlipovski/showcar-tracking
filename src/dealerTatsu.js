@@ -19,7 +19,7 @@ module.exports = {
         sendRequest({
             id: ids.join('|'),
             source: 'lv',
-            url: '/'
+            url: location.href
         });
     },
 
