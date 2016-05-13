@@ -40,8 +40,8 @@ Example: `group_myTestAttribute` is written as `<as24-tracking group_my-test-att
 Custom element way:
 
 ```html    
-<as24-tracking type="pagename" country="de" market="all-webapp" category="all" />
-<as24-tracking type="gtm" action="pageview" />
+<as24-tracking type="pagename" country="de" market="all-webapp" category="all"></as24-tracking>
+<as24-tracking type="gtm" action="pageview"></as24-tracking>
 ```
 
 JavaScript way:
@@ -66,7 +66,7 @@ ut.push(['gtm', 'pageview']);
 Custom element way:
 
 ```html
-<as24-tracking type="gtm" action="click" as24-tracking-click-target="#myButton" linkgroup="HackList" linkid="V1 (abundance)" />
+<as24-tracking type="gtm" action="click" as24-tracking-click-target="#myButton" linkgroup="HackList" linkid="V1 (abundance)"></as24-tracking>
 ```
     
 JavaScript way:
