@@ -32,15 +32,20 @@ function processCommand(data) {
 
 var ut = window.ut || (window.ut = []);
 
-ut.push = function() {
-    Array.prototype.push.apply(window.ut, arguments);
-    processCommand.apply({}, arguments);
-};
+if (ut.push === [].prototype.push) {
+    ut.push = function() {
+        Array.prototype.push.apply(window.ut, arguments);
+        processCommand.apply({}, arguments);
+    };
 
-ut.forEach(processCommand);
-ut.length = 0;
+    ut.forEach(processCommand);
+}
 
-require('./trackingElement');
+const ctor = document.createElement('as24-tracking').constructor;
+
+if (ctor === HTMLElement || ctor === HTMLUnknownElement) {
+    require('./trackingElement');
+}
 
 module.exports = {
     gtm: gtm,

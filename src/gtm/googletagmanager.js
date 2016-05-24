@@ -2,6 +2,16 @@ var dataLayer = window.dataLayer = window.dataLayer || [];
 
 module.exports = {
     loadContainer: function(containerId) {
+        var gtmAlreadyLoadedClassName = 'gtm-main-container-load-initiated';
+        var alreadyInitiatedMainGtmContainerLoaded = document.documentElement.className.indexOf(gtmAlreadyLoadedClassName) >= 0;
+
+        if (alreadyInitiatedMainGtmContainerLoaded) {
+            // preventing duplicated load of main GTM container
+            return;
+        }
+
+        document.documentElement.className += ' ' + gtmAlreadyLoadedClassName;
+
         (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
             new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
             j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=

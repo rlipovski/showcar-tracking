@@ -80,15 +80,20 @@
 	
 	var ut = window.ut || (window.ut = []);
 	
-	ut.push = function () {
-	    Array.prototype.push.apply(window.ut, arguments);
-	    processCommand.apply({}, arguments);
-	};
+	if (ut.push === [].prototype.push) {
+	    ut.push = function () {
+	        Array.prototype.push.apply(window.ut, arguments);
+	        processCommand.apply({}, arguments);
+	    };
 	
-	ut.forEach(processCommand);
-	ut.length = 0;
+	    ut.forEach(processCommand);
+	}
 	
-	__webpack_require__(20);
+	var ctor = document.createElement('as24-tracking').constructor;
+	
+	if (ctor === HTMLElement || ctor === HTMLUnknownElement) {
+	    __webpack_require__(20);
+	}
 	
 	module.exports = {
 	    gtm: gtm,
@@ -243,6 +248,16 @@
 	
 	module.exports = {
 	    loadContainer: function loadContainer(containerId) {
+	        var gtmAlreadyLoadedClassName = 'gtm-main-container-load-initiated';
+	        var alreadyInitiatedMainGtmContainerLoaded = document.documentElement.className.indexOf(gtmAlreadyLoadedClassName) >= 0;
+	
+	        if (alreadyInitiatedMainGtmContainerLoaded) {
+	            // preventing duplicated load of main GTM container
+	            return;
+	        }
+	
+	        document.documentElement.className += ' ' + gtmAlreadyLoadedClassName;
+	
 	        (function (w, d, s, l, i) {
 	            w[l] = w[l] || [];w[l].push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' });var f = d.getElementsByTagName(s)[0],
 	                j = d.createElement(s),
@@ -963,9 +978,9 @@
 	});
 	
 	try {
-	    document.registerElement('as24-tracking', {
-	        prototype: as24tracking
-	    });
+	    if (document.createElement('as24-tracking').constructor !== HTMLElement) {
+	        document.registerElement('as24-tracking', { prototype: as24tracking });
+	    }
 	} catch (e) {
 	    if (window && window.console) {
 	        window.console.warn('Failed to register CustomElement "as24-tracking".', e);
