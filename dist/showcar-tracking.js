@@ -80,7 +80,7 @@
 	
 	var ut = window.ut || (window.ut = []);
 	
-	if (ut.push === [].prototype.push) {
+	if (ut.push === Array.prototype.push) {
 	    ut.push = function () {
 	        Array.prototype.push.apply(window.ut, arguments);
 	        processCommand.apply({}, arguments);
