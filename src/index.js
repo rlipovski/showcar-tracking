@@ -43,9 +43,9 @@ if (ut.push === Array.prototype.push) {
 
 const ctor = document.createElement('as24-tracking').constructor;
 
-if (ctor === HTMLElement || ctor === HTMLUnknownElement) {
+// if (ctor === HTMLElement || ctor === HTMLUnknownElement) {
     require('./trackingElement');
-}
+// }
 
 module.exports = {
     gtm: gtm,
