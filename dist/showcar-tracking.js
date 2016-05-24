@@ -91,9 +91,9 @@
 	
 	var ctor = document.createElement('as24-tracking').constructor;
 	
-	if (ctor === HTMLElement || ctor === HTMLUnknownElement) {
-	    __webpack_require__(20);
-	}
+	// if (ctor === HTMLElement || ctor === HTMLUnknownElement) {
+	__webpack_require__(20);
+	// }
 	
 	module.exports = {
 	    gtm: gtm,
