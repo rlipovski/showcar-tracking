@@ -63,7 +63,8 @@ var as24tracking = Object.assign(Object.create(HTMLElement.prototype), {
 });
 
 try {
-    if (document.createElement('as24-tracking').constructor !== HTMLElement) {
+    var ctor = document.createElement('as24-tracking').constructor;
+    if (ctor === HTMLElement || ctor === HTMLUnknownElement) {
         document.registerElement('as24-tracking', { prototype: as24tracking });
     }
 } catch (e) {
