@@ -11,8 +11,10 @@ var as24tracking = Object.assign(Object.create(HTMLElement.prototype), {
         this.el = $(this);
         var values = this.getAdditionalProperties();
 
-        var type = this.el.attr('type');
-        var action = this.el.attr('action');
+        debugger;
+
+        var type = this.getAttribute('type');
+        var action = this.getAttribute('action');
         var args = [type, action];
 
         if (Object.keys(values).length > 0) {
@@ -23,20 +25,26 @@ var as24tracking = Object.assign(Object.create(HTMLElement.prototype), {
             args.splice(1, 1);
         }
 
-        var clickTarget = this.el.attr('as24-tracking-click-target')
-        if (clickTarget !== null && clickTarget !== '') {
-            $(this.el.attr('as24-tracking-click-target')).on('click', () => this.track(args));
+        var clickTarget = this.getAttribute('as24-tracking-click-target');
+        if (clickTarget) {
+            var elements = document.querySelectorAll(clickTarget);
+            for (let element of elements) {
+                element.addEventListener('click', () => this.track(args));
+            }
         } else {
             this.track(args);
         }
     },
 
     getAdditionalProperties() {
-        var values = JSON.parse(this.el.attr('as24-tracking-value')) || {};
+        var trackingValue = this.getAttribute('as24-tracking-value');
+        var values = trackingValue ? JSON.parse(trackingValue) : {};
+
         if (Array.isArray(values)) {
             return values;
         }
-        return Array.prototype.slice.call(this.el[0].attributes)
+
+        return Array.prototype.slice.call(this.attributes)
             .filter((element) => !(this.reservedWords.indexOf(element.nodeName) > -1))
             .reduce((prev, curr) => {
                 var attrName = this.decodeAttributeName(curr.nodeName);

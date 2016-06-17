@@ -15,13 +15,13 @@
 
     <!--
     ut.push(['pagename', @Html.Raw(Json.Encode(new PageNameViewModel("vm-webapp", Model.ClassifiedType == ArticleType.Bike ? "moto" : "uc", "dealerratings")))]);
-    ut.push(['pagename', {"country":"de","market":"all-webapp","category":"all","pageid":"home","layer":"","attribute":null,"group":null,"environment":"live","language":"de"}]);
+    ut.push(['pagename', {"country":"de","market":"all-webapp","category":"all","pageid":"home","layer":"","attribute":null,"group":null,"environment":"test","language":"de"}]);
     -->
 
-    <as24-tracking type="pagename" country="de" market="all-webapp" category="all" />
-    <as24-tracking type="pagename" as24-tracking-value='{"country":"de","market":"all-webapp","category":"all","pageid":"home","layer":"","attribute":null,"group":null,"environment":"live","language":"de"}' />
-    <as24-tracking type="pagename" foo="bar" as24-tracking-value='{"country":"de","market":"all-webapp","category":"all","pageid":"home","layer":"","attribute":null,"group":null,"environment":"live","language":"de"}' />
-    <as24-tracking type="pagename" country="de" market="all-webapp" category="all" />
+    <as24-tracking type="pagename" country="de" market="all-webapp" category="all" pageid="demo"></as24-tracking>
+    <as24-tracking type="pagename" as24-tracking-value='{"country":"de","market":"all-webapp","category":"all","pageid":"demo","layer":"","attribute":null,"group":null,"environment":"test","language":"de"}'></as24-tracking>
+    <as24-tracking type="pagename" foo="bar" as24-tracking-value='{"country":"de","market":"all-webapp","category":"all","pageid":"demo","layer":"","attribute":null,"group":null,"environment":"test","language":"de"}'></as24-tracking>
+    <as24-tracking type="pagename" country="de" market="all-webapp" category="all" pageid="demo"></as24-tracking>
 
     <!--
     //to user uppercase chars in attribute names, you need to replace them with a leading -
@@ -29,31 +29,31 @@
     // e.g. '-x' in the attribute name is replaced with 'X'
     ut.push(['gtm', 'set', {'classified_customerID': 'test', 'notification_ID': ''}]);
     -->
-    <as24-tracking type="gtm" action="set" classified_customer-i-d="test" notification_-i-d="" />
+    <as24-tracking type="gtm" action="set" classified_customer-i-d="test" notification_-i-d=""></as24-tracking>
 
     <!--
     ut.push(['gtm', 'click',{linkgroup:'HackList',linkid:'V1 (abundance): ' + itemId + '|' + abundance}]);
     -->
-    <as24-tracking type="gtm" action="click" as24-tracking-click-target="#myButton" linkgroup="HackList" linkid="V1 (abundance)" />
+    <as24-tracking type="gtm" action="click" as24-tracking-click-target="#myButton" linkgroup="HackList" linkid="V1 (abundance)"></as24-tracking>
     <button id="myButton">trackIt (gtm click tracking)</button>
 
     <!--
     ut.push(['gtm', 'pageview']);
     -->
-    <as24-tracking type="gtm" action="pageview" as24-tracking-click-target="#myButton2" />
+    <as24-tracking type="gtm" action="pageview" as24-tracking-click-target="#myButton2"></as24-tracking>
     <button id="myButton2">trackIt (gtm pageview)</button>
 
     <!--
-    ut.push(['pagename', {"country":"de","market":"all-webapp","category":"all","pageid":"home","layer":"","attribute":null,"group":null,"environment":"live","language":"de"}]);
+    ut.push(['pagename', {"country":"de","market":"all-webapp","category":"all","pageid":"home","layer":"","attribute":null,"group":null,"environment":"test","language":"de"}]);
     -->
-    <as24-tracking type="pagename" as24-tracking-click-target="#myButton3" as24-tracking-value='{"country":"de","market":"all-webapp","category":"all","pageid":"home","layer":"","attribute":null,"group":null,"environment":"live","language":"de"}' />
+    <as24-tracking type="pagename" as24-tracking-click-target="#myButton3" as24-tracking-value='{"country":"de","market":"all-webapp","category":"all","pageid":"home","layer":"","attribute":null,"group":null,"environment":"test","language":"de"}'></as24-tracking>
     <button id="myButton3">trackIt (gtm pagename)</button>
 
     <!--
     ut.push(['gtm', 'pageview']);
     -->
 
-    <as24-tracking type="gtm" action="pageview" />
+    <as24-tracking type="gtm" action="pageview"></as24-tracking>
 
 
     <!--
@@ -61,7 +61,7 @@
     ut.push(['dealerTatsu', 'listview', [281705316,281702707,281462097,281725748,237276348,281667368,281673373,281661776,281555953,281095563]]);
     -->
 
-    <as24-tracking type="dealerTatsu" action="listview" as24-tracking-value="[281705316,281702707,281462097,281725748,237276348,281667368,281673373,281661776,281555953,281095563]" />
+    <as24-tracking type="dealerTatsu" action="listview" as24-tracking-value="[281705316,281702707,281462097,281725748,237276348,281667368,281673373,281661776,281555953,281095563]"></as24-tracking>
     <as24-tracking type="dealerTatsu" action="detailview" as24-tracking-value="[286475820]"></as24-tracking>
 
 

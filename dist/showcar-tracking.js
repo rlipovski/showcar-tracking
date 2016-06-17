@@ -304,7 +304,7 @@
 	
 	module.exports = function (hostname) {
 	    var tld = hostname.split('.').pop();
-	    return tld === 'localhost' ? '' : containerIdsByTld[tld] || containerIdsByTld['com'];
+	    return tld === containerIdsByTld[tld] || containerIdsByTld['com'];
 	};
 
 /***/ },
@@ -920,8 +920,10 @@
 	        this.el = $(this);
 	        var values = this.getAdditionalProperties();
 	
-	        var type = this.el.attr('type');
-	        var action = this.el.attr('action');
+	        debugger;
+	
+	        var type = this.getAttribute('type');
+	        var action = this.getAttribute('action');
 	        var args = [type, action];
 	
 	        if (Object.keys(values).length > 0) {
@@ -932,11 +934,35 @@
 	            args.splice(1, 1);
 	        }
 	
-	        var clickTarget = this.el.attr('as24-tracking-click-target');
-	        if (clickTarget !== null && clickTarget !== '') {
-	            $(this.el.attr('as24-tracking-click-target')).on('click', function () {
-	                return _this.track(args);
-	            });
+	        var clickTarget = this.getAttribute('as24-tracking-click-target');
+	        if (clickTarget) {
+	            var elements = document.querySelectorAll(clickTarget);
+	            var _iteratorNormalCompletion = true;
+	            var _didIteratorError = false;
+	            var _iteratorError = undefined;
+	
+	            try {
+	                for (var _iterator = elements[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+	                    var element = _step.value;
+	
+	                    element.addEventListener('click', function () {
+	                        return _this.track(args);
+	                    });
+	                }
+	            } catch (err) {
+	                _didIteratorError = true;
+	                _iteratorError = err;
+	            } finally {
+	                try {
+	                    if (!_iteratorNormalCompletion && _iterator.return) {
+	                        _iterator.return();
+	                    }
+	                } finally {
+	                    if (_didIteratorError) {
+	                        throw _iteratorError;
+	                    }
+	                }
+	            }
 	        } else {
 	            this.track(args);
 	        }
@@ -944,11 +970,14 @@
 	    getAdditionalProperties: function getAdditionalProperties() {
 	        var _this2 = this;
 	
-	        var values = JSON.parse(this.el.attr('as24-tracking-value')) || {};
+	        var trackingValue = this.getAttribute('as24-tracking-value');
+	        var values = trackingValue ? JSON.parse(trackingValue) : {};
+	
 	        if (Array.isArray(values)) {
 	            return values;
 	        }
-	        return Array.prototype.slice.call(this.el[0].attributes).filter(function (element) {
+	
+	        return Array.prototype.slice.call(this.attributes).filter(function (element) {
 	            return !(_this2.reservedWords.indexOf(element.nodeName) > -1);
 	        }).reduce(function (prev, curr) {
 	            var attrName = _this2.decodeAttributeName(curr.nodeName);
