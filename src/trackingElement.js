@@ -1,5 +1,3 @@
-var $ = window.Zepto || window.$;
-
 var as24tracking = Object.assign(Object.create(HTMLElement.prototype), {
     el: null,
     inDev: false,
@@ -8,11 +6,7 @@ var as24tracking = Object.assign(Object.create(HTMLElement.prototype), {
     reservedWords: ['type', 'action', 'as24-tracking-value', 'as24-tracking-click-target'],
 
     createdCallback () {
-        this.el = $(this);
         var values = this.getAdditionalProperties();
-
-        debugger;
-
         var type = this.getAttribute('type');
         var action = this.getAttribute('action');
         var args = [type, action];

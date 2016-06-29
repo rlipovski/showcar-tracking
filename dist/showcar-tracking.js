@@ -905,8 +905,6 @@
 	
 	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 	
-	var $ = window.Zepto || window.$;
-	
 	var as24tracking = _extends(Object.create(HTMLElement.prototype), {
 	    el: null,
 	    inDev: false,
@@ -917,11 +915,7 @@
 	    createdCallback: function createdCallback() {
 	        var _this = this;
 	
-	        this.el = $(this);
 	        var values = this.getAdditionalProperties();
-	
-	        debugger;
-	
 	        var type = this.getAttribute('type');
 	        var action = this.getAttribute('action');
 	        var args = [type, action];
