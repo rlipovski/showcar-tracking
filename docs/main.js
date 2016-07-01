@@ -58,6 +58,7 @@
 	var gtm = __webpack_require__(2);
 	var dealer = __webpack_require__(19);
 	var dealerTatsu = __webpack_require__(20);
+	var dealerGtm = __webpack_require__(21);
 	
 	function processCommand(data) {
 	    var fn, args;
@@ -84,6 +85,12 @@
 	        if (typeof fn === 'function') {
 	            fn.apply(dealerTatsu, args);
 	        }
+	    } else if (data[0] === 'dealer-gtm') {
+	        fn = dealerGtm[data[1]];
+	        args = data.slice(2);
+	        if (typeof fn === 'function') {
+	            fn.apply(dealerGtm, args);
+	        }
 	    }
 	}
 	
@@ -98,7 +105,7 @@
 	    ut.forEach(processCommand);
 	}
 	
-	__webpack_require__(21);
+	__webpack_require__(22);
 	
 	module.exports = {
 	    gtm: gtm,
@@ -910,11 +917,33 @@
 /* 21 */
 /***/ function(module, exports) {
 
+	"use strict";
+	
+	var currentVehicles = [];
+	
+	function add(data) {
+	    currentVehicles.push(data);
+	}
+	
+	function commit() {
+	    window.dataLayer = window.dataLayer || [];
+	    window.dataLayer.push({
+	        list_productidsall: currentVehicles
+	    });
+	}
+	
+	module.exports = {
+	    add: add,
+	    commit: commit
+	};
+
+/***/ },
+/* 22 */
+/***/ function(module, exports) {
+
 	'use strict';
 	
 	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-	
-	var $ = window.Zepto || window.$;
 	
 	var as24tracking = _extends(Object.create(HTMLElement.prototype), {
 	    el: null,
@@ -926,11 +955,7 @@
 	    createdCallback: function createdCallback() {
 	        var _this = this;
 	
-	        this.el = $(this);
 	        var values = this.getAdditionalProperties();
-	
-	        debugger;
-	
 	        var type = this.getAttribute('type');
 	        var action = this.getAttribute('action');
 	        var args = [type, action];

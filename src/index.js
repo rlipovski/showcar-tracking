@@ -1,6 +1,7 @@
 var gtm = require('./gtm');
 var dealer = require('./dealer');
 var dealerTatsu = require('./dealerTatsu');
+var dealerGtm = require('./dealer-gtm');
 
 function processCommand(data) {
     var fn, args;
@@ -26,6 +27,12 @@ function processCommand(data) {
         args = data.slice(2);
         if (typeof fn === 'function') {
             fn.apply(dealerTatsu, args);
+        }
+    } else if (data[0] === 'dealer-gtm') {
+        fn = dealerGtm[data[1]];
+        args = data.slice(2);
+        if (typeof fn === 'function') {
+            fn.apply(dealerGtm, args);
         }
     }
 }

@@ -49,6 +49,7 @@
 	var gtm = __webpack_require__(1);
 	var dealer = __webpack_require__(18);
 	var dealerTatsu = __webpack_require__(19);
+	var dealerGtm = __webpack_require__(20);
 	
 	function processCommand(data) {
 	    var fn, args;
@@ -75,6 +76,12 @@
 	        if (typeof fn === 'function') {
 	            fn.apply(dealerTatsu, args);
 	        }
+	    } else if (data[0] === 'dealer-gtm') {
+	        fn = dealerGtm[data[1]];
+	        args = data.slice(2);
+	        if (typeof fn === 'function') {
+	            fn.apply(dealerGtm, args);
+	        }
 	    }
 	}
 	
@@ -89,7 +96,7 @@
 	    ut.forEach(processCommand);
 	}
 	
-	__webpack_require__(20);
+	__webpack_require__(21);
 	
 	module.exports = {
 	    gtm: gtm,
@@ -899,6 +906,30 @@
 
 /***/ },
 /* 20 */
+/***/ function(module, exports) {
+
+	"use strict";
+	
+	var currentVehicles = [];
+	
+	function add(data) {
+	    currentVehicles.push(data);
+	}
+	
+	function commit() {
+	    window.dataLayer = window.dataLayer || [];
+	    window.dataLayer.push({
+	        list_productidsall: currentVehicles
+	    });
+	}
+	
+	module.exports = {
+	    add: add,
+	    commit: commit
+	};
+
+/***/ },
+/* 21 */
 /***/ function(module, exports) {
 
 	'use strict';
