@@ -1,5 +1,4 @@
 var as24tracking = Object.assign(Object.create(HTMLElement.prototype), {
-    el: null,
     inDev: false,
     supportedActions: ['set', 'click', 'pageview'],
     supportedTypes: ['gtm', 'pagename'],
@@ -22,8 +21,9 @@ var as24tracking = Object.assign(Object.create(HTMLElement.prototype), {
         var clickTarget = this.getAttribute('as24-tracking-click-target');
         if (clickTarget) {
             var elements = document.querySelectorAll(clickTarget);
-            for (let element of elements) {
-                element.addEventListener('click', () => this.track(args));
+
+            for(var i=0; i < elements.length; i++) {
+                elements[i].addEventListener('click', () => this.track(args));
             }
         } else {
             this.track(args);
@@ -61,7 +61,6 @@ var as24tracking = Object.assign(Object.create(HTMLElement.prototype), {
             ut.push(args);
         }
     }
-
 });
 
 try {

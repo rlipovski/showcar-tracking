@@ -921,6 +921,8 @@
 	    window.dataLayer.push({
 	        list_productidsall: currentVehicles
 	    });
+	
+	    currentVehicles.length = 0;
 	}
 	
 	module.exports = {
@@ -937,7 +939,6 @@
 	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 	
 	var as24tracking = _extends(Object.create(HTMLElement.prototype), {
-	    el: null,
 	    inDev: false,
 	    supportedActions: ['set', 'click', 'pageview'],
 	    supportedTypes: ['gtm', 'pagename'],
