@@ -22,7 +22,7 @@ var as24tracking = Object.assign(Object.create(HTMLElement.prototype), {
         if (clickTarget) {
             var elements = document.querySelectorAll(clickTarget);
 
-            for(var i=0; i < elements.length; i++) {
+            for (var i=0; i < elements.length; i++) {
                 elements[i].addEventListener('click', () => this.track(args));
             }
         } else {
