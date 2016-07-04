@@ -922,6 +922,7 @@
 	var currentVehicles = [];
 	
 	function add(data) {
+	    console.log(data);
 	    currentVehicles.push(data);
 	}
 	
@@ -930,6 +931,10 @@
 	    window.dataLayer.push({
 	        list_productidsall: currentVehicles
 	    });
+	
+	    console.log(currentVehicles);
+	
+	    currentVehicles = [];
 	}
 	
 	module.exports = {
@@ -946,7 +951,6 @@
 	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 	
 	var as24tracking = _extends(Object.create(HTMLElement.prototype), {
-	    el: null,
 	    inDev: false,
 	    supportedActions: ['set', 'click', 'pageview'],
 	    supportedTypes: ['gtm', 'pagename'],
@@ -971,31 +975,11 @@
 	        var clickTarget = this.getAttribute('as24-tracking-click-target');
 	        if (clickTarget) {
 	            var elements = document.querySelectorAll(clickTarget);
-	            var _iteratorNormalCompletion = true;
-	            var _didIteratorError = false;
-	            var _iteratorError = undefined;
 	
-	            try {
-	                for (var _iterator = elements[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-	                    var element = _step.value;
-	
-	                    element.addEventListener('click', function () {
-	                        return _this.track(args);
-	                    });
-	                }
-	            } catch (err) {
-	                _didIteratorError = true;
-	                _iteratorError = err;
-	            } finally {
-	                try {
-	                    if (!_iteratorNormalCompletion && _iterator.return) {
-	                        _iterator.return();
-	                    }
-	                } finally {
-	                    if (_didIteratorError) {
-	                        throw _iteratorError;
-	                    }
-	                }
+	            for (var i = 0; i < elements.length; i++) {
+	                elements[i].addEventListener('click', function () {
+	                    return _this.track(args);
+	                });
 	            }
 	        } else {
 	            this.track(args);

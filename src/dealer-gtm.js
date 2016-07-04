@@ -10,7 +10,7 @@ function commit() {
         list_productidsall: currentVehicles
     });
 
-    currentVehicles.length = 0;
+    currentVehicles = [];
 }
 
 module.exports = {
