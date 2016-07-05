@@ -104,9 +104,24 @@ Custom element way:
 ```html
 <as24-tracking type="dealer" action="listview" as24-tracking-value="[281705316,281702707,281462097,281725748,237276348,281667368,281673373,281661776,281555953,281095563]"/>
 ```
-    
+
 JavaScript way:
 
 ```javascript
 ut.push(['dealer', 'listview', [281705316,281702707,281462097,281725748,237276348,281667368,281673373,281661776,281555953,281095563]]);
+```
+
+Aggregated Dealer Tracking (e.g. on list page):
+
+If you want to make sure to only send out one request for more than one tracking item you can use the dealer tracking this way:
+
+```html
+<as24-tracking type="dealer-gtm" action="add" as24-tracking-value='{ "id": 123, "guid": "asdsad-sd-f23-4-2", "tier": "t20" }'></as24-tracking>
+<as24-tracking type="dealer-gtm" action="add" as24-tracking-value='{ "id": 123, "guid": "asdsad-sd-f23-4-2", "tier": "t20" }'></as24-tracking>
+<as24-tracking type="dealer-gtm" action="add" as24-tracking-value='{ "id": 123, "guid": "asdsad-sd-f23-4-2", "tier": "t20" }'></as24-tracking>
+<as24-tracking type="dealer-gtm" action="add" as24-tracking-value='{ "id": 123, "guid": "asdsad-sd-f23-4-2", "tier": "t20" }'></as24-tracking>
+<as24-tracking type="dealer-gtm" action="add" as24-tracking-value='{ "id": 123, "guid": "asdsad-sd-f23-4-2", "tier": "t20" }'></as24-tracking>
+<as24-tracking type="dealer-gtm" action="add" as24-tracking-value='{ "id": 123, "guid": "asdsad-sd-f23-4-2", "tier": "t20" }'></as24-tracking>
+<as24-tracking type="dealer-gtm" action="add" as24-tracking-value='{ "id": 123, "guid": "asdsad-sd-f23-4-2", "tier": "t20" }'></as24-tracking>
+<as24-tracking type="dealer-gtm" action="commit"></as24-tracking>
 ```
