@@ -12,5 +12,5 @@ var containerIdsByTld = {
 
 module.exports = function(hostname) {
     var tld = hostname.split('.').pop();
-    return tld === containerIdsByTld[tld] || containerIdsByTld['com'];
+    return containerIdsByTld[tld] || containerIdsByTld['com'];
 };
