@@ -2,8 +2,8 @@ var getContainerId = require('../src/gtm/getGtmContainerId');
 
 describe('Selecting the appropritate GTM container ID', function() {
 
-    it('localhost - empty string since it doesn\'t have any', function() {
-        expect(getContainerId('localhost')).to.equal('');
+    it('to default to the .com container', function() {
+        expect(getContainerId('')).to.equal('GTM-KWX9NX');
     });
 
     it('m.autoscout24.de', function() {
