@@ -7,7 +7,6 @@ var containerIdsByTld = {
     'fr': 'GTM-PD93LD',
     'it': 'GTM-WTCSNR',
     'nl': 'GTM-TW48BJ',
-    'ru': 'GTM-PDC65Z',
     'com': 'GTM-KWX9NX'
 };
 
