@@ -305,13 +305,12 @@
 	    'fr': 'GTM-PD93LD',
 	    'it': 'GTM-WTCSNR',
 	    'nl': 'GTM-TW48BJ',
-	    'ru': 'GTM-PDC65Z',
 	    'com': 'GTM-KWX9NX'
 	};
 	
 	module.exports = function (hostname) {
 	    var tld = hostname.split('.').pop();
-	    return tld === containerIdsByTld[tld] || containerIdsByTld['com'];
+	    return containerIdsByTld[tld] || containerIdsByTld['com'];
 	};
 
 /***/ },
@@ -794,7 +793,7 @@
 	        return key + '=' + encodeURIComponent(params[key]);
 	    }).join('&');
 	
-	    new Image().src = 'http://tracking.autoscout24.com/parser.ashx?' + paramsStr;
+	    new Image().src = 'https://tracking.autoscout24.com/parser.ashx?' + paramsStr;
 	}
 	
 	module.exports = {
@@ -867,7 +866,7 @@
 	        return key + '=' + encodeURIComponent(params[key]);
 	    }).join('&');
 	
-	    new Image().src = 'http://tracking.autoscout24.com/parser.ashx?' + paramsStr;
+	    new Image().src = 'https://tracking.autoscout24.com/parser.ashx?' + paramsStr;
 	}
 	
 	module.exports = {
@@ -913,7 +912,6 @@
 	var currentVehicles = [];
 	
 	function add(data) {
-	    console.log(data);
 	    currentVehicles.push(data);
 	}
 	
@@ -923,9 +921,7 @@
 	        list_productidsall: currentVehicles
 	    });
 	
-	    console.log(currentVehicles);
-	
-	    currentVehicles.length = 0;
+	    currentVehicles = [];
 	}
 	
 	module.exports = {

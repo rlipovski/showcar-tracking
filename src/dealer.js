@@ -11,7 +11,7 @@ function sendRequest(params) {
         return key + '=' + encodeURIComponent(params[key]);
     }).join('&');
 
-    new Image().src = 'http://tracking.autoscout24.com/parser.ashx?' + paramsStr;
+    new Image().src = 'https://tracking.autoscout24.com/parser.ashx?' + paramsStr;
 }
 
 module.exports = {
