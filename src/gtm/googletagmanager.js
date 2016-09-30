@@ -1,4 +1,5 @@
 var dataLayer = window.dataLayer = window.dataLayer || [];
+var useNewArrayLogic = window.location.href.indexOf('tracking-arrays=true') >= 0;
 
 module.exports = {
     loadContainer: function(containerId) {
@@ -27,7 +28,9 @@ module.exports = {
         var args = [].slice.call(arguments);
         args.map(function(data) {
             for (var key in data) {
-                data[key] = toLower(data[key]);
+                data[key] = useNewArrayLogic
+                                ? data[key],
+                                : toLower(data[key]);
             }
 
             return data;
