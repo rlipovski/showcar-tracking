@@ -29,7 +29,7 @@ module.exports = {
         args.map(function(data) {
             for (var key in data) {
                 data[key] = useNewArrayLogic
-                                ? data[key],
+                                ? data[key]
                                 : toLower(data[key]);
             }
 
