@@ -18,8 +18,8 @@ module.exports = function(grunt) {
         eslint: loadConfig("eslint")
     });
 
-    grunt.registerTask("build", ["webpack:default"]);
     grunt.registerTask("docs", ["webpack:docs"]);
+    grunt.registerTask("build", ["webpack:default", "docs"]);
 
     grunt.registerTask("default", ["build"]);
 

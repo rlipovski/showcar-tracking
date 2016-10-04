@@ -243,7 +243,7 @@
 
 	'use strict';
 	
-	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 	
 	module.exports = function isObject(obj) {
 	    var type = typeof obj === 'undefined' ? 'undefined' : _typeof(obj);
@@ -257,6 +257,7 @@
 	'use strict';
 	
 	var dataLayer = window.dataLayer = window.dataLayer || [];
+	var useNewArrayLogic = window.location.href.indexOf('tracking-arrays=true') >= 0;
 	
 	module.exports = {
 	    loadContainer: function loadContainer(containerId) {
@@ -283,9 +284,12 @@
 	        }
 	
 	        var args = [].slice.call(arguments);
+	
 	        args.map(function (data) {
 	            for (var key in data) {
-	                data[key] = toLower(data[key]);
+	                if (!useNewArrayLogic || typeof data[key] === 'string') {
+	                    data[key] = toLower(data[key]);
+	                }
 	            }
 	
 	            return data;
@@ -314,13 +318,12 @@
 	    'fr': 'GTM-PD93LD',
 	    'it': 'GTM-WTCSNR',
 	    'nl': 'GTM-TW48BJ',
-	    'ru': 'GTM-PDC65Z',
 	    'com': 'GTM-KWX9NX'
 	};
 	
 	module.exports = function (hostname) {
 	    var tld = hostname.split('.').pop();
-	    return tld === containerIdsByTld[tld] || containerIdsByTld['com'];
+	    return containerIdsByTld[tld] || containerIdsByTld['com'];
 	};
 
 /***/ },
@@ -708,7 +711,7 @@
 	
 	'use strict';
 	
-	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 	
 	var stringifyPrimitive = function stringifyPrimitive(v) {
 	  switch (typeof v === 'undefined' ? 'undefined' : _typeof(v)) {
@@ -803,7 +806,7 @@
 	        return key + '=' + encodeURIComponent(params[key]);
 	    }).join('&');
 	
-	    new Image().src = 'http://tracking.autoscout24.com/parser.ashx?' + paramsStr;
+	    new Image().src = 'https://tracking.autoscout24.com/parser.ashx?' + paramsStr;
 	}
 	
 	module.exports = {
@@ -876,7 +879,7 @@
 	        return key + '=' + encodeURIComponent(params[key]);
 	    }).join('&');
 	
-	    new Image().src = 'http://tracking.autoscout24.com/parser.ashx?' + paramsStr;
+	    new Image().src = 'https://tracking.autoscout24.com/parser.ashx?' + paramsStr;
 	}
 	
 	module.exports = {
@@ -922,7 +925,6 @@
 	var currentVehicles = [];
 	
 	function add(data) {
-	    console.log(data);
 	    currentVehicles.push(data);
 	}
 	
@@ -931,8 +933,6 @@
 	    window.dataLayer.push({
 	        list_productidsall: currentVehicles
 	    });
-	
-	    console.log(currentVehicles);
 	
 	    currentVehicles = [];
 	}

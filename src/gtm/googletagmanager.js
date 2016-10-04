@@ -26,11 +26,12 @@ module.exports = {
         }
 
         var args = [].slice.call(arguments);
+
         args.map(function(data) {
             for (var key in data) {
-                data[key] = useNewArrayLogic
-                                ? data[key]
-                                : toLower(data[key]);
+                if (!useNewArrayLogic || typeof data[key] === 'string') {
+                    data[key] = toLower(data[key]);
+                }
             }
 
             return data;
