@@ -1,3 +1,5 @@
+![](http://img.badgesize.io/AutoScout24/showcar-tracking/master/dist/showcar-tracking.js?label=js_size_gzip&compression=gzip)
+
 # showcar-tracking
 
 Tracking library for ShowCar-based pages.
