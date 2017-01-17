@@ -18,7 +18,7 @@ function generateCommonParams(data) {
     }
 
     var commonPageName = [mergedPagename.country, mergedPagename.market, mergedPagename.category, mergedPagename.group, mergedPagename.pageid]
-        .filter(function (x) {
+        .filter(function(x) {
             return x;
         })
         .join('/');
@@ -71,6 +71,17 @@ function trackPageview(data) {
         firstPageview = false;
     } else {
         gtm.push({ event: 'pageview' });
+    }
+
+    if (window.location.href.indexOf('/ergebnisse') > 0) {
+        var numPageViews = dataLayer.filter(x => x.event === 'pageview' || x.event === 'data_ready').length;
+        var numProductIdsAll = dataLayer.filter(x => 'list_productidsall' in x).length;
+
+        if (numPageViews !== numProductIdsAll) {
+            setTimeout(function() {
+                throw new Error('Mismatch in pageviews and list_productidsall, pv: ' + numPageViews + ', lp: ' + numProductIdsAll);
+            });
+        }
     }
 }
 
