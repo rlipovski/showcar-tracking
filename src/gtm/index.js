@@ -76,10 +76,12 @@ function trackPageview(data) {
     if (window.location.href.indexOf('/ergebnisse') > 0) {
         var numPageViews = dataLayer.filter(x => x.event === 'pageview' || x.event === 'data_ready').length;
         var numProductIdsAll = dataLayer.filter(x => 'list_productidsall' in x).length;
+        var numGalleryViews = dataLayer.filter(x => x.common_pageName === 'de/vm/uc/list|gallery').length;
+        var numRealPageViews = numPageViews - numGalleryViews;
 
-        if (numPageViews !== numProductIdsAll) {
+        if (numRealPageViews !== numProductIdsAll) {
             setTimeout(function() {
-                throw new Error('Mismatch in pageviews and list_productidsall, pv: ' + numPageViews + ', lp: ' + numProductIdsAll);
+                throw new Error('Mismatch in pageviews and list_productidsall, pv: ' + numRealPageViews + ', lp: ' + numProductIdsAll);
             });
         }
     }
