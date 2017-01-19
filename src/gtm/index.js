@@ -79,7 +79,7 @@ function trackPageview(data) {
         var numOtherPageViews = dataLayer.filter(x => 'common_pageName' in x && (x.common_pageName !== 'de/vm/uc/list' && x.common_pageName !== 'de/vm/moto/list')).length;
         var numRealPageViews = numPageViews - numOtherPageViews;
 
-        if (numRealPageViews !== numProductIdsAll) {
+        if (numRealPageViews > numProductIdsAll) {
             setTimeout(function() {
                 throw new Error('Mismatch in pageviews and list_productidsall, pv: ' + numRealPageViews + ', lp: ' + numProductIdsAll);
             });
