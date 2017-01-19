@@ -76,8 +76,8 @@ function trackPageview(data) {
     if (window.location.href.indexOf('/ergebnisse') > 0) {
         var numPageViews = dataLayer.filter(x => x.event === 'pageview' || x.event === 'data_ready').length;
         var numProductIdsAll = dataLayer.filter(x => 'list_productidsall' in x).length;
-        var numGalleryViews = dataLayer.filter(x => x.common_pageName === 'de/vm/uc/list|gallery').length;
-        var numRealPageViews = numPageViews - numGalleryViews;
+        var numOtherPageViews = dataLayer.filter(x => 'common_pageName' in x && (x.common_pageName !== 'de/vm/uc/list' && x.common_pageName !== 'de/vm/moto/list')).length;
+        var numRealPageViews = numPageViews - numOtherPageViews;
 
         if (numRealPageViews !== numProductIdsAll) {
             setTimeout(function() {
