@@ -55,64 +55,74 @@
 
 	'use strict';
 	
-	var gtm = __webpack_require__(2);
-	var dealer = __webpack_require__(19);
-	var dealerTatsu = __webpack_require__(20);
-	var dealerGtm = __webpack_require__(21);
+	if (location.hash.indexOf('tracking-off=true') < 0) {
+	    var gtm;
+	    var dealer;
+	    var dealerTatsu;
+	    var dealerGtm;
+	    var ut;
 	
-	function processCommand(data) {
-	    var fn, args;
+	    (function () {
+	        var processCommand = function processCommand(data) {
+	            var fn, args;
 	
-	    if (data[0] === 'pagename') {
-	        gtm.setPagename(data[1]);
-	    }
+	            if (data[0] === 'pagename') {
+	                gtm.setPagename(data[1]);
+	            }
 	
-	    if (data[0] === 'gtm') {
-	        fn = gtm[data[1]];
-	        args = data.slice(2);
-	        if (typeof fn === 'function') {
-	            fn.apply(gtm, args);
+	            if (data[0] === 'gtm') {
+	                fn = gtm[data[1]];
+	                args = data.slice(2);
+	                if (typeof fn === 'function') {
+	                    fn.apply(gtm, args);
+	                }
+	            } else if (data[0] === 'dealer') {
+	                fn = dealer[data[1]];
+	                args = data.slice(2);
+	                if (typeof fn === 'function') {
+	                    fn.apply(dealer, args);
+	                }
+	            } else if (data[0] === 'dealerTatsu') {
+	                fn = dealerTatsu[data[1]];
+	                args = data.slice(2);
+	                if (typeof fn === 'function') {
+	                    fn.apply(dealerTatsu, args);
+	                }
+	            } else if (data[0] === 'dealer-gtm') {
+	                fn = dealerGtm[data[1]];
+	                args = data.slice(2);
+	                if (typeof fn === 'function') {
+	                    fn.apply(dealerGtm, args);
+	                }
+	            }
+	        };
+	
+	        gtm = __webpack_require__(2);
+	        dealer = __webpack_require__(19);
+	        dealerTatsu = __webpack_require__(20);
+	        dealerGtm = __webpack_require__(21);
+	        ut = window.ut || (window.ut = []);
+	
+	
+	        if (ut.push === Array.prototype.push) {
+	            ut.push = function () {
+	                Array.prototype.push.apply(window.ut, arguments);
+	                processCommand.apply({}, arguments);
+	            };
+	
+	            ut.forEach(processCommand);
 	        }
-	    } else if (data[0] === 'dealer') {
-	        fn = dealer[data[1]];
-	        args = data.slice(2);
-	        if (typeof fn === 'function') {
-	            fn.apply(dealer, args);
-	        }
-	    } else if (data[0] === 'dealerTatsu') {
-	        fn = dealerTatsu[data[1]];
-	        args = data.slice(2);
-	        if (typeof fn === 'function') {
-	            fn.apply(dealerTatsu, args);
-	        }
-	    } else if (data[0] === 'dealer-gtm') {
-	        fn = dealerGtm[data[1]];
-	        args = data.slice(2);
-	        if (typeof fn === 'function') {
-	            fn.apply(dealerGtm, args);
-	        }
-	    }
+	
+	        __webpack_require__(22);
+	
+	        module.exports = {
+	            gtm: gtm,
+	            dealer: dealer,
+	            dealerTatsu: dealerTatsu,
+	            ut: ut
+	        };
+	    })();
 	}
-	
-	var ut = window.ut || (window.ut = []);
-	
-	if (ut.push === Array.prototype.push) {
-	    ut.push = function () {
-	        Array.prototype.push.apply(window.ut, arguments);
-	        processCommand.apply({}, arguments);
-	    };
-	
-	    ut.forEach(processCommand);
-	}
-	
-	__webpack_require__(22);
-	
-	module.exports = {
-	    gtm: gtm,
-	    dealer: dealer,
-	    dealerTatsu: dealerTatsu,
-	    ut: ut
-	};
 
 /***/ },
 /* 2 */
@@ -183,15 +193,17 @@
 	
 	    gtm.push(generateCommonParams(data));
 	
-	    if (firstPageview) {
-	        gtm.loadContainer(containerId);
-	        __webpack_require__(9).updateCampaignCookie();
-	        gtm.push({ event: 'common_data_ready' });
-	        gtm.push({ event: 'data_ready' });
-	        firstPageview = false;
-	    } else {
-	        gtm.push({ event: 'pageview' });
-	    }
+	    setTimeout(function () {
+	        if (firstPageview) {
+	            gtm.loadContainer(containerId);
+	            __webpack_require__(9).updateCampaignCookie();
+	            gtm.push({ event: 'common_data_ready' });
+	            gtm.push({ event: 'data_ready' });
+	            firstPageview = false;
+	        } else {
+	            gtm.push({ event: 'pageview' });
+	        }
+	    }, 10);
 	}
 	
 	module.exports = {
@@ -243,7 +255,7 @@
 
 	'use strict';
 	
-	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
 	
 	module.exports = function isObject(obj) {
 	    var type = typeof obj === 'undefined' ? 'undefined' : _typeof(obj);
@@ -711,7 +723,7 @@
 	
 	'use strict';
 	
-	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
 	
 	var stringifyPrimitive = function stringifyPrimitive(v) {
 	  switch (typeof v === 'undefined' ? 'undefined' : _typeof(v)) {
