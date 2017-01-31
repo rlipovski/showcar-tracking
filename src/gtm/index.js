@@ -63,28 +63,17 @@ function trackPageview(data) {
 
     gtm.push(generateCommonParams(data));
 
-    if (firstPageview) {
-        gtm.loadContainer(containerId);
-        require('./campaign').updateCampaignCookie();
-        gtm.push({ event: 'common_data_ready' });
-        gtm.push({ event: 'data_ready' });
-        firstPageview = false;
-    } else {
-        gtm.push({ event: 'pageview' });
-    }
-
-    if (window.location.href.indexOf('/ergebnisse') > 0) {
-        var numPageViews = dataLayer.filter(x => x.event === 'pageview' || x.event === 'data_ready').length;
-        var numProductIdsAll = dataLayer.filter(x => 'list_productidsall' in x).length;
-        var numOtherPageViews = dataLayer.filter(x => 'common_pageName' in x && (x.common_pageName !== 'de/vm/uc/list' && x.common_pageName !== 'de/vm/moto/list')).length;
-        var numRealPageViews = numPageViews - numOtherPageViews;
-
-        if (numRealPageViews > numProductIdsAll) {
-            setTimeout(function() {
-                throw new Error('Mismatch in pageviews and list_productidsall, pv: ' + numRealPageViews + ', lp: ' + numProductIdsAll);
-            });
+    setTimeout(function() {
+        if (firstPageview) {
+            gtm.loadContainer(containerId);
+            require('./campaign').updateCampaignCookie();
+            gtm.push({ event: 'common_data_ready' });
+            gtm.push({ event: 'data_ready' });
+            firstPageview = false;
+        } else {
+            gtm.push({ event: 'pageview' });
         }
-    }
+    }, 10);
 }
 
 module.exports = {
