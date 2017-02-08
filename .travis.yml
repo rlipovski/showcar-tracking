@@ -26,4 +26,4 @@ script:
 
 after_success:
   # only run for master branch, we don't want to release PRs and other branches
-#   - 'if [ "$TRAVIS_PULL_REQUEST" != "true" ] && [ "$TRAVIS_BRANCH" == "master" ]; then bash ./travis_release.sh; fi'
+  - 'if [ "$TRAVIS_PULL_REQUEST" != "true" ] && [ "$TRAVIS_BRANCH" == "master" ]; then bash ./travis_release.sh; fi'
