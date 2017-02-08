@@ -1,0 +1,29 @@
+language: node_js
+node_js:
+  - "7"
+
+cache:
+  yarn: true
+  directories:
+    - node_modules
+
+env:
+  global:
+    - secure: "frC8FyUg6+EAo3MyhEtZt53XC30Z4qLdzK+5lGPyXxzgyyMMt9/EKrXpXGv4HW5yWn5Qouvjhb5fW4BGGB7EtpoEsGNhRHfLZF6NNakRm2BlH+gZQGI2IGjMomWJESyOk3uvd4mgZFREd8qtl+Cn1kYBdUGarWFmVpB7XjdwjRaXME8NxBHhPTz910EL0QkhliFXriHlpAee8noOBwUvyLRe8CUS5kik6PpZxKyIG51niFjMVsDW/sq4P3+bVV2duwlY+o4RvyD+36uZhqIIpGMH+QNAO46uKzj6wqCksPU3bW8hw12yAjXDb3FI3ABBg10qZLzlDWyGer4bXIs0THMlVKqD1XoxecRoQR35w5JInNDkiPjZbvwCOel4YqOgrzhcfc6mQ2xuVuZqUby/IZ+D452Az8IP5cbhW6H75fEJ06G27MLBECLpg4o1Zy5ooaXCvfFcsq2q2ZsjE/eDJ5b+Ih7EhNVi16sIaUK06CQA4nZbdRjmJZ1wzansB6kLWO7m0N8H7/YaZkTrjIvp1Z2Lkk8VKs8mUayy0S3/5x/LMeoD2KLp96hziFls44Bq6B1CMU/Cz6YUbsvDu4e+pXdXQdPYOSpI90hioFxnzzXqlLi+fFLmJmcc/aONbv84D6NCGuchJqV32WGL8lmpFG5IBQexAosOkfVVVtGeHmQ="
+
+branches:
+  only:
+  - master
+
+notifications:
+  email: false
+
+before_install:
+#   - openssl aes-256-cbc -K $encrypted_bd2fe598737f_key -iv $encrypted_bd2fe598737f_iv -in travis-release-key.enc -out release_key -d
+
+script:
+  - npm run build
+
+after_success:
+  # only run for master branch, we don't want to release PRs and other branches
+#   - 'if [ "$TRAVIS_PULL_REQUEST" != "true" ] && [ "$TRAVIS_BRANCH" == "master" ]; then bash ./travis_release.sh; fi'
