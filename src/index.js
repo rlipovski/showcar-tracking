@@ -58,3 +58,5 @@ if (location.hash.indexOf('tracking-off=true') < 0) {
         ut: ut
     };
 }
+
+window.__temp__test__ = 1;
