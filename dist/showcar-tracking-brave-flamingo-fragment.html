@@ -1,0 +1,9 @@
+<!--# if expr="$arg_sc_tracking_master_ver" -->
+<!--# include virtual="/assets/external/brave-flamingo/master/$arg_sc_tracking_master_ver/index.html" -->
+<!--# elif expr="$arg_sc_tracking_develop" -->
+<!--# include virtual="/assets/external/brave-flamingo/develop/latest/index.html" -->
+<!--# elif expr="$arg_sc_tracking_develop_ver" -->
+<!--# include virtual="/assets/external/brave-flamingo/develop/$arg_sc_tracking_develop_ver/index.html" -->
+<!--# else -->
+<!--# include virtual="/assets/external/brave-flamingo/master/latest/index.html" -->
+<!--# endif -->
