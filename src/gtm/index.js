@@ -14,7 +14,7 @@ function generateCommonParams(data) {
     var mergedPagename = merge({}, pagename, data);
 
     if (!mergedPagename || !mergedPagename.country || !mergedPagename.market || !mergedPagename.category || !mergedPagename.pageid) {
-        throw new Error('Incorrect pagename');
+        throw new Error('Incorrect pagename, ' + JSON.stringify(mergedPagename));
     }
 
     var commonPageName = [mergedPagename.country, mergedPagename.market, mergedPagename.category, mergedPagename.group, mergedPagename.pageid]
