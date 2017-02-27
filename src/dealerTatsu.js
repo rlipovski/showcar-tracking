@@ -45,5 +45,13 @@ module.exports = {
             source: 'mc',
             url: location.href
         });
+    },
+
+    print: function(id) {
+        sendRequest({
+            id: id,
+            source: 'pr',
+            url: location.href
+        });
     }
 };
