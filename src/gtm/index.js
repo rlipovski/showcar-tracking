@@ -14,13 +14,13 @@ function generateCommonParams(data) {
     var mergedPagename = merge({}, pagename, data);
 
     if (!mergedPagename || !mergedPagename.country || !mergedPagename.market || !mergedPagename.category || !mergedPagename.pageid) {
-        console.log(101, mergedPagename);
-        console.log(102, mergedPagename.country);
-        console.log(103, mergedPagename.market);
-        console.log(104, mergedPagename.category);
-        console.log(105, mergedPagename.pageid);
         throw new Error('Incorrect pagename, ' + JSON.stringify(mergedPagename));
     }
+    console.log(101, mergedPagename);
+    console.log(102, mergedPagename.country);
+    console.log(103, mergedPagename.market);
+    console.log(104, mergedPagename.category);
+    console.log(105, mergedPagename.pageid);
 
     var commonPageName = [mergedPagename.country, mergedPagename.market, mergedPagename.category, mergedPagename.group, mergedPagename.pageid]
         .filter(function(x) {
