@@ -56,72 +56,64 @@
 	'use strict';
 	
 	if (location.hash.indexOf('tracking-off=true') < 0) {
-	    var gtm;
-	    var dealer;
-	    var dealerTatsu;
-	    var dealerGtm;
-	    var ut;
+	    var processCommand = function processCommand(data) {
+	        var fn, args;
 	
-	    (function () {
-	        var processCommand = function processCommand(data) {
-	            var fn, args;
-	
-	            if (data[0] === 'pagename') {
-	                gtm.setPagename(data[1]);
-	            }
-	
-	            if (data[0] === 'gtm') {
-	                fn = gtm[data[1]];
-	                args = data.slice(2);
-	                if (typeof fn === 'function') {
-	                    fn.apply(gtm, args);
-	                }
-	            } else if (data[0] === 'dealer') {
-	                fn = dealer[data[1]];
-	                args = data.slice(2);
-	                if (typeof fn === 'function') {
-	                    fn.apply(dealer, args);
-	                }
-	            } else if (data[0] === 'dealerTatsu') {
-	                fn = dealerTatsu[data[1]];
-	                args = data.slice(2);
-	                if (typeof fn === 'function') {
-	                    fn.apply(dealerTatsu, args);
-	                }
-	            } else if (data[0] === 'dealer-gtm') {
-	                fn = dealerGtm[data[1]];
-	                args = data.slice(2);
-	                if (typeof fn === 'function') {
-	                    fn.apply(dealerGtm, args);
-	                }
-	            }
-	        };
-	
-	        gtm = __webpack_require__(2);
-	        dealer = __webpack_require__(19);
-	        dealerTatsu = __webpack_require__(20);
-	        dealerGtm = __webpack_require__(21);
-	        ut = window.ut || (window.ut = []);
-	
-	
-	        if (ut.push === Array.prototype.push) {
-	            ut.push = function () {
-	                Array.prototype.push.apply(window.ut, arguments);
-	                processCommand.apply({}, arguments);
-	            };
-	
-	            ut.forEach(processCommand);
+	        if (data[0] === 'pagename') {
+	            gtm.setPagename(data[1]);
 	        }
 	
-	        __webpack_require__(22);
+	        if (data[0] === 'gtm') {
+	            fn = gtm[data[1]];
+	            args = data.slice(2);
+	            if (typeof fn === 'function') {
+	                fn.apply(gtm, args);
+	            }
+	        } else if (data[0] === 'dealer') {
+	            fn = dealer[data[1]];
+	            args = data.slice(2);
+	            if (typeof fn === 'function') {
+	                fn.apply(dealer, args);
+	            }
+	        } else if (data[0] === 'dealerTatsu') {
+	            fn = dealerTatsu[data[1]];
+	            args = data.slice(2);
+	            if (typeof fn === 'function') {
+	                fn.apply(dealerTatsu, args);
+	            }
+	        } else if (data[0] === 'dealer-gtm') {
+	            fn = dealerGtm[data[1]];
+	            args = data.slice(2);
+	            if (typeof fn === 'function') {
+	                fn.apply(dealerGtm, args);
+	            }
+	        }
+	    };
 	
-	        module.exports = {
-	            gtm: gtm,
-	            dealer: dealer,
-	            dealerTatsu: dealerTatsu,
-	            ut: ut
+	    var gtm = __webpack_require__(2);
+	    var dealer = __webpack_require__(19);
+	    var dealerTatsu = __webpack_require__(20);
+	    var dealerGtm = __webpack_require__(21);
+	
+	    var ut = window.ut || (window.ut = []);
+	
+	    if (ut.push === Array.prototype.push) {
+	        ut.push = function () {
+	            Array.prototype.push.apply(window.ut, arguments);
+	            processCommand.apply({}, arguments);
 	        };
-	    })();
+	
+	        ut.forEach(processCommand);
+	    }
+	
+	    __webpack_require__(22);
+	
+	    module.exports = {
+	        gtm: gtm,
+	        dealer: dealer,
+	        dealerTatsu: dealerTatsu,
+	        ut: ut
+	    };
 	}
 
 /***/ },
@@ -146,6 +138,11 @@
 	    var mergedPagename = merge({}, pagename, data);
 	
 	    if (!mergedPagename || !mergedPagename.country || !mergedPagename.market || !mergedPagename.category || !mergedPagename.pageid) {
+	        console.log(101, mergedPagename);
+	        console.log(102, mergedPagename.country);
+	        console.log(103, mergedPagename.market);
+	        console.log(104, mergedPagename.category);
+	        console.log(105, mergedPagename.pageid);
 	        throw new Error('Incorrect pagename, ' + JSON.stringify(mergedPagename));
 	    }
 	
@@ -923,6 +920,14 @@
 	        sendRequest({
 	            id: id,
 	            source: 'mc',
+	            url: location.href
+	        });
+	    },
+	
+	    print: function print(id) {
+	        sendRequest({
+	            id: id,
+	            source: 'pr',
 	            url: location.href
 	        });
 	    }
