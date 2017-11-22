@@ -4,7 +4,7 @@ var as24tracking = Object.assign(Object.create(HTMLElement.prototype), {
     supportedTypes: ['gtm', 'pagename'],
     reservedWords: ['type', 'action', 'as24-tracking-value', 'as24-tracking-click-target'],
 
-    createdCallback () {
+    attachedCallback () {
         var values = this.getAdditionalProperties();
         var type = this.getAttribute('type');
         var action = this.getAttribute('action');
