@@ -56,64 +56,54 @@
 	'use strict';
 	
 	if (location.hash.indexOf('tracking-off=true') < 0) {
-	    var processCommand = function processCommand(data) {
-	        var fn, args;
+	    var gtm;
+	    var dealerGtm;
+	    var ut;
 	
-	        if (data[0] === 'pagename') {
-	            gtm.setPagename(data[1]);
-	        }
+	    (function () {
+	        var processCommand = function processCommand(data) {
+	            var fn, args;
 	
-	        if (data[0] === 'gtm') {
-	            fn = gtm[data[1]];
-	            args = data.slice(2);
-	            if (typeof fn === 'function') {
-	                fn.apply(gtm, args);
+	            if (data[0] === 'pagename') {
+	                gtm.setPagename(data[1]);
 	            }
-	        } else if (data[0] === 'dealer') {
-	            fn = dealer[data[1]];
-	            args = data.slice(2);
-	            if (typeof fn === 'function') {
-	                fn.apply(dealer, args);
-	            }
-	        } else if (data[0] === 'dealerTatsu') {
-	            fn = dealerTatsu[data[1]];
-	            args = data.slice(2);
-	            if (typeof fn === 'function') {
-	                fn.apply(dealerTatsu, args);
-	            }
-	        } else if (data[0] === 'dealer-gtm') {
-	            fn = dealerGtm[data[1]];
-	            args = data.slice(2);
-	            if (typeof fn === 'function') {
-	                fn.apply(dealerGtm, args);
-	            }
-	        }
-	    };
 	
-	    var gtm = __webpack_require__(2);
-	    var dealer = __webpack_require__(19);
-	    var dealerTatsu = __webpack_require__(20);
-	    var dealerGtm = __webpack_require__(21);
-	
-	    var ut = window.ut || (window.ut = []);
-	
-	    if (ut.push === Array.prototype.push) {
-	        ut.push = function () {
-	            Array.prototype.push.apply(window.ut, arguments);
-	            processCommand.apply({}, arguments);
+	            if (data[0] === 'gtm') {
+	                fn = gtm[data[1]];
+	                args = data.slice(2);
+	                if (typeof fn === 'function') {
+	                    fn.apply(gtm, args);
+	                }
+	            } else if (data[0] === 'dealer-gtm') {
+	                fn = dealerGtm[data[1]];
+	                args = data.slice(2);
+	                if (typeof fn === 'function') {
+	                    fn.apply(dealerGtm, args);
+	                }
+	            }
 	        };
 	
-	        ut.forEach(processCommand);
-	    }
+	        gtm = __webpack_require__(2);
+	        dealerGtm = __webpack_require__(19);
+	        ut = window.ut || (window.ut = []);
 	
-	    __webpack_require__(22);
 	
-	    module.exports = {
-	        gtm: gtm,
-	        dealer: dealer,
-	        dealerTatsu: dealerTatsu,
-	        ut: ut
-	    };
+	        if (ut.push === Array.prototype.push) {
+	            ut.push = function () {
+	                Array.prototype.push.apply(window.ut, arguments);
+	                processCommand.apply({}, arguments);
+	            };
+	
+	            ut.forEach(processCommand);
+	        }
+	
+	        __webpack_require__(20);
+	
+	        module.exports = {
+	            gtm: gtm,
+	            ut: ut
+	        };
+	    })();
 	}
 
 /***/ },
@@ -791,145 +781,6 @@
 
 /***/ },
 /* 19 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	var cookies = __webpack_require__(11);
-	var visitorId = cookies.read('as24Visitor');
-	
-	function sendRequest(params) {
-	    if (!visitorId) {
-	        return;
-	    }
-	
-	    params.visitor = visitorId;
-	    params.ticks = +new Date();
-	
-	    var paramsStr = Object.keys(params).map(function (key) {
-	        return key + '=' + encodeURIComponent(params[key]);
-	    }).join('&');
-	
-	    new Image().src = 'https://tracking.autoscout24.com/parser.ashx?' + paramsStr;
-	}
-	
-	module.exports = {
-	    listview: function listview(ids) {
-	        sendRequest({
-	            id: ids.join('|'),
-	            source: 'lv',
-	            url: '/'
-	        });
-	    },
-	
-	    detailview: function detailview(url) {
-	        var parser = document.createElement('a');
-	        parser.href = url || location.href;
-	        var matches = parser.pathname.match(/-([\d]+)$/i);
-	
-	        if (matches && matches.length === 2) {
-	            var id = matches[1];
-	            sendRequest({
-	                source: 'pv',
-	                url: url || location.href,
-	                id: id
-	            });
-	        }
-	    },
-	
-	    topcarview: function topcarview() {
-	        var matches = location.pathname.match(/-([\d]+)$/i);
-	        if (matches && matches.length === 2) {
-	            var id = matches[1];
-	            sendRequest({
-	                source: 'ha',
-	                url: location.href,
-	                id: id
-	            });
-	        }
-	    },
-	
-	    phone: function phone() {
-	        var matches = location.pathname.match(/-([\d]+)$/i);
-	        if (matches && matches.length === 2) {
-	            var id = matches[1];
-	            sendRequest({
-	                source: 'mc',
-	                url: location.href,
-	                id: id
-	            });
-	        }
-	    }
-	};
-
-/***/ },
-/* 20 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	var cookies = __webpack_require__(11);
-	var visitorId = cookies.read('as24Visitor');
-	
-	function sendRequest(params) {
-	    if (!visitorId) {
-	        return;
-	    }
-	
-	    params.visitor = visitorId;
-	    params.ticks = +new Date();
-	
-	    var paramsStr = Object.keys(params).map(function (key) {
-	        return key + '=' + encodeURIComponent(params[key]);
-	    }).join('&');
-	
-	    new Image().src = 'https://tracking.autoscout24.com/parser.ashx?' + paramsStr;
-	}
-	
-	module.exports = {
-	    listview: function listview(ids) {
-	        sendRequest({
-	            id: ids.join('|'),
-	            source: 'lv',
-	            url: location.href
-	        });
-	    },
-	
-	    detailview: function detailview(id) {
-	        sendRequest({
-	            id: id,
-	            source: 'pv',
-	            url: location.href
-	        });
-	    },
-	
-	    topcarview: function topcarview(id) {
-	        sendRequest({
-	            id: id,
-	            source: 'ha',
-	            url: location.href
-	        });
-	    },
-	
-	    phone: function phone(id) {
-	        sendRequest({
-	            id: id,
-	            source: 'mc',
-	            url: location.href
-	        });
-	    },
-	
-	    print: function print(id) {
-	        sendRequest({
-	            id: id,
-	            source: 'pr',
-	            url: location.href
-	        });
-	    }
-	};
-
-/***/ },
-/* 21 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -955,7 +806,7 @@
 	};
 
 /***/ },
-/* 22 */
+/* 20 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -968,7 +819,7 @@
 	    supportedTypes: ['gtm', 'pagename'],
 	    reservedWords: ['type', 'action', 'as24-tracking-value', 'as24-tracking-click-target'],
 	
-	    createdCallback: function createdCallback() {
+	    attachedCallback: function attachedCallback() {
 	        var _this = this;
 	
 	        var values = this.getAdditionalProperties();
