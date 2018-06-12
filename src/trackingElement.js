@@ -58,7 +58,8 @@ var as24tracking = Object.assign(Object.create(HTMLElement.prototype), {
         if (this.inDev) {
             console.log(args);
         } else {
-            ut.push(args);
+            window.ut = window.ut || [];
+            window.ut.push(args);
         }
     }
 });
