@@ -14,13 +14,13 @@ function generateCommonParams(data) {
     var mergedPagename = merge({}, pagename, data);
 
     if (!mergedPagename || !mergedPagename.country || !mergedPagename.market || !mergedPagename.category || !mergedPagename.pageid || !mergedPagename.environment) {
-        if (mergedPagename.environment === "test" || mergedPagename.environment === "live") {
+        if (mergedPagename.environment !== "test" || mergedPagename.environment !== "live") {
             throw new Error('Invalid environment type, ' + JSON.stringify(mergedPagename))
         }
         throw new Error('Incorrect pagename, ' + JSON.stringify(mergedPagename));
     }
 
-    var commonPageName = [mergedPagename.country, mergedPagename.market, mergedPagename.category, mergedPagename.group, mergedPagename.pageid, mergedPagename.environment]
+    var commonPageName = [mergedPagename.country, mergedPagename.market, mergedPagename.category, mergedPagename.group, mergedPagename.pageid]
         .filter(function(x) {
             return x;
         })
