@@ -127,7 +127,10 @@
 	function generateCommonParams(data) {
 	    var mergedPagename = merge({}, pagename, data);
 	
-	    if (!mergedPagename || !mergedPagename.country || !mergedPagename.market || !mergedPagename.category || !mergedPagename.pageid) {
+	    if (!mergedPagename || !mergedPagename.country || !mergedPagename.market || !mergedPagename.category || !mergedPagename.pageid || !mergedPagename.environment) {
+	        if (mergedPagename.environment !== "test" || mergedPagename.environment !== "live") {
+	            throw new Error('Invalid environment type, ' + JSON.stringify(mergedPagename));
+	        }
 	        throw new Error('Incorrect pagename, ' + JSON.stringify(mergedPagename));
 	    }
 	
@@ -145,8 +148,8 @@
 	        common_category: mergedPagename.category,
 	        common_pageid: mergedPagename.pageid,
 	        common_pageName: commonPageName,
+	        common_environment: mergedPagename.environment,
 	
-	        common_environment: mergedPagename.environment || '',
 	        common_language: mergedPagename.language || '',
 	        common_group: mergedPagename.group || '',
 	        common_layer: mergedPagename.layer || '',
@@ -878,7 +881,8 @@
 	        if (this.inDev) {
 	            console.log(args);
 	        } else {
-	            ut.push(args);
+	            window.ut = window.ut || [];
+	            window.ut.push(args);
 	        }
 	    }
 	});
