@@ -35,20 +35,20 @@ pipeline {
       }
     }
 
-    // stage('DeployProd') {
-    //   when {
-    //     beforeAgent true
-    //     branch 'release'
-    //   }
+    stage('DeployProd') {
+      when {
+        beforeAgent true
+        branch 'release'
+      }
 
-    //   environment {
-    //     BRANCH="master"
-    //   }
+      environment {
+        BRANCH="master"
+      }
 
-    //   agent { node { label 'deploy-as24dev' } }
-    //   steps {
-    //     sh './deploy.sh'
-    //   }
-    // }
+      agent { node { label 'deploy-as24dev' } }
+      steps {
+        sh './deploy.sh'
+      }
+    }
   }
 }
