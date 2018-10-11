@@ -25,7 +25,7 @@ pipeline {
       }
 
       environment {
-        BRANCH="test"
+        BRANCH="develop"
       }
 
       agent { node { label 'deploy-as24dev-node' } }
