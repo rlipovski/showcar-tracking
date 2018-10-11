@@ -27,7 +27,7 @@ upload_to_s3() {
     # aws --region "eu-west-1" s3 cp dist "s3://as24-assets-eu-west-1/${SERVICE}/" --recursive --exclude "*" --include "*-fragment.html" --cache-control "max-age=300" --acl public-read
 }
 
-node --version
+npm install phantomjs-prebuilt 
 npm i
 npm run build
 
