@@ -1,7 +1,7 @@
 module.exports = {
     options: {
         configFile: 'karma.conf.js',
-        browsers: ['PhantomJS', 'Chrome', 'IE9', 'Firefox']
+        browsers: ['Chrome', 'IE9', 'Firefox']
     },
     dist: {
         singleRun: true,
@@ -13,6 +13,6 @@ module.exports = {
     },
     dev: {
         reporters: 'spec',
-        browsers: ['PhantomJS']
+        browsers: ['Chrome']
     }
 };
