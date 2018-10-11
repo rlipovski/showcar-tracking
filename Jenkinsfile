@@ -5,6 +5,7 @@ pipeline {
   options {
     timestamps() // Enable timestamps in the build log
     disableConcurrentBuilds() // The pipeline should run only once at a time
+    preserveStashes(buildCount: 5)
   }
 
   // Environment variables for all stages
@@ -18,7 +19,21 @@ pipeline {
   }
 
   stages {
-    stage('Build + DeployDev') {
+    stage('Build') {
+      when {
+        beforeAgent true
+        branch 'master'
+      }
+
+      agent { node { label 'deploy-as24dev-node' } }
+
+      steps {
+        sh './build.sh'
+        stash includes: 'dist/**/*', name: 'output-dist'
+      }
+    }
+
+    stage('DeployDev') {
       when {
         beforeAgent true
         branch 'master'
@@ -31,40 +46,26 @@ pipeline {
       agent { node { label 'deploy-as24dev-node' } }
 
       steps {
-        sh './build.sh'
-      }
-    }
-
-    stage('DeployDev') {
-      when {
-        beforeAgent true
-        branch 'release'
-      }
-
-      environment {
-        BRANCH="develop"
-      }
-
-      agent { node { label 'deploy-as24dev' } }
-
-      steps {
-        sh './deploy.sh'
+        unstash 'output-dist'
+        sh './deploy2.sh'
       }
     }
 
     // stage('DeployProd') {
     //   when {
     //     beforeAgent true
-    //     branch 'release'
+    //     branch 'master'
     //   }
 
     //   environment {
     //     BRANCH="master"
     //   }
 
-    //   agent { node { label 'deploy-as24dev' } }
+    //   agent { node { label 'deploy-as24dev-node' } }
+
     //   steps {
-    //     sh './deploy.sh'
+    //     unstash 'output-dist'
+    //     sh './deploy2.sh'
     //   }
     // }
   }
