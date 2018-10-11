@@ -18,6 +18,23 @@ pipeline {
   }
 
   stages {
+    stage('Build + DeployDev') {
+      when {
+        beforeAgent true
+        branch 'master'
+      }
+
+      environment {
+        BRANCH="test"
+      }
+
+      agent { node { label 'deploy-as24dev-node' } }
+
+      steps {
+        sh './build.sh'
+      }
+    }
+
     stage('DeployDev') {
       when {
         beforeAgent true
