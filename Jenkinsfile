@@ -47,7 +47,7 @@ pipeline {
 
       steps {
         unstash 'output-dist'
-        sh './deploy2.sh'
+        sh './deploy.sh'
       }
     }
 
