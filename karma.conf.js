@@ -35,8 +35,6 @@ module.exports = function (config) {
             'karma-chai',
             'karma-sinon',
             require('karma-sinon'),
-            //'karma-sinon-chai',
-            'karma-phantomjs-launcher',
             'karma-chrome-launcher',
             'karma-firefox-launcher',
             'karma-ie-launcher',

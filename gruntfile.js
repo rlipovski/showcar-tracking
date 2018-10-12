@@ -20,6 +20,7 @@ module.exports = function(grunt) {
 
     grunt.registerTask("docs", ["webpack:docs"]);
     grunt.registerTask("build", ["webpack:default", "docs"]);
+    grunt.registerTask("test", ["karma"]);
 
     grunt.registerTask("default", ["build"]);
 
