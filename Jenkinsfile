@@ -51,22 +51,22 @@ pipeline {
       }
     }
 
-    // stage('DeployProd') {
-    //   when {
-    //     beforeAgent true
-    //     branch 'master'
-    //   }
+    stage('DeployProd') {
+      when {
+        beforeAgent true
+        branch 'master'
+      }
 
-    //   environment {
-    //     BRANCH="master"
-    //   }
+      environment {
+        BRANCH="master"
+      }
 
-    //   agent { node { label 'deploy-as24dev-node' } }
+      agent { node { label 'deploy-as24dev-node' } }
 
-    //   steps {
-    //     unstash 'output-dist'
-    //     sh './deploy2.sh'
-    //   }
-    // }
+      steps {
+        unstash 'output-dist'
+        sh './deploy.sh'
+      }
+    }
   }
 }
