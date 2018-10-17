@@ -64,11 +64,11 @@ pipeline {
         sh './deploy.sh'
       }
     }
+  }
 
-    post { 
-      failure { 
-          echo 'Pipeline failed 💣'
-      }
+  post { 
+    failure { 
+        echo 'Pipeline failed 💣'
     }
   }
 }
