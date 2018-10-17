@@ -12,10 +12,6 @@ pipeline {
   environment {
     AWS_DEFAULT_REGION="eu-west-1"
     SERVICE="brave-flamingo"
-    // USECASE="showcar-tracking"
-    // SEGMENT="cxp"
-    // TEAM="acquisition"
-    // VERTICAL="as24"
   }
 
   stages {
@@ -71,7 +67,7 @@ pipeline {
 
     post { 
       failure { 
-          echo 'Pipeline failed 💣''
+          echo 'Pipeline failed 💣'
       }
     }
   }
