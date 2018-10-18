@@ -24,7 +24,7 @@ pipeline {
       agent { node { label 'deploy-as24dev-node' } }
 
       steps {
-        sh './build.sh'
+        sh './deploy/build.sh'
         stash includes: 'dist/**/*', name: 'output-dist'
       }
     }
@@ -43,7 +43,7 @@ pipeline {
 
       steps {
         unstash 'output-dist'
-        sh './deploy.sh'
+        sh './deploy/deploy.sh'
       }
     }
 
@@ -61,7 +61,7 @@ pipeline {
 
       steps {
         unstash 'output-dist'
-        sh './deploy.sh'
+        sh './deploy/deploy.sh'
       }
     }
   }
