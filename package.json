@@ -41,7 +41,8 @@
     "matchdep": "^2.0.0",
     "mocha": "^5.2.0",
     "sinon": "^1.17.4",
-    "webpack": "^4.35.2",
+    "webpack": "^1.13.1",
+    "webpack-dev-server": "^3.1.14",
     "zepto-browserify": "^1.1.6-1"
   },
   "dependencies": {
