@@ -4,6 +4,12 @@
 
 Tracking library for ShowCar-based pages.
 
+## How to contribute
+
+- To check you changes run `npm run build`
+- To run test `npm run test`
+- To run localy testing page `serve docs` and open `http://localhost:3000`
+
 ## Track actions that cause page loads
 
 If you need to track a click on an element that will cause the browser to load another page, you should use
@@ -11,11 +17,10 @@ the query parameters ipl and ipc. As you can see here:
 
     http://www.autoscout24.de/auto-verkaufen/?ipc=cc:insertion-home&ipl=teaser
 
-* ipc: Group or positioning of a feature under test;
-* ipl: Describes the feature itself.
+- ipc: Group or positioning of a feature under test;
+- ipl: Describes the feature itself.
 
 Example: Tracking of the CMS box containing price estimation IPC: `home-cmsbox` IPL: `vehicle-evaluation`
-
 
 GTM will automatically take care of tracking the given values. You just have to insert the two parameters into the URL of the
 target of the action. e.g. in the href-attribute of a link.
@@ -27,10 +32,10 @@ To control tracking you use a set of attributes.
 
 There are a couple of common attributes that are used to control the behavior of the custom element:
 
-* type: type of tracking. Possible values are: `pagename`, `gtm` or `dealer`;
-* action: specific type of tracking. Possible values are: `click`, `set`, `pageview`, `listview`;
-* as24-tracking-value: JSON object with key-value pairs to use as bulk set (can be used in combination with attributes);
-* as24-tracking-click-target: target selector for click tracking.
+- type: type of tracking. Possible values are: `pagename`, `gtm` or `dealer`;
+- action: specific type of tracking. Possible values are: `click`, `set`, `pageview`, `listview`;
+- as24-tracking-value: JSON object with key-value pairs to use as bulk set (can be used in combination with attributes);
+- as24-tracking-click-target: target selector for click tracking.
 
 All other attributes are used as key-value pairs for tracking. They override values given by the `as24-tracking-value` attribute.
 
@@ -41,7 +46,7 @@ Example: `group_myTestAttribute` is written as `<as24-tracking group_my-test-att
 
 Custom element way:
 
-```html    
+```html
 <as24-tracking type="pagename" country="de" market="all-webapp" category="all"></as24-tracking>
 <as24-tracking type="gtm" action="pageview"></as24-tracking>
 ```
@@ -49,18 +54,21 @@ Custom element way:
 JavaScript way:
 
 ```javascript
-ut.push(['pagename', {
-        "country": "de",
-        "market": "all-webapp",
-        "category": "all",
-        "pageid": "home",
-        "layer": "",
-        "attribute": null,
-        "group": null,
-        "environment": "live",
-        "language":"de"
-    }]);
-ut.push(['gtm', 'pageview']);    
+ut.push([
+  "pagename",
+  {
+    country: "de",
+    market: "all-webapp",
+    category: "all",
+    pageid: "home",
+    layer: "",
+    attribute: null,
+    group: null,
+    environment: "live",
+    language: "de"
+  }
+]);
+ut.push(["gtm", "pageview"]);
 ```
 
 ### Click tracking (without page load)
@@ -68,16 +76,26 @@ ut.push(['gtm', 'pageview']);
 Custom element way:
 
 ```html
-<as24-tracking type="gtm" action="click" as24-tracking-click-target="#myButton" linkgroup="HackList" linkid="V1 (abundance)"></as24-tracking>
+<as24-tracking
+  type="gtm"
+  action="click"
+  as24-tracking-click-target="#myButton"
+  linkgroup="HackList"
+  linkid="V1 (abundance)"
+></as24-tracking>
 ```
-    
+
 JavaScript way:
 
 ```javascript
-ut.push(['gtm', 'click', {
-    linkgroup: 'HackList',
-    linkid: 'V1 (abundance): ' + itemId + '|' + abundance
-}]);
+ut.push([
+  "gtm",
+  "click",
+  {
+    linkgroup: "HackList",
+    linkid: "V1 (abundance): " + itemId + "|" + abundance
+  }
+]);
 ```
 
 ### Extended click tracking (e.g. for page load)
@@ -96,7 +114,7 @@ Custom element way:
 JavaScript way:
 
 ```javascript
-ut.push(['gtm', 'set', {'test_experiments.tt5': 'NetGross:Variation1'}]);
+ut.push(["gtm", "set", { "test_experiments.tt5": "NetGross:Variation1" }]);
 ```
 
 ### Dealer tracking
@@ -104,13 +122,21 @@ ut.push(['gtm', 'set', {'test_experiments.tt5': 'NetGross:Variation1'}]);
 Custom element way:
 
 ```html
-<as24-tracking type="dealer" action="listview" as24-tracking-value="[281705316,281702707,281462097,281725748,237276348,281667368,281673373,281661776,281555953,281095563]"/>
+<as24-tracking
+  type="dealer"
+  action="listview"
+  as24-tracking-value="[281705316,281702707,281462097,281725748,237276348,281667368,281673373,281661776,281555953,281095563]"
+/>
 ```
 
 JavaScript way:
 
 ```javascript
-ut.push(['dealer', 'listview', [281705316,281702707,281462097,281725748,237276348,281667368,281673373,281661776,281555953,281095563]]);
+ut.push([
+  "dealer",
+  "listview",
+  [281705316, 281702707, 281462097, 281725748, 237276348, 281667368, 281673373, 281661776, 281555953, 281095563]
+]);
 ```
 
 Aggregated Dealer Tracking (e.g. on list page):
@@ -118,12 +144,40 @@ Aggregated Dealer Tracking (e.g. on list page):
 If you want to make sure to only send out one request for more than one tracking item you can use the dealer tracking this way:
 
 ```html
-<as24-tracking type="dealer-gtm" action="add" as24-tracking-value='{ "id": 123, "guid": "asdsad-sd-f23-4-2", "tier": "t20" }'></as24-tracking>
-<as24-tracking type="dealer-gtm" action="add" as24-tracking-value='{ "id": 123, "guid": "asdsad-sd-f23-4-2", "tier": "t20" }'></as24-tracking>
-<as24-tracking type="dealer-gtm" action="add" as24-tracking-value='{ "id": 123, "guid": "asdsad-sd-f23-4-2", "tier": "t20" }'></as24-tracking>
-<as24-tracking type="dealer-gtm" action="add" as24-tracking-value='{ "id": 123, "guid": "asdsad-sd-f23-4-2", "tier": "t20" }'></as24-tracking>
-<as24-tracking type="dealer-gtm" action="add" as24-tracking-value='{ "id": 123, "guid": "asdsad-sd-f23-4-2", "tier": "t20" }'></as24-tracking>
-<as24-tracking type="dealer-gtm" action="add" as24-tracking-value='{ "id": 123, "guid": "asdsad-sd-f23-4-2", "tier": "t20" }'></as24-tracking>
-<as24-tracking type="dealer-gtm" action="add" as24-tracking-value='{ "id": 123, "guid": "asdsad-sd-f23-4-2", "tier": "t20" }'></as24-tracking>
+<as24-tracking
+  type="dealer-gtm"
+  action="add"
+  as24-tracking-value='{ "id": 123, "guid": "asdsad-sd-f23-4-2", "tier": "t20" }'
+></as24-tracking>
+<as24-tracking
+  type="dealer-gtm"
+  action="add"
+  as24-tracking-value='{ "id": 123, "guid": "asdsad-sd-f23-4-2", "tier": "t20" }'
+></as24-tracking>
+<as24-tracking
+  type="dealer-gtm"
+  action="add"
+  as24-tracking-value='{ "id": 123, "guid": "asdsad-sd-f23-4-2", "tier": "t20" }'
+></as24-tracking>
+<as24-tracking
+  type="dealer-gtm"
+  action="add"
+  as24-tracking-value='{ "id": 123, "guid": "asdsad-sd-f23-4-2", "tier": "t20" }'
+></as24-tracking>
+<as24-tracking
+  type="dealer-gtm"
+  action="add"
+  as24-tracking-value='{ "id": 123, "guid": "asdsad-sd-f23-4-2", "tier": "t20" }'
+></as24-tracking>
+<as24-tracking
+  type="dealer-gtm"
+  action="add"
+  as24-tracking-value='{ "id": 123, "guid": "asdsad-sd-f23-4-2", "tier": "t20" }'
+></as24-tracking>
+<as24-tracking
+  type="dealer-gtm"
+  action="add"
+  as24-tracking-value='{ "id": 123, "guid": "asdsad-sd-f23-4-2", "tier": "t20" }'
+></as24-tracking>
 <as24-tracking type="dealer-gtm" action="commit"></as24-tracking>
 ```
