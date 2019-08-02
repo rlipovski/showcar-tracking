@@ -80,6 +80,35 @@ Custom element way:
   type="gtm"
   action="click"
   as24-tracking-click-target="#myButton"
+  category="myProject"
+  eventaction="Login"
+  label="B2C"
+></as24-tracking>
+```
+
+JavaScript way:
+
+```javascript
+ut.push([
+  "gtm",
+  "click",
+  {
+    category: "myProject",
+    eventaction: 'Login',
+    label: 'B2C'
+  }
+]);
+```
+
+### DEPRECATED click tracking
+
+Custom element way:
+
+```html
+<as24-tracking
+  type="gtm"
+  action="click"
+  as24-tracking-click-target="#myButton"
   linkgroup="HackList"
   linkid="V1 (abundance)"
 ></as24-tracking>

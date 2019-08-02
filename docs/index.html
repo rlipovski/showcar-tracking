@@ -1,75 +1,119 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title></title>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/document-register-element/0.5.4/document-register-element.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/zepto/1.1.6/zepto.min.js"></script>
-    <script>window.ut = window.ut || [];</script>
+    <head>
+        <meta charset="UTF-8">
+        <title></title>
+
+        <script
+            src="https://cdnjs.cloudflare.com/ajax/libs/document-register-element/0.5.4/document-register-element.js">
+        </script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/zepto/1.1.6/zepto.min.js"></script>
+        <script>
+            window.ut = window.ut || [];
+        </script>
     </head>
+
     <body>
-<!--
+        <!--
     <as24-tracking ></as24-tracking>
 -->
 
-    <!--
+        <!--
     ut.push(['pagename', @Html.Raw(Json.Encode(new PageNameViewModel("vm-webapp", Model.ClassifiedType == ArticleType.Bike ? "moto" : "uc", "dealerratings")))]);
     ut.push(['pagename', {"country":"de","market":"all-webapp","category":"all","pageid":"home","layer":"","attribute":null,"group":null,"environment":"test","language":"de"}]);
     -->
 
-    <as24-tracking type="pagename" country="de" market="all-webapp" category="all" pageid="demo"></as24-tracking>
-    <as24-tracking type="pagename" as24-tracking-value='{"country":"de","market":"all-webapp","category":"all","pageid":"demo","layer":"","attribute":null,"group":null,"environment":"test","language":"de"}'></as24-tracking>
-    <as24-tracking type="pagename" foo="bar" as24-tracking-value='{"country":"de","market":"all-webapp","category":"all","pageid":"demo","layer":"","attribute":null,"group":null,"environment":"test","language":"de"}'></as24-tracking>
-    <as24-tracking type="pagename" country="de" market="all-webapp" category="all" pageid="demo"></as24-tracking>
+        <as24-tracking type="pagename" country="de" market="all-webapp" category="all" pageid="demo">
+        </as24-tracking>
+        <as24-tracking type="pagename"
+            as24-tracking-value='
+            {"country":"de","market":"all-webapp","category":"all","pageid":"demo","layer":"","attribute":null,"group":null,"environment":"test","language":"de"}'>
+        </as24-tracking>
+        <as24-tracking type="pagename" foo="bar"
+            as24-tracking-value='{"country":"de","market":"all-webapp","category":"all","pageid":"demo","layer":"","attribute":null,"group":null,"environment":"test","language":"de"}'>
+        </as24-tracking>
+        <as24-tracking type="pagename" country="de" market="all-webapp" category="all" pageid="demo"
+            as24-tracking-value='{"environment":"test"}'>
+        </as24-tracking>
 
-    <!--
+        <!--
     //to user uppercase chars in attribute names, you need to replace them with a leading -
     //the tracking library replaces the - AND the following char with its uppercase char
     // e.g. '-x' in the attribute name is replaced with 'X'
     ut.push(['gtm', 'set', {'classified_customerID': 'test', 'notification_ID': ''}]);
     -->
-    <as24-tracking type="gtm" action="set" classified_customer-i-d="test" notification_-i-d=""></as24-tracking>
+        <as24-tracking type="gtm" action="set" classified_customer-i-d="test" notification_-i-d=""></as24-tracking>
 
-    <!--
+        <!--
     ut.push(['gtm', 'click',{linkgroup:'HackList',linkid:'V1 (abundance): ' + itemId + '|' + abundance}]);
     -->
-    <as24-tracking type="gtm" action="click" as24-tracking-click-target="#myButton" linkgroup="HackList" linkid="V1 (abundance)"></as24-tracking>
-    <button id="myButton">trackIt (gtm click tracking)</button>
+        <as24-tracking type="gtm" action="click" as24-tracking-click-target="#myButton" linkgroup="HackList"
+            linkid="V1 (abundance)"></as24-tracking>
+        <button id="myButton">trackIt (DEPRECATED gtm click tracking with linkgroup)</button>
 
-    <!--
+        <!--
+        ut.push(['gtm', 'click',{category: 'my-project', eventaction: 'login', label: 'b2c'}]);
+        -->
+        <as24-tracking type="gtm" action="click" as24-tracking-click-target="#myNewButton" category="my-project"
+            eventaction="login" label="b2c"></as24-tracking>
+        <button id="myNewButton">trackIt (gtm click tracking with event_trigger)</button>
+
+        <!--
     ut.push(['gtm', 'pageview']);
     -->
-    <as24-tracking type="gtm" action="pageview" as24-tracking-click-target="#myButton2"></as24-tracking>
-    <button id="myButton2">trackIt (gtm pageview)</button>
+        <as24-tracking type="gtm" action="pageview" as24-tracking-click-target="#myButton2"></as24-tracking>
+        <button id="myButton2">trackIt (gtm pageview)</button>
 
-    <!--
+
+        <!--
     ut.push(['pagename', {"country":"de","market":"all-webapp","category":"all","pageid":"home","layer":"","attribute":null,"group":null,"environment":"test","language":"de"}]);
     -->
-    <as24-tracking type="pagename" as24-tracking-click-target="#myButton3" as24-tracking-value='{"country":"de","market":"all-webapp","category":"all","pageid":"home","layer":"","attribute":null,"group":null,"environment":"test","language":"de"}'></as24-tracking>
-    <button id="myButton3">trackIt (gtm pagename)</button>
+        <as24-tracking type="pagename" as24-tracking-click-target="#myButton3"
+            as24-tracking-value='{"country":"de","market":"all-webapp","category":"all","pageid":"home","layer":"","attribute":null,"group":null,"environment":"test","language":"de"}'>
+        </as24-tracking>
+        <button id="myButton3">trackIt (gtm pagename)</button>
 
-    <!--
+        <!--
     ut.push(['gtm', 'pageview']);
     -->
 
-    <as24-tracking type="gtm" action="set" as24-tracking-value='{"search_productIDs": [ "1234", "5678", "91202" ]}'></as24-tracking>
+        <as24-tracking type="gtm" action="set" as24-tracking-value='{"search_productIDs": [ "1234", "5678", "91202" ]}'>
+        </as24-tracking>
 
-    <as24-tracking type="gtm" action="pageview"></as24-tracking>
+        <as24-tracking type="gtm" action="pageview"></as24-tracking>
 
-    <as24-tracking type="dealer-gtm" action="add" as24-tracking-value='{ "id": 123, "guid": "asdsad-sd-f23-4-2", "tier": "t20" }'></as24-tracking>
-    <as24-tracking type="dealer-gtm" action="add" as24-tracking-value='{ "id": 123, "guid": "asdsad-sd-f23-4-2", "tier": "t20" }'></as24-tracking>
-    <as24-tracking type="dealer-gtm" action="add" as24-tracking-value='{ "id": 123, "guid": "asdsad-sd-f23-4-2", "tier": "t20" }'></as24-tracking>
-    <as24-tracking type="dealer-gtm" action="add" as24-tracking-value='{ "id": 123, "guid": "asdsad-sd-f23-4-2", "tier": "t20" }'></as24-tracking>
-    <as24-tracking type="dealer-gtm" action="add" as24-tracking-value='{ "id": 123, "guid": "asdsad-sd-f23-4-2", "tier": "t20" }'></as24-tracking>
-    <as24-tracking type="dealer-gtm" action="add" as24-tracking-value='{ "id": 123, "guid": "asdsad-sd-f23-4-2", "tier": "t20" }'></as24-tracking>
-    <as24-tracking type="dealer-gtm" action="commit"></as24-tracking>
+        <as24-tracking type="dealer-gtm" action="add"
+            as24-tracking-value='{ "id": 123, "guid": "asdsad-sd-f23-4-2", "tier": "t20" }'></as24-tracking>
+        <as24-tracking type="dealer-gtm" action="add"
+            as24-tracking-value='{ "id": 123, "guid": "asdsad-sd-f23-4-2", "tier": "t20" }'></as24-tracking>
+        <as24-tracking type="dealer-gtm" action="add"
+            as24-tracking-value='{ "id": 123, "guid": "asdsad-sd-f23-4-2", "tier": "t20" }'></as24-tracking>
+        <as24-tracking type="dealer-gtm" action="add"
+            as24-tracking-value='{ "id": 123, "guid": "asdsad-sd-f23-4-2", "tier": "t20" }'></as24-tracking>
+        <as24-tracking type="dealer-gtm" action="add"
+            as24-tracking-value='{ "id": 123, "guid": "asdsad-sd-f23-4-2", "tier": "t20" }'></as24-tracking>
+        <as24-tracking type="dealer-gtm" action="add"
+            as24-tracking-value='{ "id": 123, "guid": "asdsad-sd-f23-4-2", "tier": "t20" }'></as24-tracking>
+        <as24-tracking type="dealer-gtm" action="commit"></as24-tracking>
 
-    <script src="./main.js"></script>
-    <script>
-        $(document).ready(function() {
-            console.log('window.ut', window.ut);
-        });
-    </script>
+
+
+        <br /><br />
+        Tracking click of any of the 3 buttons with single as24-tracking:
+        <br />
+        <as24-tracking type="gtm" action="click" as24-tracking-click-target="button[data-track-any]"
+            category="my-project" eventaction="login" label="b2b"></as24-tracking>
+        <button data-track-any="1">trackIt1 (gtm click tracking)</button>
+        <button data-track-any="2">trackIt2 (gtm click tracking)</button>
+        <button data-track-any="3">trackIt3 (gtm click tracking)</button>
+
+        <script src="./main.js"></script>
+        <script>
+            $(document).ready(function () {
+                console.log('window.ut', window.ut);
+            });
+        </script>
     </body>
-    </html>
+
+</html>

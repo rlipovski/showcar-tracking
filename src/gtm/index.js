@@ -21,7 +21,7 @@ function generateCommonParams(data) {
     }
 
     var commonPageName = [mergedPagename.country, mergedPagename.market, mergedPagename.category, mergedPagename.group, mergedPagename.pageid]
-        .filter(function(x) {
+        .filter(function (x) {
             return x;
         })
         .join('/');
@@ -53,8 +53,21 @@ function generateCommonParams(data) {
 }
 
 function trackClick(params) {
-    gtm.push(generateCommonParams(params));
-    gtm.push({ event: 'click' });
+    if (params.category && params.eventaction) {
+        gtm.push({
+            event: 'event_trigger',
+            event_category: params.category,
+            event_action: params.eventaction,
+            event_label: params.label || '',
+            event_non_interaction: false
+        });
+    } else {
+        //DEPRECATED
+        gtm.push(generateCommonParams(params));
+        gtm.push({
+            event: 'click'
+        });
+    }
 }
 
 var firstPageview = true;
@@ -66,15 +79,21 @@ function trackPageview(data) {
 
     gtm.push(generateCommonParams(data));
 
-    setTimeout(function() {
+    setTimeout(function () {
         if (firstPageview) {
             gtm.loadContainer(containerId);
             require('./campaign').updateCampaignCookie();
-            gtm.push({ event: 'common_data_ready' });
-            gtm.push({ event: 'data_ready' });
+            gtm.push({
+                event: 'common_data_ready'
+            });
+            gtm.push({
+                event: 'data_ready'
+            });
             firstPageview = false;
         } else {
-            gtm.push({ event: 'pageview' });
+            gtm.push({
+                event: 'pageview'
+            });
         }
     }, 10);
 }

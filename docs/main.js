@@ -42,73 +42,67 @@
 /************************************************************************/
 /******/ ([
 /* 0 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	var tracking = __webpack_require__(1);
 	window.ut = tracking.ut || [];
 
-/***/ },
+/***/ }),
 /* 1 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	if (location.hash.indexOf('tracking-off=true') < 0) {
-	    var gtm;
-	    var dealerGtm;
-	    var ut;
+	    var processCommand = function processCommand(data) {
+	        var fn, args;
 	
-	    (function () {
-	        var processCommand = function processCommand(data) {
-	            var fn, args;
-	
-	            if (data[0] === 'pagename') {
-	                gtm.setPagename(data[1]);
-	            }
-	
-	            if (data[0] === 'gtm') {
-	                fn = gtm[data[1]];
-	                args = data.slice(2);
-	                if (typeof fn === 'function') {
-	                    fn.apply(gtm, args);
-	                }
-	            } else if (data[0] === 'dealer-gtm') {
-	                fn = dealerGtm[data[1]];
-	                args = data.slice(2);
-	                if (typeof fn === 'function') {
-	                    fn.apply(dealerGtm, args);
-	                }
-	            }
-	        };
-	
-	        gtm = __webpack_require__(2);
-	        dealerGtm = __webpack_require__(19);
-	        ut = window.ut || (window.ut = []);
-	
-	
-	        if (ut.push === Array.prototype.push) {
-	            ut.push = function () {
-	                Array.prototype.push.apply(window.ut, arguments);
-	                processCommand.apply({}, arguments);
-	            };
-	
-	            ut.forEach(processCommand);
+	        if (data[0] === 'pagename') {
+	            gtm.setPagename(data[1]);
 	        }
 	
-	        __webpack_require__(20);
+	        if (data[0] === 'gtm') {
+	            fn = gtm[data[1]];
+	            args = data.slice(2);
+	            if (typeof fn === 'function') {
+	                fn.apply(gtm, args);
+	            }
+	        } else if (data[0] === 'dealer-gtm') {
+	            fn = dealerGtm[data[1]];
+	            args = data.slice(2);
+	            if (typeof fn === 'function') {
+	                fn.apply(dealerGtm, args);
+	            }
+	        }
+	    };
 	
-	        module.exports = {
-	            gtm: gtm,
-	            ut: ut
+	    var gtm = __webpack_require__(2);
+	    var dealerGtm = __webpack_require__(19);
+	
+	    var ut = window.ut || (window.ut = []);
+	
+	    if (ut.push === Array.prototype.push) {
+	        ut.push = function () {
+	            Array.prototype.push.apply(window.ut, arguments);
+	            processCommand.apply({}, arguments);
 	        };
-	    })();
+	
+	        ut.forEach(processCommand);
+	    }
+	
+	    __webpack_require__(20);
+	
+	    module.exports = {
+	        gtm: gtm,
+	        ut: ut
+	    };
 	}
 
-/***/ },
+/***/ }),
 /* 2 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
@@ -165,8 +159,21 @@
 	}
 	
 	function trackClick(params) {
-	    gtm.push(generateCommonParams(params));
-	    gtm.push({ event: 'click' });
+	    if (params.category && params.eventaction) {
+	        gtm.push({
+	            event: 'event_trigger',
+	            event_category: params.category,
+	            event_action: params.eventaction,
+	            event_label: params.label || '',
+	            event_non_interaction: false
+	        });
+	    } else {
+	        //DEPRECATED
+	        gtm.push(generateCommonParams(params));
+	        gtm.push({
+	            event: 'click'
+	        });
+	    }
 	}
 	
 	var firstPageview = true;
@@ -182,11 +189,17 @@
 	        if (firstPageview) {
 	            gtm.loadContainer(containerId);
 	            __webpack_require__(9).updateCampaignCookie();
-	            gtm.push({ event: 'common_data_ready' });
-	            gtm.push({ event: 'data_ready' });
+	            gtm.push({
+	                event: 'common_data_ready'
+	            });
+	            gtm.push({
+	                event: 'data_ready'
+	            });
 	            firstPageview = false;
 	        } else {
-	            gtm.push({ event: 'pageview' });
+	            gtm.push({
+	                event: 'pageview'
+	            });
 	        }
 	    }, 10);
 	}
@@ -200,9 +213,9 @@
 	    click: trackClick
 	};
 
-/***/ },
+/***/ }),
 /* 3 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
@@ -214,9 +227,9 @@
 	    return extend.apply(this, args);
 	};
 
-/***/ },
+/***/ }),
 /* 4 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
@@ -234,9 +247,9 @@
 	    return obj;
 	};
 
-/***/ },
+/***/ }),
 /* 5 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	'use strict';
 	
@@ -247,9 +260,9 @@
 	    return !!obj && (type === 'function' || type === 'object');
 	};
 
-/***/ },
+/***/ }),
 /* 6 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	'use strict';
 	
@@ -300,9 +313,9 @@
 	    return val && ('' + val).toLowerCase();
 	}
 
-/***/ },
+/***/ }),
 /* 7 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	'use strict';
 	
@@ -323,9 +336,9 @@
 	    return containerIdsByTld[tld] || containerIdsByTld['com'];
 	};
 
-/***/ },
+/***/ }),
 /* 8 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	'use strict';
 	
@@ -335,9 +348,9 @@
 	    session_viewport: viewportWidth >= 994 ? 'l' : viewportWidth >= 768 ? 'm' : viewportWidth >= 480 ? 's' : 'xs'
 	};
 
-/***/ },
+/***/ }),
 /* 9 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
@@ -356,9 +369,9 @@
 	    updateCampaignCookie: updateCampaignCookie
 	};
 
-/***/ },
+/***/ }),
 /* 10 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
@@ -477,9 +490,9 @@
 	    write: writeCookie
 	};
 
-/***/ },
+/***/ }),
 /* 11 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	"use strict";
 	
@@ -536,9 +549,9 @@
 	    remove: removeCookie
 	};
 
-/***/ },
+/***/ }),
 /* 12 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	'use strict';
 	
@@ -548,9 +561,9 @@
 	    return toString.call(obj) === '[object Date]';
 	};
 
-/***/ },
+/***/ }),
 /* 13 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
@@ -583,18 +596,18 @@
 	    }
 	};
 
-/***/ },
+/***/ }),
 /* 14 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	exports.decode = exports.parse = __webpack_require__(15);
 	exports.encode = exports.stringify = __webpack_require__(16);
 
-/***/ },
+/***/ }),
 /* 15 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	// Copyright Joyent, Inc. and other Node contributors.
 	//
@@ -681,9 +694,9 @@
 	  return obj;
 	};
 
-/***/ },
+/***/ }),
 /* 16 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	// Copyright Joyent, Inc. and other Node contributors.
 	//
@@ -750,9 +763,9 @@
 	  return encodeURIComponent(stringifyPrimitive(name)) + eq + encodeURIComponent(stringifyPrimitive(obj));
 	};
 
-/***/ },
+/***/ }),
 /* 17 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
@@ -770,9 +783,9 @@
 	    return -1;
 	};
 
-/***/ },
+/***/ }),
 /* 18 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	'use strict';
 	
@@ -782,9 +795,9 @@
 	    return toString.call(obj) === '[object Number]';
 	};
 
-/***/ },
+/***/ }),
 /* 19 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	"use strict";
 	
@@ -808,9 +821,9 @@
 	    commit: commit
 	};
 
-/***/ },
+/***/ }),
 /* 20 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	'use strict';
 	
@@ -890,7 +903,9 @@
 	try {
 	    var ctor = document.createElement('as24-tracking').constructor;
 	    if (ctor === HTMLElement || ctor === HTMLUnknownElement) {
-	        document.registerElement('as24-tracking', { prototype: as24tracking });
+	        document.registerElement('as24-tracking', {
+	            prototype: as24tracking
+	        });
 	    }
 	} catch (e) {
 	    if (window && window.console) {
@@ -898,6 +913,6 @@
 	    }
 	}
 
-/***/ }
+/***/ })
 /******/ ]);
 //# sourceMappingURL=main.js.map
