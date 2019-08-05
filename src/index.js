@@ -27,7 +27,7 @@ if (location.hash.indexOf('tracking-off=true') < 0) {
     var ut = window.ut || (window.ut = []);
 
     if (ut.push === Array.prototype.push) {
-        ut.push = function() {
+        ut.push = function () {
             Array.prototype.push.apply(window.ut, arguments);
             processCommand.apply({}, arguments);
         };

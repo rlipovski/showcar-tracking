@@ -4,7 +4,7 @@ var as24tracking = Object.assign(Object.create(HTMLElement.prototype), {
     supportedTypes: ['gtm', 'pagename'],
     reservedWords: ['type', 'action', 'as24-tracking-value', 'as24-tracking-click-target'],
 
-    attachedCallback () {
+    attachedCallback() {
         var values = this.getAdditionalProperties();
         var type = this.getAttribute('type');
         var action = this.getAttribute('action');
@@ -22,7 +22,7 @@ var as24tracking = Object.assign(Object.create(HTMLElement.prototype), {
         if (clickTarget) {
             var elements = document.querySelectorAll(clickTarget);
 
-            for (var i=0; i < elements.length; i++) {
+            for (var i = 0; i < elements.length; i++) {
                 elements[i].addEventListener('click', () => this.track(args));
             }
         } else {
@@ -47,9 +47,11 @@ var as24tracking = Object.assign(Object.create(HTMLElement.prototype), {
             }, values);
     },
 
-    decodeAttributeName (attrName) {
+    decodeAttributeName(attrName) {
         if (attrName.indexOf('-') > -1) {
-            attrName = attrName.replace(/-([a-z])/g, function (g) { return g[1].toUpperCase(); });
+            attrName = attrName.replace(/-([a-z])/g, function (g) {
+                return g[1].toUpperCase();
+            });
         }
         return attrName;
     },
@@ -67,7 +69,9 @@ var as24tracking = Object.assign(Object.create(HTMLElement.prototype), {
 try {
     var ctor = document.createElement('as24-tracking').constructor;
     if (ctor === HTMLElement || ctor === HTMLUnknownElement) {
-        document.registerElement('as24-tracking', { prototype: as24tracking });
+        document.registerElement('as24-tracking', {
+            prototype: as24tracking
+        });
     }
 } catch (e) {
     if (window && window.console) {
