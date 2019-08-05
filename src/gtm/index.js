@@ -53,12 +53,12 @@ function generateCommonParams(data) {
 }
 
 function trackClick(params) {
-    if (params.category && params.eventaction) {
+    if (params.eventcategory && params.eventaction) {
         gtm.push({
             event: 'event_trigger',
-            event_category: params.category,
+            event_category: params.eventcategory,
             event_action: params.eventaction,
-            event_label: params.label || '',
+            event_label: params.eventlabel || '',
             event_non_interaction: false
         });
     } else {

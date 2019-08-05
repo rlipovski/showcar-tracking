@@ -53,10 +53,10 @@
         <button id="myButton">trackIt (DEPRECATED gtm click tracking with linkgroup)</button>
 
         <!--
-        ut.push(['gtm', 'click',{category: 'my-project', eventaction: 'login', label: 'b2c'}]);
+        ut.push(['gtm', 'click',{eventcategory: 'my-project', eventaction: 'login', eventlabel: 'b2c'}]);
         -->
-        <as24-tracking type="gtm" action="click" as24-tracking-click-target="#myNewButton" category="my-project"
-            eventaction="login" label="b2c"></as24-tracking>
+        <as24-tracking type="gtm" action="click" as24-tracking-click-target="#myNewButton" eventcategory="my-project"
+            eventaction="login" eventlabel="b2c"></as24-tracking>
         <button id="myNewButton">trackIt (gtm click tracking with event_trigger)</button>
 
         <!--
@@ -103,7 +103,7 @@
         Tracking click of any of the 3 buttons with single as24-tracking:
         <br />
         <as24-tracking type="gtm" action="click" as24-tracking-click-target="button[data-track-any]"
-            category="my-project" eventaction="login" label="b2b"></as24-tracking>
+            eventcategory="my-project" eventaction="login" eventlabel="b2b"></as24-tracking>
         <button data-track-any="1">trackIt1 (gtm click tracking)</button>
         <button data-track-any="2">trackIt2 (gtm click tracking)</button>
         <button data-track-any="3">trackIt3 (gtm click tracking)</button>

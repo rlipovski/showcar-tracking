@@ -80,9 +80,9 @@ Custom element way:
   type="gtm"
   action="click"
   as24-tracking-click-target="#myButton"
-  category="myProject"
+  eventcategory="myProject"
   eventaction="Login"
-  label="B2C"
+  eventlabel="B2C"
 ></as24-tracking>
 ```
 
@@ -93,9 +93,9 @@ ut.push([
   "gtm",
   "click",
   {
-    category: "myProject",
+    eventcategory: "myProject",
     eventaction: 'Login',
-    label: 'B2C'
+    eventlabel: 'B2C'
   }
 ]);
 ```
