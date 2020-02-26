@@ -6,6 +6,7 @@ pipeline {
     timestamps() // Enable timestamps in the build log
     disableConcurrentBuilds() // The pipeline should run only once at a time
     preserveStashes(buildCount: 5)
+    buildDiscarder(logRotator(daysToKeepStr: '90'))
   }
 
   // Environment variables for all stages
