@@ -95,7 +95,7 @@ function trackPageview(data) {
     setTimeout(function () {
         if (firstPageview) {
             gtm.loadContainer(containerId);
-            require('./campaign').updateCampaignCookie();
+
             gtm.push({
                 event: 'common_data_ready',
             });
