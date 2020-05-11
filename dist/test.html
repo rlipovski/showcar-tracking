@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Tracking Test</title>
+    </head>
+    <body>
+        <as24-tracking
+            type="pagename"
+            country="de"
+            language="de"
+            category="uc"
+            group=""
+            layer=""
+            market="vm"
+            environment="test"
+            pageid="tracking-test"
+            tech-state="tatsu"
+        ></as24-tracking>
+
+        <as24-tracking type="gtm" action="pageview" as24-tracking-value='{"attribute":"pagination|1"}'></as24-tracking>
+
+        <script src="//cdnjs.cloudflare.com/ajax/libs/document-register-element/0.4.3/document-register-element.js"></script>
+        <script src="index.min.js"></script>
+    </body>
+</html>

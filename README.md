@@ -210,3 +210,14 @@ If you want to make sure to only send out one request for more than one tracking
 ></as24-tracking>
 <as24-tracking type="dealer-gtm" action="commit"></as24-tracking>
 ```
+
+## CMP - Consent Management Platform
+
+### How to develop
+
+Open two terminals:
+- `npx webpack --config config/webpack.conf.js -w`
+- `npx serve dist/`
+
+Go to `http://local.autoscout24.de:3000/test.html?__cmp` with CMP
+or to `http://local.autoscout24.de:3000/test.html` without CMP

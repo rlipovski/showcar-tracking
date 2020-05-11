@@ -1,4 +1,8 @@
-if (location.hash.indexOf('tracking-off=true') < 0) {
+const trackingEnabled = location.hash.indexOf('tracking-off=true') < 0;
+const cmpEnabled = location.href.indexOf('__cmp') >= 0;
+// const alreadyHaveConsent
+
+const startTracking = () => {
     var gtm = require('./gtm');
     var dealerGtm = require('./dealer-gtm');
 
@@ -41,4 +45,43 @@ if (location.hash.indexOf('tracking-off=true') < 0) {
         gtm: gtm,
         ut: ut,
     };
-}
+};
+
+const cmp = require('./cmp');
+
+const run = () => {
+    if (!trackingEnabled) {
+        console.log('Tracking disabled');
+        return;
+    }
+
+    if (!cmp.isCmpEnabled()) {
+        startTracking();
+        return;
+    }
+
+    // We load the CMP and do some magic here
+    cmp.loadCmpStub();
+    cmp.loadCmp();
+
+    // Either wait for consent/dissent
+    // OR load cached consent object and put it into dataLayer variables
+
+    // if (cmp.hasLocalCmpDecision()) {
+    //     console.log('Has CMP decision');
+    //     startTracking();
+    //     return;
+    // }
+
+    // cmp.updateCachedDecisionWhenItChanges();
+
+    // cmp.waitForFirstCmpDecision().then(() => {
+    //     console.log('Got first decision');
+    //     cmp.updateLocalCmpDecision().then(() => {
+    //         console.log('localStorage updated');
+    //         startTracking();
+    //     });
+    // });
+};
+
+run();
