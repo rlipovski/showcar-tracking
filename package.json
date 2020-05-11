@@ -40,6 +40,7 @@
     "load-grunt-tasks": "^3.5.0",
     "matchdep": "^2.0.0",
     "mocha": "^5.2.0",
+    "prettier": "^2.0.5",
     "sinon": "^1.17.4",
     "webpack": "^1.13.1",
     "webpack-dev-server": "^3.1.14",

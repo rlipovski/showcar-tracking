@@ -1,10 +1,7 @@
 module.exports = function (config) {
     config.set({
         frameworks: ['mocha', 'sinon', 'chai'],
-        files: [
-            'test/**/*.js',
-            { pattern: 'src/**/*.js', watched: true, included: false, served: false }
-        ],
+        files: ['test/**/*.js', { pattern: 'src/**/*.js', watched: true, included: false, served: false }],
         basePath: '',
         port: 9900,
         //reporters: ['progress'],
@@ -14,7 +11,7 @@ module.exports = function (config) {
         browsers: ['Chrome'],
 
         preprocessors: {
-            'test/**/*.js': ['webpack']
+            'test/**/*.js': ['webpack'],
         },
 
         webpack: {
@@ -22,11 +19,11 @@ module.exports = function (config) {
             stats: false,
             debug: true,
             profile: false,
-            progress: false
+            progress: false,
         },
 
         webpackMiddleware: {
-            stats: false
+            stats: false,
         },
 
         plugins: [
@@ -39,14 +36,14 @@ module.exports = function (config) {
             'karma-firefox-launcher',
             'karma-ie-launcher',
             'karma-spec-reporter',
-            'karma-teamcity-reporter'
+            'karma-teamcity-reporter',
         ],
 
         customLaunchers: {
             IE9: {
                 base: 'IE',
-                'x-ua-compatible': 'IE=EmulateIE9'
-            }
-        }
+                'x-ua-compatible': 'IE=EmulateIE9',
+            },
+        },
     });
 };

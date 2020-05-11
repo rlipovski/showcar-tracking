@@ -122,7 +122,7 @@
 	    var mergedPagename = merge({}, pagename, data);
 	
 	    if (!mergedPagename || !mergedPagename.country || !mergedPagename.market || !mergedPagename.category || !mergedPagename.pageid || !mergedPagename.environment) {
-	        if (mergedPagename.environment !== "test" || mergedPagename.environment !== "live") {
+	        if (mergedPagename.environment !== 'test' || mergedPagename.environment !== 'live') {
 	            throw new Error('Invalid environment type, ' + JSON.stringify(mergedPagename));
 	        }
 	        throw new Error('Incorrect pagename, ' + JSON.stringify(mergedPagename));
@@ -282,9 +282,14 @@
 	        document.documentElement.className += ' ' + gtmAlreadyLoadedClassName;
 	
 	        (function (w, d, s, l, i) {
-	            w[l] = w[l] || [];w[l].push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' });var f = d.getElementsByTagName(s)[0],
+	            w[l] = w[l] || [];
+	            w[l].push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' });
+	            var f = d.getElementsByTagName(s)[0],
 	                j = d.createElement(s),
-	                dl = l != 'dataLayer' ? '&l=' + l : '';j.async = true;j.src = '//www.googletagmanager.com/gtm.js?id=' + i + dl;f.parentNode.insertBefore(j, f);
+	                dl = l != 'dataLayer' ? '&l=' + l : '';
+	            j.async = true;
+	            j.src = '//www.googletagmanager.com/gtm.js?id=' + i + dl;
+	            f.parentNode.insertBefore(j, f);
 	        })(window, document, 'script', 'dataLayer', containerId);
 	    },
 	
@@ -320,15 +325,15 @@
 	'use strict';
 	
 	var containerIdsByTld = {
-	    'de': 'GTM-MK57H2',
-	    'at': 'GTM-WBZ87G',
-	    'be': 'GTM-5BWB2M',
-	    'lu': 'GTM-NDBDCZ',
-	    'es': 'GTM-PS6QHN',
-	    'fr': 'GTM-PD93LD',
-	    'it': 'GTM-WTCSNR',
-	    'nl': 'GTM-TW48BJ',
-	    'com': 'GTM-KWX9NX'
+	    de: 'GTM-MK57H2',
+	    at: 'GTM-WBZ87G',
+	    be: 'GTM-5BWB2M',
+	    lu: 'GTM-NDBDCZ',
+	    es: 'GTM-PS6QHN',
+	    fr: 'GTM-PD93LD',
+	    it: 'GTM-WTCSNR',
+	    nl: 'GTM-TW48BJ',
+	    com: 'GTM-KWX9NX'
 	};
 	
 	module.exports = function (hostname) {
@@ -494,7 +499,7 @@
 /* 11 */
 /***/ (function(module, exports) {
 
-	"use strict";
+	'use strict';
 	
 	var doc = document;
 	
@@ -505,7 +510,7 @@
 	
 	    var decodingFunction = options && options.decodingFunction || decodeURIComponent;
 	
-	    return decodingFunction(doc.cookie.replace(new RegExp("(?:(?:^|.*;)\\s*" + encodeURIComponent(name).replace(/[\-\.\+\*]/g, "\\$&") + "\\s*\\=\\s*([^;]*).*$)|^.*$"), "$1")) || null;
+	    return decodingFunction(doc.cookie.replace(new RegExp('(?:(?:^|.*;)\\s*' + encodeURIComponent(name).replace(/[\-\.\+\*]/g, '\\$&') + '\\s*\\=\\s*([^;]*).*$)|^.*$'), '$1')) || null;
 	}
 	
 	function setCookie(name, value, options) {
@@ -513,17 +518,17 @@
 	        return false;
 	    }
 	
-	    var expiresString = "";
+	    var expiresString = '';
 	
 	    if (options.expires) {
 	        var date = new Date();
 	        date.setTime(+date + options.expires);
-	        expiresString = "; expires=" + date.toGMTString();
+	        expiresString = '; expires=' + date.toGMTString();
 	    }
 	
 	    options.encodingFunction = options.encodingFunction || encodeURIComponent;
 	
-	    document.cookie = encodeURIComponent(name) + "=" + options.encodingFunction(value) + expiresString + (options.domain ? "; domain=" + options.domain : "") + (options.path ? "; path=" + options.path : "") + (options.secure ? "; secure" : "");
+	    document.cookie = encodeURIComponent(name) + '=' + options.encodingFunction(value) + expiresString + (options.domain ? '; domain=' + options.domain : '') + (options.path ? '; path=' + options.path : '') + (options.secure ? '; secure' : '');
 	
 	    return true;
 	}
@@ -532,7 +537,7 @@
 	    if (hasCookie(name)) {
 	        return false;
 	    }
-	    document.cookie = encodeURIComponent(name) + "=; expires=Thu, 01 Jan 1970 00:00:00 GMT" + (name ? "; domain=" + options.domain : "") + (options.path ? "; path=" + options.path : "");
+	    document.cookie = encodeURIComponent(name) + '=; expires=Thu, 01 Jan 1970 00:00:00 GMT' + (name ? '; domain=' + options.domain : '') + (options.path ? '; path=' + options.path : '');
 	    return true;
 	}
 	
@@ -540,7 +545,7 @@
 	    if (!name) {
 	        return false;
 	    }
-	    return new RegExp("(?:^|;\\s*)" + encodeURIComponent(name).replace(/[\-\.\+\*]/g, "\\$&") + "\\s*\\=").test(document.cookie);
+	    return new RegExp('(?:^|;\\s*)' + encodeURIComponent(name).replace(/[\-\.\+\*]/g, '\\$&') + '\\s*\\=').test(document.cookie);
 	}
 	
 	module.exports = {

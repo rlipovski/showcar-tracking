@@ -20,7 +20,10 @@ describe('Campaign cookie:', function () {
 
     describe('When cookie is set', function () {
         it('the value must be read correctly', function () {
-            cookies.set(cookieName, '1421317609216direct,direct,direct,1413537172486#direct,direct,direct,1413815400872#direct,direct,direct,1421313800634');
+            cookies.set(
+                cookieName,
+                '1421317609216direct,direct,direct,1413537172486#direct,direct,direct,1413815400872#direct,direct,direct,1421313800634'
+            );
 
             var cookie = campaignCookieHandler.read(cookieName);
             expect(+cookie.date).to.equal(1421317609216);
@@ -28,7 +31,7 @@ describe('Campaign cookie:', function () {
             expect(cookie.content).to.deep.equal([
                 ['direct', 'direct', 'direct', 1413537172486],
                 ['direct', 'direct', 'direct', 1413815400872],
-                ['direct', 'direct', 'direct', 1421313800634]
+                ['direct', 'direct', 'direct', 1421313800634],
             ]);
         });
     });
@@ -52,11 +55,13 @@ describe('Campaign cookie:', function () {
             it('should set an appropritate cookie and GTM data when coming directly', function () {
                 campaign.updateCampaignCookie();
                 var cookieValue = cookies.get(cookieName);
-                expect(cookieValue).to.equal('1421679155521direct,direct,direct,1421679155521##direct,direct,direct,1421679155521');
+                expect(cookieValue).to.equal(
+                    '1421679155521direct,direct,direct,1421679155521##direct,direct,direct,1421679155521'
+                );
                 expect(window.dataLayer).to.contain({
                     campaign_directMedium: 'direct',
                     campaign_directSource: 'direct',
-                    campaign_directCampaign: 'direct'
+                    campaign_directCampaign: 'direct',
                 });
             });
         });
@@ -67,11 +72,13 @@ describe('Campaign cookie:', function () {
                 utmMock.expects('getParameters').returns({ source: 'source', medium: 'medium', campaign: 'campaign' });
                 campaign.updateCampaignCookie();
                 var cookieValue = cookies.get(cookieName);
-                expect(cookieValue).to.equal('1421679155521medium,source,campaign,1421679155521##medium,source,campaign,1421679155521');
+                expect(cookieValue).to.equal(
+                    '1421679155521medium,source,campaign,1421679155521##medium,source,campaign,1421679155521'
+                );
                 expect(window.dataLayer).to.contain({
                     campaign_directMedium: 'medium',
                     campaign_directSource: 'source',
-                    campaign_directCampaign: 'campaign'
+                    campaign_directCampaign: 'campaign',
                 });
             });
         });
@@ -81,7 +88,9 @@ describe('Campaign cookie:', function () {
                 utmMock.expects('getParameters').returns({ source: 'source', medium: 'aff', campaign: 'campaign' });
                 campaign.updateCampaignCookie();
                 var cookieValue = cookies.get(cookieName);
-                expect(cookieValue).to.equal('1421679155521aff,source,campaign,1421679155521#aff,source,campaign,1421679155521#aff,source,campaign,1421679155521');
+                expect(cookieValue).to.equal(
+                    '1421679155521aff,source,campaign,1421679155521#aff,source,campaign,1421679155521#aff,source,campaign,1421679155521'
+                );
                 expect(window.dataLayer).to.contain({
                     campaign_directMedium: 'aff',
                     campaign_directSource: 'source',
@@ -89,7 +98,7 @@ describe('Campaign cookie:', function () {
 
                     campaign_lastPaidMedium: 'aff',
                     campaign_lastPaidSource: 'source',
-                    campaign_lastPaidCampaign: 'campaign'
+                    campaign_lastPaidCampaign: 'campaign',
                 });
             });
         });
@@ -99,7 +108,9 @@ describe('Campaign cookie:', function () {
                 utmMock.expects('getParameters').returns({ source: 'source', medium: 'gclid', campaign: 'campaign' });
                 campaign.updateCampaignCookie();
                 var cookieValue = cookies.get(cookieName);
-                expect(cookieValue).to.equal('1421679155521gclid,source,campaign,1421679155521#gclid,source,campaign,1421679155521#gclid,source,campaign,1421679155521');
+                expect(cookieValue).to.equal(
+                    '1421679155521gclid,source,campaign,1421679155521#gclid,source,campaign,1421679155521#gclid,source,campaign,1421679155521'
+                );
             });
         });
     });
@@ -122,25 +133,35 @@ describe('Campaign cookie:', function () {
 
         describe('First and second visits through direct', function () {
             it('should set the correct cookie', function () {
-                cookies.set(cookieName, '1421317609216direct,direct,direct,1413537172486##direct,direct,direct,1421313800634');
+                cookies.set(
+                    cookieName,
+                    '1421317609216direct,direct,direct,1413537172486##direct,direct,direct,1421313800634'
+                );
                 campaign.updateCampaignCookie();
                 var cookieValue = cookies.get(cookieName);
-                expect(cookieValue).to.equal('1421679155521direct,direct,direct,1413537172486##direct,direct,direct,1421679155521');
+                expect(cookieValue).to.equal(
+                    '1421679155521direct,direct,direct,1413537172486##direct,direct,direct,1421679155521'
+                );
 
                 expect(window.dataLayer).to.contain({
                     campaign_directMedium: 'direct',
                     campaign_directSource: 'direct',
-                    campaign_directCampaign: 'direct'
+                    campaign_directCampaign: 'direct',
                 });
             });
         });
 
         describe('First visit through paid campaign and second visits through direct', function () {
             it('should set the correct cookie', function () {
-                cookies.set(cookieName, '1421679155520aff,source,campaign,1421679155520#aff,source,campaign,1421679155520#aff,source,campaign,1421679155520');
+                cookies.set(
+                    cookieName,
+                    '1421679155520aff,source,campaign,1421679155520#aff,source,campaign,1421679155520#aff,source,campaign,1421679155520'
+                );
                 campaign.updateCampaignCookie();
                 var cookieValue = cookies.get(cookieName);
-                expect(cookieValue).to.equal('1421679155521aff,source,campaign,1421679155520#aff,source,campaign,1421679155520#direct,direct,direct,1421679155521');
+                expect(cookieValue).to.equal(
+                    '1421679155521aff,source,campaign,1421679155520#aff,source,campaign,1421679155520#direct,direct,direct,1421679155521'
+                );
 
                 expect(window.dataLayer).to.contain({
                     campaign_directMedium: 'direct',
@@ -149,18 +170,23 @@ describe('Campaign cookie:', function () {
 
                     campaign_lastPaidMedium: 'aff',
                     campaign_lastPaidSource: 'source',
-                    campaign_lastPaidCampaign: 'campaign'
+                    campaign_lastPaidCampaign: 'campaign',
                 });
             });
         });
 
         describe('First visit through direct and second visits through paid campaign', function () {
             it('should set the correct cookie', function () {
-                cookies.set(cookieName, '1421679155520direct,direct,direct,1421679155520##direct,direct,direct,1421679155520');
+                cookies.set(
+                    cookieName,
+                    '1421679155520direct,direct,direct,1421679155520##direct,direct,direct,1421679155520'
+                );
                 utmMock.expects('getParameters').returns({ source: 'source', medium: 'aff', campaign: 'campaign' });
                 campaign.updateCampaignCookie();
                 var cookieValue = cookies.get(cookieName);
-                expect(cookieValue).to.equal('1421679155521direct,direct,direct,1421679155520#aff,source,campaign,1421679155521#aff,source,campaign,1421679155521');
+                expect(cookieValue).to.equal(
+                    '1421679155521direct,direct,direct,1421679155520#aff,source,campaign,1421679155521#aff,source,campaign,1421679155521'
+                );
 
                 expect(window.dataLayer).to.contain({
                     campaign_directMedium: 'aff',
@@ -169,33 +195,43 @@ describe('Campaign cookie:', function () {
 
                     campaign_lastPaidMedium: 'aff',
                     campaign_lastPaidSource: 'source',
-                    campaign_lastPaidCampaign: 'campaign'
+                    campaign_lastPaidCampaign: 'campaign',
                 });
             });
         });
 
         describe('First visit through paid campain then through direct', function () {
             it('second visit after 30 minutes of inactivity', function () {
-                cookies.set(cookieName, '1221679155520cpc,source,campaign,1221679155520#cpc,source,campaign,1221679155520#cpc,source,campaign,1221679155520');
+                cookies.set(
+                    cookieName,
+                    '1221679155520cpc,source,campaign,1221679155520#cpc,source,campaign,1221679155520#cpc,source,campaign,1221679155520'
+                );
                 campaign.updateCampaignCookie();
                 var cookieValue = cookies.get(cookieName);
-                expect(cookieValue).to.equal('1421679155521cpc,source,campaign,1221679155520#cpc,source,campaign,1221679155520#direct,direct,direct,1421679155521');
+                expect(cookieValue).to.equal(
+                    '1421679155521cpc,source,campaign,1221679155520#cpc,source,campaign,1221679155520#direct,direct,direct,1421679155521'
+                );
                 expect(window.dataLayer).to.contain({
                     campaign_directMedium: 'direct',
                     campaign_directSource: 'direct',
-                    campaign_directCampaign: 'direct'
+                    campaign_directCampaign: 'direct',
                 });
             });
         });
 
         describe('First visit through paid campaign and second visits through non-paid campaign', function () {
             it('should set the correct cookie', function () {
-                cookies.set(cookieName, '1421679155520aff,source,campaign,1421679155520#aff,source,campaign,1421679155520#aff,source,campaign,1421679155520');
+                cookies.set(
+                    cookieName,
+                    '1421679155520aff,source,campaign,1421679155520#aff,source,campaign,1421679155520#aff,source,campaign,1421679155520'
+                );
                 utmMock.expects('getParameters').returns({ source: 'source', medium: 'medium', campaign: 'campaign' });
 
                 campaign.updateCampaignCookie();
                 var cookieValue = cookies.get(cookieName);
-                expect(cookieValue).to.equal('1421679155521aff,source,campaign,1421679155520#aff,source,campaign,1421679155520#medium,source,campaign,1421679155521');
+                expect(cookieValue).to.equal(
+                    '1421679155521aff,source,campaign,1421679155520#aff,source,campaign,1421679155520#medium,source,campaign,1421679155521'
+                );
 
                 expect(window.dataLayer).to.contain({
                     campaign_directMedium: 'medium',
@@ -204,7 +240,7 @@ describe('Campaign cookie:', function () {
 
                     campaign_lastPaidMedium: 'aff',
                     campaign_lastPaidSource: 'source',
-                    campaign_lastPaidCampaign: 'campaign'
+                    campaign_lastPaidCampaign: 'campaign',
                 });
             });
         });

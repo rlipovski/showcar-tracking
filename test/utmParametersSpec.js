@@ -8,7 +8,7 @@ describe('Parsing UTM parameters', function () {
             expect(params).to.deep.equal({
                 medium: 'medium',
                 source: 'source',
-                campaign: 'campaign'
+                campaign: 'campaign',
             });
         });
 
@@ -18,7 +18,7 @@ describe('Parsing UTM parameters', function () {
             expect(params).to.deep.equal({
                 medium: 'gclid',
                 source: 'source',
-                campaign: 'campaign'
+                campaign: 'campaign',
             });
         });
     });
@@ -29,7 +29,7 @@ describe('Parsing UTM parameters', function () {
             expect(params).to.deep.equal({
                 medium: 'direct',
                 source: 'direct',
-                campaign: 'direct'
+                campaign: 'direct',
             });
         });
 
@@ -38,7 +38,7 @@ describe('Parsing UTM parameters', function () {
             expect(params).to.deep.equal({
                 medium: 'direct',
                 source: 'direct',
-                campaign: 'direct'
+                campaign: 'direct',
             });
         });
     });

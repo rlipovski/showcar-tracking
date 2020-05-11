@@ -2,18 +2,18 @@ module.exports = {
     options: {
         configFile: 'karma.conf.js',
         // browsers: ['Chrome', 'IE9', 'Firefox']
-        browsers: ['Chrome']
+        browsers: ['Chrome'],
     },
     dist: {
         singleRun: true,
-        reporters: 'progress'
+        reporters: 'progress',
     },
     teamcity: {
         singleRun: true,
-        reporters: 'teamcity'
+        reporters: 'teamcity',
     },
     dev: {
         reporters: 'spec',
-        browsers: ['Chrome']
-    }
+        browsers: ['Chrome'],
+    },
 };

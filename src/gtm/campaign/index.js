@@ -10,5 +10,5 @@ function updateCampaignCookie() {
 }
 
 module.exports = {
-    updateCampaignCookie: updateCampaignCookie
+    updateCampaignCookie: updateCampaignCookie,
 };

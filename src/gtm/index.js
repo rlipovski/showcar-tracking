@@ -13,14 +13,27 @@ function setPagename(pn) {
 function generateCommonParams(data) {
     var mergedPagename = merge({}, pagename, data);
 
-    if (!mergedPagename || !mergedPagename.country || !mergedPagename.market || !mergedPagename.category || !mergedPagename.pageid || !mergedPagename.environment) {
-        if (mergedPagename.environment !== "test" || mergedPagename.environment !== "live") {
-            throw new Error('Invalid environment type, ' + JSON.stringify(mergedPagename))
+    if (
+        !mergedPagename ||
+        !mergedPagename.country ||
+        !mergedPagename.market ||
+        !mergedPagename.category ||
+        !mergedPagename.pageid ||
+        !mergedPagename.environment
+    ) {
+        if (mergedPagename.environment !== 'test' || mergedPagename.environment !== 'live') {
+            throw new Error('Invalid environment type, ' + JSON.stringify(mergedPagename));
         }
         throw new Error('Incorrect pagename, ' + JSON.stringify(mergedPagename));
     }
 
-    var commonPageName = [mergedPagename.country, mergedPagename.market, mergedPagename.category, mergedPagename.group, mergedPagename.pageid]
+    var commonPageName = [
+        mergedPagename.country,
+        mergedPagename.market,
+        mergedPagename.category,
+        mergedPagename.group,
+        mergedPagename.pageid,
+    ]
         .filter(function (x) {
             return x;
         })
@@ -46,7 +59,7 @@ function generateCommonParams(data) {
         common_linkgroup: mergedPagename.linkgroup || '',
         common_linkid: mergedPagename.linkid || '',
 
-        common_techState: mergedPagename.techState || ''
+        common_techState: mergedPagename.techState || '',
     };
 
     return commonData;
@@ -59,13 +72,13 @@ function trackClick(params) {
             event_category: params.eventcategory,
             event_action: params.eventaction,
             event_label: params.eventlabel || '',
-            event_non_interaction: false
+            event_non_interaction: false,
         });
     } else {
         //DEPRECATED
         gtm.push(generateCommonParams(params));
         gtm.push({
-            event: 'click'
+            event: 'click',
         });
     }
 }
@@ -84,15 +97,15 @@ function trackPageview(data) {
             gtm.loadContainer(containerId);
             require('./campaign').updateCampaignCookie();
             gtm.push({
-                event: 'common_data_ready'
+                event: 'common_data_ready',
             });
             gtm.push({
-                event: 'data_ready'
+                event: 'data_ready',
             });
             firstPageview = false;
         } else {
             gtm.push({
-                event: 'pageview'
+                event: 'pageview',
             });
         }
     }, 10);
@@ -104,5 +117,5 @@ module.exports = {
 
     set: gtm.push,
     pageview: trackPageview,
-    click: trackClick
+    click: trackClick,
 };

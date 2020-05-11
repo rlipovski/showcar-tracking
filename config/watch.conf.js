@@ -1,9 +1,7 @@
 module.exports = {
-    files: [
-        'src/**/*.js'
-    ],
-    tasks: ["build"],
+    files: ['src/**/*.js'],
+    tasks: ['build'],
     options: {
-        livereload: true
-    }
+        livereload: true,
+    },
 };

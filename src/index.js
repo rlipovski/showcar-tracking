@@ -39,6 +39,6 @@ if (location.hash.indexOf('tracking-off=true') < 0) {
 
     module.exports = {
         gtm: gtm,
-        ut: ut
+        ut: ut,
     };
 }

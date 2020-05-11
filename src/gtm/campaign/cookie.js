@@ -22,10 +22,10 @@ function readCookie(name) {
         currentVisit: null,
         lastPaidVisit: null,
 
-        isValid: function() {
+        isValid: function () {
             return isValidDate(this.date) && this.content && this.content.length === 3;
         },
-        getGtmData: function() {
+        getGtmData: function () {
             var ret = {};
             ret.campaign_directMedium = this.currentVisit[0];
             ret.campaign_directSource = this.currentVisit[1];
@@ -40,7 +40,7 @@ function readCookie(name) {
             return ret;
         },
 
-        updateCurrentVisit: function() {
+        updateCurrentVisit: function () {
             var utmParams = utm.getParameters(location.search);
             this.currentVisit = [utmParams.medium, utmParams.source, utmParams.campaign, now];
             this.firstVisit = this.firstVisit || this.currentVisit;
@@ -50,7 +50,7 @@ function readCookie(name) {
             }
 
             this.content = [this.firstVisit, this.lastPaidVisit, this.currentVisit];
-        }
+        },
     };
 
     try {
@@ -72,7 +72,7 @@ function readCookie(name) {
             .substring(13)
             .split('#')
             .map(function (part) {
-                if (!part){
+                if (!part) {
                     return null;
                 }
 
@@ -92,8 +92,7 @@ function readCookie(name) {
         cookie.content = content;
 
         return cookie;
-
-    } catch(ex) {
+    } catch (ex) {
         return cookie;
     }
 }
@@ -102,11 +101,11 @@ function writeCookie(cookie) {
     var now = +new Date();
     var domain = '.' + location.hostname.split('.').slice(-2).join('.');
 
-    var formattedValue = now + '' + cookie.content.slice(0,3).join('#');
+    var formattedValue = now + '' + cookie.content.slice(0, 3).join('#');
     var options = {
         expires: cAge * 24 * 60 * 60,
         path: '/',
-        domain: location.hostname.indexOf('localhost') >= 0 ? '' : domain
+        domain: location.hostname.indexOf('localhost') >= 0 ? '' : domain,
     };
 
     cookies.set(cookie.name, formattedValue, options);
@@ -114,5 +113,5 @@ function writeCookie(cookie) {
 
 module.exports = {
     read: readCookie,
-    write: writeCookie
+    write: writeCookie,
 };

@@ -7,7 +7,7 @@ function add(data) {
 function commit() {
     window.dataLayer = window.dataLayer || [];
     window.dataLayer.push({
-        list_productidsall: currentVehicles
+        list_productidsall: currentVehicles,
     });
 
     currentVehicles = [];
@@ -15,5 +15,5 @@ function commit() {
 
 module.exports = {
     add: add,
-    commit: commit
+    commit: commit,
 };

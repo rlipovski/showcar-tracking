@@ -38,7 +38,8 @@ var as24tracking = Object.assign(Object.create(HTMLElement.prototype), {
             return values;
         }
 
-        return Array.prototype.slice.call(this.attributes)
+        return Array.prototype.slice
+            .call(this.attributes)
             .filter((element) => !(this.reservedWords.indexOf(element.nodeName) > -1))
             .reduce((prev, curr) => {
                 var attrName = this.decodeAttributeName(curr.nodeName);
@@ -63,14 +64,14 @@ var as24tracking = Object.assign(Object.create(HTMLElement.prototype), {
             window.ut = window.ut || [];
             window.ut.push(args);
         }
-    }
+    },
 });
 
 try {
     var ctor = document.createElement('as24-tracking').constructor;
     if (ctor === HTMLElement || ctor === HTMLUnknownElement) {
         document.registerElement('as24-tracking', {
-            prototype: as24tracking
+            prototype: as24tracking,
         });
     }
 } catch (e) {
