@@ -42,5 +42,3 @@ if (location.hash.indexOf('tracking-off=true') < 0) {
         ut: ut
     };
 }
-
-window.__sc_tracking_live__ = 1;
