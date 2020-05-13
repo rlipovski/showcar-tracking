@@ -1,6 +1,4 @@
 const trackingEnabled = location.hash.indexOf('tracking-off=true') < 0;
-const cmpEnabled = location.href.indexOf('__cmp') >= 0;
-// const alreadyHaveConsent
 
 const startTracking = () => {
     var gtm = require('./gtm');
@@ -61,27 +59,28 @@ const run = () => {
     }
 
     // We load the CMP and do some magic here
-    cmp.loadCmpStub();
-    cmp.loadCmp();
+    cmp.loadCmpStubSync(); // defines window.__cmp as a queue
+    cmp.loadCmpAsync();
 
-    // Either wait for consent/dissent
-    // OR load cached consent object and put it into dataLayer variables
+    // window.__cmp('addEventListener', 'cmpReady', () => {
+    // When consent changes we update dataLayer and localStorage.__as24_cached_cmp_consent
+    cmp.updateDataLayerAndCacheOnConsentChange();
 
-    // if (cmp.hasLocalCmpDecision()) {
-    //     console.log('Has CMP decision');
+    cmp.sendMetricsOnEvents();
+
+    cmp.waitForConsentIfNeeded().then(() => startTracking());
+
+    // if (cmp.trySetDataLayerVariablesFromCache()) {
+    //     // We have consent data in cache so we can proceed loading GTM
     //     startTracking();
-    //     return;
-    // }
-
-    // cmp.updateCachedDecisionWhenItChanges();
-
-    // cmp.waitForFirstCmpDecision().then(() => {
-    //     console.log('Got first decision');
-    //     cmp.updateLocalCmpDecision().then(() => {
-    //         console.log('localStorage updated');
+    // } else {
+    //     // We don't have previous consent in cache therefore we are waiting for getting one
+    //     // This is to avoid losing important conversion tracking events: Google Ads, Facebook
+    //     // which are fired directly in the pageview
+    //     cmp.waitForFirstCmpDecision().then(() => {
     //         startTracking();
     //     });
-    // });
+    // }
 };
 
 run();

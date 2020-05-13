@@ -47,7 +47,12 @@ Example: `group_myTestAttribute` is written as `<as24-tracking group_my-test-att
 Custom element way:
 
 ```html
-<as24-tracking type="pagename" country="de" market="all-webapp" category="all"></as24-tracking>
+<as24-tracking
+  type="pagename"
+  country="de"
+  market="all-webapp"
+  category="all"
+></as24-tracking>
 <as24-tracking type="gtm" action="pageview"></as24-tracking>
 ```
 
@@ -55,20 +60,20 @@ JavaScript way:
 
 ```javascript
 ut.push([
-  "pagename",
+  'pagename',
   {
-    country: "de",
-    market: "all-webapp",
-    category: "all",
-    pageid: "home",
-    layer: "",
+    country: 'de',
+    market: 'all-webapp',
+    category: 'all',
+    pageid: 'home',
+    layer: '',
     attribute: null,
     group: null,
-    environment: "live",
-    language: "de"
-  }
+    environment: 'live',
+    language: 'de',
+  },
 ]);
-ut.push(["gtm", "pageview"]);
+ut.push(['gtm', 'pageview']);
 ```
 
 ### Click tracking (without page load)
@@ -90,13 +95,13 @@ JavaScript way:
 
 ```javascript
 ut.push([
-  "gtm",
-  "click",
+  'gtm',
+  'click',
   {
-    eventcategory: "myProject",
+    eventcategory: 'myProject',
     eventaction: 'Login',
-    eventlabel: 'B2C'
-  }
+    eventlabel: 'B2C',
+  },
 ]);
 ```
 
@@ -118,12 +123,12 @@ JavaScript way:
 
 ```javascript
 ut.push([
-  "gtm",
-  "click",
+  'gtm',
+  'click',
   {
-    linkgroup: "HackList",
-    linkid: "V1 (abundance): " + itemId + "|" + abundance
-  }
+    linkgroup: 'HackList',
+    linkid: 'V1 (abundance): ' + itemId + '|' + abundance,
+  },
 ]);
 ```
 
@@ -137,13 +142,17 @@ Its value needs to be a valid selector.
 Custom element way:
 
 ```html
-<as24-tracking type="gtm" action="set" test_experiments.tt5="NetGross:Variation1" />
+<as24-tracking
+  type="gtm"
+  action="set"
+  test_experiments.tt5="NetGross:Variation1"
+/>
 ```
 
 JavaScript way:
 
 ```javascript
-ut.push(["gtm", "set", { "test_experiments.tt5": "NetGross:Variation1" }]);
+ut.push(['gtm', 'set', { 'test_experiments.tt5': 'NetGross:Variation1' }]);
 ```
 
 ### Dealer tracking
@@ -162,9 +171,20 @@ JavaScript way:
 
 ```javascript
 ut.push([
-  "dealer",
-  "listview",
-  [281705316, 281702707, 281462097, 281725748, 237276348, 281667368, 281673373, 281661776, 281555953, 281095563]
+  'dealer',
+  'listview',
+  [
+    281705316,
+    281702707,
+    281462097,
+    281725748,
+    237276348,
+    281667368,
+    281673373,
+    281661776,
+    281555953,
+    281095563,
+  ],
 ]);
 ```
 
@@ -213,9 +233,10 @@ If you want to make sure to only send out one request for more than one tracking
 
 ## CMP - Consent Management Platform
 
-### How to develop
+<!-- ### How to develop -->
 
 Open two terminals:
+
 - `npx webpack --config config/webpack.conf.js -w`
 - `npx serve dist/`
 

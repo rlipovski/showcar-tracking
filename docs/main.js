@@ -56,16 +56,10 @@
 	'use strict';
 	
 	var trackingEnabled = location.hash.indexOf('tracking-off=true') < 0;
-	var cmpEnabled = location.href.indexOf('__cmp') >= 0;
-	// const alreadyHaveConsent
-	
-	if (cmpEnabled) {
-	    __webpack_require__(2);
-	}
 	
 	var startTracking = function startTracking() {
-	    var gtm = __webpack_require__(3);
-	    var dealerGtm = __webpack_require__(10);
+	    var gtm = __webpack_require__(2);
+	    var dealerGtm = __webpack_require__(9);
 	
 	    function processCommand(data) {
 	        var fn, args;
@@ -100,7 +94,7 @@
 	        ut.forEach(processCommand);
 	    }
 	
-	    __webpack_require__(11);
+	    __webpack_require__(10);
 	
 	    module.exports = {
 	        gtm: gtm,
@@ -108,89 +102,59 @@
 	    };
 	};
 	
-	if (trackingEnabled) {
-	    startTracking();
-	}
+	var cmp = __webpack_require__(11);
 	
-	console.log('ABCDEF');
+	var run = function run() {
+	    if (!trackingEnabled) {
+	        console.log('Tracking disabled');
+	        return;
+	    }
+	
+	    if (!cmp.isCmpEnabled()) {
+	        startTracking();
+	        return;
+	    }
+	
+	    // We load the CMP and do some magic here
+	    cmp.loadCmpStubSync(); // defines window.__cmp as a queue
+	    cmp.loadCmpAsync();
+	
+	    // window.__cmp('addEventListener', 'cmpReady', () => {
+	    // When consent changes we update dataLayer and localStorage.__as24_cached_cmp_consent
+	    cmp.updateDataLayerAndCacheOnConsentChange();
+	
+	    cmp.sendMetricsOnEvents();
+	
+	    cmp.waitForConsentIfNeeded().then(function () {
+	        return startTracking();
+	    });
+	
+	    // if (cmp.trySetDataLayerVariablesFromCache()) {
+	    //     // We have consent data in cache so we can proceed loading GTM
+	    //     startTracking();
+	    // } else {
+	    //     // We don't have previous consent in cache therefore we are waiting for getting one
+	    //     // This is to avoid losing important conversion tracking events: Google Ads, Facebook
+	    //     // which are fired directly in the pageview
+	    //     cmp.waitForFirstCmpDecision().then(() => {
+	    //         startTracking();
+	    //     });
+	    // }
+	};
+	
+	run();
 
 /***/ }),
 /* 2 */
-/***/ (function(module, exports) {
-
-	'use strict';
-	
-	if (!window.__cmp || typeof window.__cmp !== 'function') {
-	    var faktorCmpStart = window.__cmp ? window.__cmp.start : {};
-	
-	    window.__cmp = function () {
-	        var listen = window.attachEvent || window.addEventListener;
-	        listen('message', function (event) {
-	            window.__cmp.receiveMessage(event);
-	        });
-	
-	        function addLocatorFrame() {
-	            if (!window.frames['__cmpLocator']) {
-	                if (document.body) {
-	                    var frame = document.createElement('iframe');
-	                    frame.style.display = 'none';
-	                    frame.name = '__cmpLocator';
-	                    document.body.appendChild(frame);
-	                } else {
-	                    setTimeout(addLocatorFrame, 5);
-	                }
-	            }
-	        }
-	
-	        addLocatorFrame();
-	
-	        var commandQueue = [];
-	        var cmp = function cmp(command, parameter, callback) {
-	            if (command === 'ping') {
-	                if (callback) {
-	                    callback({
-	                        gdprAppliesGlobally: !!(window.__cmp && window.__cmp.config && window.__cmp.config.storeConsentGlobally),
-	                        cmpLoaded: false
-	                    });
-	                }
-	            } else {
-	                commandQueue.push({
-	                    command: command,
-	                    parameter: parameter,
-	                    callback: callback
-	                });
-	            }
-	        };
-	        cmp.commandQueue = commandQueue;
-	        cmp.receiveMessage = function (event) {
-	            var data = event && event.data && event.data.__cmpCall;
-	            if (data) {
-	                commandQueue.push({
-	                    callId: data.callId,
-	                    command: data.command,
-	                    parameter: data.parameter,
-	                    event: event
-	                });
-	            }
-	        };
-	
-	        return cmp;
-	    }();
-	
-	    window.__cmp.start = faktorCmpStart;
-	}
-
-/***/ }),
-/* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var merge = __webpack_require__(4);
+	var merge = __webpack_require__(3);
 	
-	var gtm = __webpack_require__(7);
-	var containerId = __webpack_require__(8)(location.hostname);
-	var viewport = __webpack_require__(9);
+	var gtm = __webpack_require__(6);
+	var containerId = __webpack_require__(7)(location.hostname);
+	var viewport = __webpack_require__(8);
 	
 	var pagename;
 	
@@ -294,12 +258,12 @@
 	};
 
 /***/ }),
-/* 4 */
+/* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var extend = __webpack_require__(5);
+	var extend = __webpack_require__(4);
 	
 	module.exports = function merge() {
 	    var args = [].slice.call(arguments);
@@ -308,12 +272,12 @@
 	};
 
 /***/ }),
-/* 5 */
+/* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var isObject = __webpack_require__(6);
+	var isObject = __webpack_require__(5);
 	
 	module.exports = function (obj) {
 	    if (!isObject(obj)) return obj;
@@ -328,7 +292,7 @@
 	};
 
 /***/ }),
-/* 6 */
+/* 5 */
 /***/ (function(module, exports) {
 
 	'use strict';
@@ -341,7 +305,7 @@
 	};
 
 /***/ }),
-/* 7 */
+/* 6 */
 /***/ (function(module, exports) {
 
 	'use strict';
@@ -399,7 +363,7 @@
 	}
 
 /***/ }),
-/* 8 */
+/* 7 */
 /***/ (function(module, exports) {
 
 	'use strict';
@@ -422,7 +386,7 @@
 	};
 
 /***/ }),
-/* 9 */
+/* 8 */
 /***/ (function(module, exports) {
 
 	'use strict';
@@ -434,7 +398,7 @@
 	};
 
 /***/ }),
-/* 10 */
+/* 9 */
 /***/ (function(module, exports) {
 
 	"use strict";
@@ -460,7 +424,7 @@
 	};
 
 /***/ }),
-/* 11 */
+/* 10 */
 /***/ (function(module, exports) {
 
 	'use strict';
@@ -549,6 +513,276 @@
 	    if (window && window.console) {
 	        window.console.warn('Failed to register CustomElement "as24-tracking".', e);
 	    }
+	}
+
+/***/ }),
+/* 11 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
+	
+	var _require = __webpack_require__(12),
+	    once = _require.once;
+	
+	var consentCacheKey = '__cmp_consent_cache';
+	
+	module.exports.loadCmpStubSync = function () {
+	    __webpack_require__(13);
+	};
+	
+	module.exports.loadCmpAsync = once(function () {
+	    var script = document.createElement('script');
+	    var ref = document.getElementsByTagName('script')[0];
+	    ref.parentNode.insertBefore(script, ref);
+	    script.src = 'https://config-prod.choice.faktor.io/ea93c094-1e43-49f8-8c62-75128f08f70b/faktor.js';
+	});
+	
+	module.exports.isCmpEnabled = function () {
+	    return location.href.indexOf('__cmp') >= 0;
+	};
+	
+	module.exports.waitForConsentIfNeeded = function () {
+	    return new Promise(function (resolve) {
+	        if (trySetDataLayerVariablesFromCache()) {
+	            resolve();
+	            return;
+	        }
+	
+	        var handler = function handler(e) {
+	            window.__cmp('consentDataExist', null, function (d) {
+	                if (d === true) {
+	                    window.__cmp('removeEventListener', 'consentChanged', handler);
+	                    resolve();
+	                }
+	            });
+	        };
+	
+	        window.__cmp('addEventListener', 'consentChanged', handler);
+	    });
+	};
+	
+	module.exports.waitForFirstCmpDecision = function () {
+	    return new Promise(function (resolve) {
+	        var handler = function handler(e) {
+	            window.__cmp('consentDataExist', null, function (d) {
+	                if (d === true) {
+	                    window.__cmp('removeEventListener', 'consentChanged', handler);
+	                    resolve();
+	                }
+	            });
+	        };
+	
+	        window.__cmp('addEventListener', 'consentChanged', handler);
+	    });
+	};
+	
+	function getAllConsents() {
+	    return Promise.all([new Promise(function (resolve) {
+	        return window.__cmp('getVendorConsents', null, resolve);
+	    }), new Promise(function (resolve) {
+	        return window.__cmp('getAdditionalVendorConsents', null, resolve);
+	    })]);
+	}
+	
+	module.exports.updateDataLayerAndCacheOnConsentChange = function () {
+	    window.__cmp('addEventListener', 'consentChanged', function (e) {
+	        getAllConsents().then(function (_ref) {
+	            var _ref2 = _slicedToArray(_ref, 2),
+	                vendorConsents = _ref2[0],
+	                additionalVendorConsents = _ref2[1];
+	
+	            setDataLayerConsents(vendorConsents, additionalVendorConsents);
+	            localStorage.setItem(consentCacheKey, JSON.stringify({ vendorConsents: vendorConsents, additionalVendorConsents: additionalVendorConsents }));
+	        });
+	    });
+	
+	    // For safety we update the cache and the dataLayer every time when the cmp loads
+	    cmpReady().then(function () {
+	        consentDataExists().then(function (exists) {
+	            if (exists) {
+	                console.log('Consent data exists');
+	                getAllConsents().then(function (_ref3) {
+	                    var _ref4 = _slicedToArray(_ref3, 2),
+	                        vendorConsents = _ref4[0],
+	                        additionalVendorConsents = _ref4[1];
+	
+	                    setDataLayerConsents(vendorConsents, additionalVendorConsents);
+	                    localStorage.setItem(consentCacheKey, JSON.stringify({ vendorConsents: vendorConsents, additionalVendorConsents: additionalVendorConsents }));
+	                });
+	            }
+	        });
+	    });
+	};
+	
+	module.exports.trySetDataLayerVariablesFromCache = function () {
+	    try {
+	        var cache = JSON.parse(localStorage.getItem(consentCacheKey));
+	        setDataLayerConsents(cache.vendorConsents, cache.additionalVendorConsents);
+	        return true;
+	    } catch (e) {
+	        return false;
+	    }
+	};
+	
+	function trySetDataLayerVariablesFromCache() {
+	    try {
+	        var cache = JSON.parse(localStorage.getItem(consentCacheKey));
+	        setDataLayerConsents(cache.vendorConsents, cache.additionalVendorConsents);
+	        return true;
+	    } catch (e) {
+	        return false;
+	    }
+	}
+	
+	function cmpReady() {
+	    return new Promise(function (resolve) {
+	        var handler = function handler(e) {
+	            window.__cmp('removeEventListener', 'cmpReady', handler);
+	            resolve(e);
+	        };
+	
+	        window.__cmp('addEventListener', 'cmpReady', handler);
+	    });
+	}
+	
+	function consentDataExists() {
+	    return new Promise(function (resolve) {
+	        window.__cmp('consentDataExist', null, function (x) {
+	            resolve(x);
+	        });
+	    });
+	}
+	
+	module.exports.sendMetricsOnEvents = function () {
+	    var events = ['faktorIdChanged', 'acceptAllButtonClicked', 'rejectAllButtonClicked', 'exitButtonClicked', 'privacySettingsButtonClicked', 'disabledCookies', 'consentManagerDisplayed', 'consentManagerClosed', 'consentWallDisplayed', 'consentWallClosed'];
+	
+	    events.forEach(function (event) {
+	        return window.__cmp('addEventListener', event, function () {
+	            return sendMetrics(event);
+	        });
+	    });
+	};
+	
+	function setDataLayerConsents(vendorConsents, additionalVendorConsents) {
+	    var facebookConsent = vendorConsents && vendorConsents.purposeConsents[1] && vendorConsents.purposeConsents[2] && vendorConsents.purposeConsents[3] && vendorConsents.purposeConsents[5] && additionalVendorConsents.vendorConsents[16];
+	
+	    var googleAnalyticsConsent = vendorConsents && vendorConsents.purposeConsents[1] && vendorConsents.purposeConsents[5] && additionalVendorConsents.vendorConsents[4];
+	
+	    var googleAdsConsent = vendorConsents && vendorConsents.purposeConsents[1] && vendorConsents.purposeConsents[2] && vendorConsents.purposeConsents[3] && vendorConsents.purposeConsents[5] && additionalVendorConsents.vendorConsents[91];
+	
+	    var bingConsent = vendorConsents && vendorConsents.purposeConsents[1] && vendorConsents.purposeConsents[2] && vendorConsents.purposeConsents[3] && vendorConsents.purposeConsents[4] && vendorConsents.purposeConsents[5] && additionalVendorConsents.vendorConsents[21];
+	
+	    var mouseFlowConsent = vendorConsents && vendorConsents.purposeConsents[1] && vendorConsents.purposeConsents[5] && additionalVendorConsents.vendorConsents[223];
+	
+	    window.dataLayer = window.dataLayer || [];
+	    window.dataLayer.push({
+	        cmp_facebook_consent: facebookConsent,
+	        cmp_googleAnalytics_consent: googleAnalyticsConsent,
+	        cmp_googleAds_consent: googleAdsConsent,
+	        cmp_bing_consent: bingConsent,
+	        cmp_mouseFlow_consent: mouseFlowConsent
+	    });
+	}
+	
+	function sendMetrics(name) {
+	    fetch('/frontend-metrics/timeseries', {
+	        method: 'POST',
+	        headers: {
+	            Accept: 'application/json',
+	            'Content-Type': 'application/json'
+	        },
+	        body: JSON.stringify({
+	            metrics: [{
+	                type: 'increment',
+	                name: 'showcar-tracking-cmp-' + name,
+	                tags: { service: 'showcar-tracking' }
+	            }]
+	        })
+	    });
+	}
+
+/***/ }),
+/* 12 */
+/***/ (function(module, exports) {
+
+	"use strict";
+	
+	module.exports.once = function (fn) {
+	    var executed = false;
+	    return function () {
+	        if (!executed) {
+	            executed = true;
+	            fn();
+	        }
+	    };
+	};
+
+/***/ }),
+/* 13 */
+/***/ (function(module, exports) {
+
+	'use strict';
+	
+	if (!window.__cmp || typeof window.__cmp !== 'function') {
+	    var faktorCmpStart = window.__cmp ? window.__cmp.start : {};
+	
+	    window.__cmp = function () {
+	        var listen = window.attachEvent || window.addEventListener;
+	        listen('message', function (event) {
+	            window.__cmp.receiveMessage(event);
+	        });
+	
+	        function addLocatorFrame() {
+	            if (!window.frames['__cmpLocator']) {
+	                if (document.body) {
+	                    var frame = document.createElement('iframe');
+	                    frame.style.display = 'none';
+	                    frame.name = '__cmpLocator';
+	                    document.body.appendChild(frame);
+	                } else {
+	                    setTimeout(addLocatorFrame, 5);
+	                }
+	            }
+	        }
+	
+	        addLocatorFrame();
+	
+	        var commandQueue = [];
+	        var cmp = function cmp(command, parameter, callback) {
+	            if (command === 'ping') {
+	                if (callback) {
+	                    callback({
+	                        gdprAppliesGlobally: !!(window.__cmp && window.__cmp.config && window.__cmp.config.storeConsentGlobally),
+	                        cmpLoaded: false
+	                    });
+	                }
+	            } else {
+	                commandQueue.push({
+	                    command: command,
+	                    parameter: parameter,
+	                    callback: callback
+	                });
+	            }
+	        };
+	        cmp.commandQueue = commandQueue;
+	        cmp.receiveMessage = function (event) {
+	            var data = event && event.data && event.data.__cmpCall;
+	            if (data) {
+	                commandQueue.push({
+	                    callId: data.callId,
+	                    command: data.command,
+	                    parameter: data.parameter,
+	                    event: event
+	                });
+	            }
+	        };
+	
+	        return cmp;
+	    }();
+	
+	    window.__cmp.start = faktorCmpStart;
 	}
 
 /***/ })
