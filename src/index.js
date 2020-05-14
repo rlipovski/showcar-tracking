@@ -1,4 +1,6 @@
-if (location.hash.indexOf('tracking-off=true') < 0) {
+const trackingEnabled = location.hash.indexOf('tracking-off=true') < 0;
+
+const startTracking = () => {
     var gtm = require('./gtm');
     var dealerGtm = require('./dealer-gtm');
 
@@ -41,4 +43,44 @@ if (location.hash.indexOf('tracking-off=true') < 0) {
         gtm: gtm,
         ut: ut,
     };
-}
+};
+
+const cmp = require('./cmp');
+
+const run = () => {
+    if (!trackingEnabled) {
+        console.log('Tracking disabled');
+        return;
+    }
+
+    if (!cmp.isCmpEnabled()) {
+        startTracking();
+        return;
+    }
+
+    // We load the CMP and do some magic here
+    cmp.loadCmpStubSync(); // defines window.__cmp as a queue
+    cmp.loadCmpAsync();
+
+    // window.__cmp('addEventListener', 'cmpReady', () => {
+    // When consent changes we update dataLayer and localStorage.__as24_cached_cmp_consent
+    cmp.updateDataLayerAndCacheOnConsentChange();
+
+    cmp.sendMetricsOnEvents();
+
+    cmp.waitForConsentIfNeeded().then(() => startTracking());
+
+    // if (cmp.trySetDataLayerVariablesFromCache()) {
+    //     // We have consent data in cache so we can proceed loading GTM
+    //     startTracking();
+    // } else {
+    //     // We don't have previous consent in cache therefore we are waiting for getting one
+    //     // This is to avoid losing important conversion tracking events: Google Ads, Facebook
+    //     // which are fired directly in the pageview
+    //     cmp.waitForFirstCmpDecision().then(() => {
+    //         startTracking();
+    //     });
+    // }
+};
+
+run();
