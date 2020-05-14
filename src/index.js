@@ -58,6 +58,9 @@ const run = () => {
         return;
     }
 
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push({ cmp_enabled: true });
+
     // We load the CMP and do some magic here
     cmp.loadCmpStubSync(); // defines window.__cmp as a queue
     cmp.loadCmpAsync();
