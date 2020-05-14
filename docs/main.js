@@ -111,12 +111,15 @@
 	    }
 	
 	    if (!cmp.isCmpEnabled()) {
+	        window.dataLayer = window.dataLayer || [];
+	        window.dataLayer.push({ cmp_enabled: false });
 	        startTracking();
 	        return;
 	    }
 	
 	    window.dataLayer = window.dataLayer || [];
 	    window.dataLayer.push({ cmp_enabled: true });
+	
 	    // We load the CMP and do some magic here
 	    cmp.loadCmpStubSync(); // defines window.__cmp as a queue
 	    cmp.loadCmpAsync();
@@ -629,6 +632,11 @@
 	};
 	
 	function trySetDataLayerVariablesFromCache() {
+	    if (!/faktorid/i.test(document.cookie)) {
+	        // We should not use cache if faktor cookies are missing (e.g. cookies deleted by a extension which keeps localStorage)
+	        return false;
+	    }
+	
 	    try {
 	        var cache = JSON.parse(localStorage.getItem(consentCacheKey));
 	        setDataLayerConsents(cache.vendorConsents, cache.additionalVendorConsents);

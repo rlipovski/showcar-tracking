@@ -92,6 +92,11 @@ module.exports.trySetDataLayerVariablesFromCache = () => {
 };
 
 function trySetDataLayerVariablesFromCache() {
+    if (!/faktorid/i.test(document.cookie)) {
+        // We should not use cache if faktor cookies are missing (e.g. cookies deleted by a extension which keeps localStorage)
+        return false;
+    }
+
     try {
         const cache = JSON.parse(localStorage.getItem(consentCacheKey));
         setDataLayerConsents(cache.vendorConsents, cache.additionalVendorConsents);
