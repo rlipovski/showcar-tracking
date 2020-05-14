@@ -54,6 +54,8 @@ const run = () => {
     }
 
     if (!cmp.isCmpEnabled()) {
+        window.dataLayer = window.dataLayer || [];
+        window.dataLayer.push({ cmp_enabled: false });
         startTracking();
         return;
     }
