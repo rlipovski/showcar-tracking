@@ -202,6 +202,7 @@ function sendMetrics(name) {
                 {
                     type: 'increment',
                     name: 'showcar-tracking-cmp-' + name,
+                    value: 1,
                     tags: { service: 'showcar-tracking' },
                 },
             ],
