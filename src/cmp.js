@@ -3,7 +3,7 @@ const { once } = require('./util');
 const consentCacheKey = '__cmp_consent_cache';
 
 module.exports.loadCmpStubSync = () => {
-    require('./liveramp-stub');
+    // require('./liveramp-stub');
 };
 
 module.exports.loadCmpAsync = once(() => {
@@ -14,7 +14,8 @@ module.exports.loadCmpAsync = once(() => {
 });
 
 module.exports.isCmpEnabled = () => {
-    return location.href.indexOf('__cmp') >= 0;
+    return window.cmpEnabled;
+    // return location.href.indexOf('__cmp') >= 0;
 };
 
 module.exports.waitForConsentIfNeeded = () => {
@@ -71,7 +72,6 @@ module.exports.updateDataLayerAndCacheOnConsentChange = () => {
     cmpReady().then(() => {
         consentDataExists().then((exists) => {
             if (exists) {
-                console.log('Consent data exists');
                 getAllConsents().then(([vendorConsents, additionalVendorConsents]) => {
                     setDataLayerConsents(vendorConsents, additionalVendorConsents);
                     localStorage.setItem(consentCacheKey, JSON.stringify({ vendorConsents, additionalVendorConsents }));
@@ -93,7 +93,8 @@ module.exports.trySetDataLayerVariablesFromCache = () => {
 
 function trySetDataLayerVariablesFromCache() {
     if (!/faktorid/i.test(document.cookie)) {
-        // We should not use cache if faktor cookies are missing (e.g. cookies deleted by a extension which keeps localStorage)
+        // We do not use cached data if faktor cookies are missing
+        // (e.g. cookies were deleted by a extension which keeps localStorage)
         return false;
     }
 

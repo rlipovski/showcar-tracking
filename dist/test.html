@@ -23,6 +23,105 @@
         <as24-tracking type="gtm" action="pageview" as24-tracking-value='{"attribute":"pagination|1"}'></as24-tracking>
 
         <script src="//cdnjs.cloudflare.com/ajax/libs/document-register-element/0.4.3/document-register-element.js"></script>
+        <script data-pagespeed-no-defer>
+            (function () {
+                if (isInCmpExperiment()) {
+                    console.log('stub');
+                    window.cmpEnabled = true;
+                    loadCMPStub();
+                }
+
+                function isInCmpExperiment() {
+                    try {
+                        if (window.location.href.indexOf('__cmp') >= 0) {
+                            return true;
+                        }
+
+                        if (localStorage.getItem('as24_cmp_experiment') === '1') {
+                            return true;
+                        }
+
+                        if (localStorage.getItem('as24_cmp_experiment') === '0') {
+                            return false;
+                        }
+
+                        return false;
+
+                        // // Replace `return false` above with these lines below
+                        // var shouldBeInExperiment = ((Math.random() * 100) | 0) < 3;
+                        // localStorage.setItem('as24_cmp_experiment', shouldBeInExperiment ? '1' : '0');
+
+                        // return shouldBeInExperiment;
+                    } catch (ex) {
+                        return false;
+                    }
+
+                    return false;
+                }
+
+                function loadCMPStub() {
+                    if (!window.__cmp || typeof window.__cmp !== 'function') {
+                        var faktorCmpStart = window.__cmp ? window.__cmp.start : {};
+
+                        window.__cmp = (function () {
+                            var listen = window.attachEvent || window.addEventListener;
+                            listen('message', function (event) {
+                                window.__cmp.receiveMessage(event);
+                            });
+
+                            function addLocatorFrame() {
+                                if (!window.frames['__cmpLocator']) {
+                                    if (document.body) {
+                                        var frame = document.createElement('iframe');
+                                        frame.style.display = 'none';
+                                        frame.name = '__cmpLocator';
+                                        document.body.appendChild(frame);
+                                    } else {
+                                        setTimeout(addLocatorFrame, 5);
+                                    }
+                                }
+                            }
+
+                            addLocatorFrame();
+
+                            var commandQueue = [];
+                            var cmp = function (command, parameter, callback) {
+                                if (command === 'ping') {
+                                    if (callback) {
+                                        callback({
+                                            gdprAppliesGlobally: !!(
+                                                window.__cmp &&
+                                                window.__cmp.config &&
+                                                window.__cmp.config.storeConsentGlobally
+                                            ),
+                                            cmpLoaded: false,
+                                        });
+                                    }
+                                } else {
+                                    commandQueue.push({ command: command, parameter: parameter, callback: callback });
+                                }
+                            };
+                            cmp.commandQueue = commandQueue;
+                            cmp.receiveMessage = function (event) {
+                                var data = event && event.data && event.data.__cmpCall;
+                                if (data) {
+                                    commandQueue.push({
+                                        callId: data.callId,
+                                        command: data.command,
+                                        parameter: data.parameter,
+                                        event: event,
+                                    });
+                                }
+                            };
+
+                            return cmp;
+                        })();
+
+                        window.__cmp.start = faktorCmpStart;
+                    }
+                }
+            })();
+        </script>
         <script src="index.min.js"></script>
     </body>
 </html>
