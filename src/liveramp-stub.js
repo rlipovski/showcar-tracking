@@ -1,3 +1,4 @@
+typeof console === 'object' && console && console.log('2. stub');
 if (!window.__cmp || typeof window.__cmp !== 'function') {
     var faktorCmpStart = window.__cmp ? window.__cmp.start : {};
 
