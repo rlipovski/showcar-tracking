@@ -1,8 +1,9 @@
 <script data-pagespeed-no-defer>
     (function () {
+        'use strict';
+
         window.cmpEnabled = false;
         if (isInCmpExperiment()) {
-            console.log('stub');
             window.cmpEnabled = true;
             loadCMPStub();
         }
@@ -13,21 +14,16 @@
                     return true;
                 }
 
-                if (localStorage.getItem('as24_cmp_experiment') === '1') {
-                    return true;
-                }
+                if (window.location.hostname.split('.').pop() === 'de') {
+                    var cmpExperimentBucket =
+                        parseInt(localStorage.getItem('as24_cmp_experiment'), 10) || (Math.random() * 100) | 0;
 
-                if (localStorage.getItem('as24_cmp_experiment') === '0') {
-                    return false;
+                    localStorage.setItem('as24_cmp_experiment', cmpExperimentBucket);
+
+                    return cmpExperimentBucket < 3;
                 }
 
                 return false;
-
-                // Replace `return false` above with these lines below
-                // var shouldBeInExperiment = ((Math.random() * 100) | 0) < 3;
-                // localStorage.setItem('as24_cmp_experiment', shouldBeInExperiment ? '1' : '0');
-
-                // return shouldBeInExperiment;
             } catch (ex) {
                 return false;
             }
