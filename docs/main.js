@@ -667,7 +667,7 @@
 	}
 	
 	module.exports.sendMetricsOnEvents = function () {
-	    var events = ['faktorIdChanged', 'acceptAllButtonClicked', 'rejectAllButtonClicked', 'exitButtonClicked', 'privacySettingsButtonClicked', 'disabledCookies', 'consentManagerDisplayed', 'consentManagerClosed', 'consentWallDisplayed', 'consentWallClosed'];
+	    var events = ['faktorIdChanged', 'acceptAllButtonClicked', 'rejectAllButtonClicked', 'exitButtonClicked', 'privacySettingsButtonClicked', 'disabledCookies', 'consentManagerDisplayed', 'consentManagerClosed', 'consentWallDisplayed', 'consentWallClosed', 'consentToolShouldBeShown'];
 	
 	    events.forEach(function (event) {
 	        return window.__cmp('addEventListener', event, function () {
