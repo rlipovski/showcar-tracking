@@ -142,6 +142,10 @@ module.exports.sendMetricsOnEvents = () => {
     ];
 
     events.forEach((event) => window.__cmp('addEventListener', event, () => sendMetrics(event)));
+
+    // window.__cmp('addEventListener', 'consentToolShouldBeShown', () => {
+    //     console.log('shouldBeShown');
+    // });
 };
 
 function setDataLayerConsents(vendorConsents, additionalVendorConsents) {
@@ -193,6 +197,7 @@ function setDataLayerConsents(vendorConsents, additionalVendorConsents) {
 }
 
 function sendMetrics(name) {
+    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini|mobil/i.test(navigator.userAgent);
     fetch('/frontend-metrics/timeseries', {
         method: 'POST',
         headers: {
@@ -205,7 +210,7 @@ function sendMetrics(name) {
                     type: 'increment',
                     name: 'showcar-tracking-cmp-' + name,
                     value: 1,
-                    tags: { service: 'showcar-tracking' },
+                    tags: { service: 'showcar-tracking', device: isMobile ? 'mobile' : 'desktop' },
                 },
             ],
         }),
