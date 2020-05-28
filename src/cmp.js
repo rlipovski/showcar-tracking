@@ -139,6 +139,7 @@ module.exports.sendMetricsOnEvents = () => {
         'consentWallDisplayed',
         'consentWallClosed',
         'consentToolShouldBeShown',
+        'cmpReady',
     ];
 
     events.forEach((event) => window.__cmp('addEventListener', event, () => sendMetrics(event)));
