@@ -542,6 +542,15 @@
 	    var ref = document.getElementsByTagName('script')[0];
 	    ref.parentNode.insertBefore(script, ref);
 	    script.src = 'https://config-prod.choice.faktor.io/ea93c094-1e43-49f8-8c62-75128f08f70b/faktor.js';
+	
+	    try {
+	        var pv = parseInt(localStorage.getItem('as24_cmp_pageview') || '0', 10);
+	        localStorage.setItem('as24_cmp_pageview', pv + 1);
+	    } catch (ex) {
+	        //
+	    }
+	
+	    sendMetrics('cmp_pageview');
 	});
 	
 	module.exports.isCmpEnabled = function () {
@@ -714,7 +723,11 @@
 	                type: 'increment',
 	                name: 'showcar-tracking-cmp-' + name,
 	                value: 1,
-	                tags: { service: 'showcar-tracking', device: isMobile ? 'mobile' : 'desktop' }
+	                tags: {
+	                    service: 'showcar-tracking',
+	                    device: isMobile ? 'mobile' : 'desktop',
+	                    pageview: localStorage.getItem('as24_cmp_pageview')
+	                }
 	            }]
 	        })
 	    });
