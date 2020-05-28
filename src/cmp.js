@@ -207,7 +207,9 @@ function setDataLayerConsents(vendorConsents, additionalVendorConsents) {
 }
 
 function sendMetrics(name) {
-    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini|mobil/i.test(navigator.userAgent);
+    var isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini|mobil/i.test(navigator.userAgent);
+    var pv = parseInt(localStorage.getItem('as24_cmp_pageview'), 10);
+
     fetch('/frontend-metrics/timeseries', {
         method: 'POST',
         headers: {
@@ -223,7 +225,7 @@ function sendMetrics(name) {
                     tags: {
                         service: 'showcar-tracking',
                         device: isMobile ? 'mobile' : 'desktop',
-                        pageview: localStorage.getItem('as24_cmp_pageview'),
+                        pageview: pv > 5 ? '5+' : '' + pv,
                     },
                 },
             ],

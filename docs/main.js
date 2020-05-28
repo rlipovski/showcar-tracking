@@ -712,6 +712,8 @@
 	
 	function sendMetrics(name) {
 	    var isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini|mobil/i.test(navigator.userAgent);
+	    var pv = parseInt(localStorage.getItem('as24_cmp_pageview'), 10);
+	
 	    fetch('/frontend-metrics/timeseries', {
 	        method: 'POST',
 	        headers: {
@@ -726,7 +728,7 @@
 	                tags: {
 	                    service: 'showcar-tracking',
 	                    device: isMobile ? 'mobile' : 'desktop',
-	                    pageview: localStorage.getItem('as24_cmp_pageview')
+	                    pageview: pv > 5 ? '5+' : '' + pv
 	                }
 	            }]
 	        })
