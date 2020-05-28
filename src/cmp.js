@@ -196,6 +196,15 @@ function setDataLayerConsents(vendorConsents, additionalVendorConsents) {
         vendorConsents.purposeConsents[5] &&
         additionalVendorConsents.vendorConsents[223];
 
+    const kruxConsent =
+        vendorConsents &&
+        vendorConsents.purposeConsents[1] &&
+        vendorConsents.purposeConsents[2] &&
+        vendorConsents.purposeConsents[3] &&
+        vendorConsents.purposeConsents[4] &&
+        vendorConsents.purposeConsents[5] &&
+        additionalVendorConsents.vendorConsents[25];
+
     window.dataLayer = window.dataLayer || [];
     window.dataLayer.push({
         cmp_facebook_consent: facebookConsent,
@@ -203,6 +212,7 @@ function setDataLayerConsents(vendorConsents, additionalVendorConsents) {
         cmp_googleAds_consent: googleAdsConsent,
         cmp_bing_consent: bingConsent,
         cmp_mouseFlow_consent: mouseFlowConsent,
+        cmp_krux_consent: kruxConsent,
     });
 }
 
