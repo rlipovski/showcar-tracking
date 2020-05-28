@@ -14,14 +14,14 @@
                     return true;
                 }
 
-                // if (window.location.hostname.split('.').pop() === 'de') {
-                //     var cmpExperimentBucket =
-                //         parseInt(localStorage.getItem('as24_cmp_experiment'), 10) || (Math.random() * 100) | 0;
+                if (window.location.hostname.split('.').pop() === 'de') {
+                    var cmpExperimentBucket =
+                        parseInt(localStorage.getItem('as24_cmp_experiment'), 10) || (Math.random() * 100) | 0;
 
-                //     localStorage.setItem('as24_cmp_experiment', cmpExperimentBucket);
+                    localStorage.setItem('as24_cmp_experiment', cmpExperimentBucket);
 
-                //     return cmpExperimentBucket < 3;
-                // }
+                    return cmpExperimentBucket < 3;
+                }
 
                 return false;
             } catch (ex) {
