@@ -728,7 +728,7 @@
 	                tags: {
 	                    service: 'showcar-tracking',
 	                    device: isMobile ? 'mobile' : 'desktop',
-	                    pageview: pv > 5 ? '5+' : '' + pv
+	                    pageview: pv > 5 ? 5 : pv
 	                }
 	            }]
 	        })
