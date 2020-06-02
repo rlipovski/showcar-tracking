@@ -163,10 +163,11 @@ module.exports.sendMetricsOnEvents = () => {
         'disabledCookies',
         'consentManagerDisplayed',
         'consentManagerClosed',
-        'consentWallDisplayed',
+        // 'consentWallDisplayed',
         'consentWallClosed',
         'consentToolShouldBeShown',
         'cmpReady',
+        'brandConsentNoticeDisplayed',
     ];
 
     events.forEach((event) => window.__cmp('addEventListener', event, () => sendMetrics(event)));
