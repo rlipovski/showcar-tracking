@@ -569,6 +569,15 @@
 	    });
 	
 	    sendMetrics('cmp_pageview');
+	
+	    try {
+	        var userMadeDecision = !!localStorage[consentCacheKey];
+	        if (!userMadeDecision) {
+	            sendMetrics('cmp_pageview_without_decision');
+	        }
+	    } catch (ex) {
+	        //
+	    }
 	});
 	
 	module.exports.isCmpEnabled = function () {

@@ -39,6 +39,15 @@ module.exports.loadCmpAsync = once(() => {
     });
 
     sendMetrics('cmp_pageview');
+
+    try {
+        const userMadeDecision = !!localStorage[consentCacheKey];
+        if (!userMadeDecision) {
+            sendMetrics('cmp_pageview_without_decision');
+        }
+    } catch (ex) {
+        //
+    }
 });
 
 module.exports.isCmpEnabled = () => {
