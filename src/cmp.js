@@ -306,7 +306,7 @@ const serialize = (obj) => {
         .join('&');
 };
 
-function sendGAEvent(name) {
+function sendGAEvent(name, cd1) {
     const doc = document;
     const params = {
         z: Math.random(),
@@ -325,6 +325,7 @@ function sendGAEvent(name) {
         ec: 'CMP',
         ea: name,
         ni: 1,
+        cd1: !!localStorage[consentCacheKey] ? 'decided' : 'undecided',
     };
 
     const url = 'https://www.google-analytics.com/collect';
@@ -347,6 +348,7 @@ function sendGAPageview() {
         sr: (screen && `${screen.width}x${screen.height}`) || '',
         vp: `${document.documentElement.clientWidth}x${document.documentElement.clientHeight}`,
         cid: getcid(),
+        cd1: !!localStorage[consentCacheKey] ? 'decided' : 'undecided',
     };
 
     const url = 'https://www.google-analytics.com/collect';

@@ -805,7 +805,7 @@
 	    }).join('&');
 	};
 	
-	function sendGAEvent(name) {
+	function sendGAEvent(name, cd1) {
 	    var doc = document;
 	    var params = {
 	        z: Math.random(),
@@ -823,7 +823,8 @@
 	        cid: getcid(),
 	        ec: 'CMP',
 	        ea: name,
-	        ni: 1
+	        ni: 1,
+	        cd1: !!localStorage[consentCacheKey] ? 'decided' : 'undecided'
 	    };
 	
 	    var url = 'https://www.google-analytics.com/collect';
@@ -845,7 +846,8 @@
 	        de: doc.characterSet,
 	        sr: screen && screen.width + 'x' + screen.height || '',
 	        vp: document.documentElement.clientWidth + 'x' + document.documentElement.clientHeight,
-	        cid: getcid()
+	        cid: getcid(),
+	        cd1: !!localStorage[consentCacheKey] ? 'decided' : 'undecided'
 	    };
 	
 	    var url = 'https://www.google-analytics.com/collect';
