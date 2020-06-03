@@ -532,6 +532,7 @@
 	    once = _require.once;
 	
 	var consentCacheKey = '__cmp_consent_cache';
+	var isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini|mobil/i.test(navigator.userAgent);
 	
 	module.exports.loadCmpStubSync = function () {
 	    // require('./liveramp-stub');
@@ -552,6 +553,7 @@
 	
 	    function waitForIframe(cb) {
 	        var ifr = document.querySelector('iframe#cmp-faktor-io-brand-consent-notice');
+	        // const ifr = document.querySelector('div#cmp-faktor-io-parent');
 	        if (ifr) {
 	            cb(ifr);
 	            return;
@@ -562,11 +564,20 @@
 	        }, 50);
 	    }
 	
-	    window.__cmp('addEventListener', 'consentToolShouldBeShown', function () {
-	        waitForIframe(function (ifr) {
-	            ifr.parentNode.style = 'width: 100%; heigh: 100%; position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 1000; background-color: rgba(0, 0, 0, 0.35);';
+	    if (isMobile) {
+	        window.__cmp('addEventListener', 'consentToolShouldBeShown', function () {
+	            waitForIframe(function (ifr) {
+	                ifr.parentNode.style = 'width: 100%; heigh: 100%; position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 1000; background-color: rgba(0, 0, 0, 0.35);';
+	            });
 	        });
-	    });
+	    }
+	    // window.__cmp('addEventListener', 'consentToolShouldBeShown', () => {
+	    //     waitForIframe((ifr) => {
+	    //         console.log(ifr);
+	    //         ifr.parentNode.style = 'position: relative';
+	    //         // 'width: 100%; heigh: 100%; position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 1000; background-color: rgba(0, 0, 0, 0.35);';
+	    //     });
+	    // });
 	
 	    sendMetrics('cmp_pageview');
 	
@@ -742,7 +753,6 @@
 	}
 	
 	function sendMetrics(name) {
-	    var isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini|mobil/i.test(navigator.userAgent);
 	    var pv = parseInt(localStorage.getItem('as24_cmp_pageview'), 10);
 	
 	    fetch('/frontend-metrics/timeseries', {
