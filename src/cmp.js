@@ -50,11 +50,14 @@ module.exports.loadCmpAsync = once(() => {
     // });
 
     sendMetrics('cmp_pageview');
+    // sendGAEvent('pageview');
+    sendGAPageview();
 
     try {
         const userMadeDecision = !!localStorage[consentCacheKey];
         if (!userMadeDecision) {
             sendMetrics('cmp_pageview_without_decision');
+            sendGAEvent('pageview_without_decision');
         }
     } catch (ex) {
         //
@@ -191,10 +194,7 @@ module.exports.sendMetricsOnEvents = () => {
     ];
 
     events.forEach((event) => window.__cmp('addEventListener', event, () => sendMetrics(event)));
-
-    // window.__cmp('addEventListener', 'consentToolShouldBeShown', () => {
-    //     console.log('shouldBeShown');
-    // });
+    events.forEach((event) => window.__cmp('addEventListener', event, () => sendGAEvent(event)));
 };
 
 function setDataLayerConsents(vendorConsents, additionalVendorConsents) {
@@ -279,4 +279,68 @@ function sendMetrics(name) {
             ],
         }),
     });
+}
+
+function uuidv4() {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+        var r = (Math.random() * 16) | 0,
+            v = c == 'x' ? r : (r & 0x3) | 0x8;
+        return v.toString(16);
+    });
+}
+
+const getcid = () => {
+    const cid = localStorage.getItem('__cmp_experiment_cid') || uuidv4();
+    localStorage.setItem('__cmp_experiment_cid', cid);
+    return cid;
+};
+
+const serialize = (obj) => {
+    return Object.keys(obj)
+        .map((key) => `${key}=${encodeURIComponent(obj[key])}`)
+        .join('&');
+};
+
+function sendGAEvent(name) {
+    const doc = document;
+    const params = {
+        z: Math.random(),
+        aip: 1,
+        v: 1,
+        ds: 'web',
+        t: 'event',
+        dt: doc.title,
+        dl: doc.location.origin + doc.location.pathname + doc.location.search,
+        ul: navigator.language.toLowerCase(),
+        de: doc.characterSet,
+        sr: (screen && `${screen.width}x${screen.height}`) || '',
+        vp: `${document.documentElement.clientWidth}x${document.documentElement.clientHeight}`,
+        cid: getcid(),
+        ec: 'CMP',
+        ea: name,
+    };
+
+    const url = 'https://www.google-analytics.com/collect';
+    new Image().src = `${url}?${serialize(params)}`;
+}
+
+function sendGAPageview() {
+    const doc = document;
+    const params = {
+        z: Math.random(),
+        aip: 1,
+        v: 1,
+        ds: 'web',
+        t: 'pageview',
+        dt: doc.title,
+        dl: doc.location.origin + doc.location.pathname + doc.location.search,
+        ul: navigator.language.toLowerCase(),
+        de: doc.characterSet,
+        sr: (screen && `${screen.width}x${screen.height}`) || '',
+        vp: `${document.documentElement.clientWidth}x${document.documentElement.clientHeight}`,
+        cid: getcid(),
+    };
+
+    const url = 'https://www.google-analytics.com/collect';
+    new Image().src = `${url}?${serialize(params)}`;
 }
