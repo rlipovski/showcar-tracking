@@ -817,7 +817,8 @@
 	        vp: document.documentElement.clientWidth + 'x' + document.documentElement.clientHeight,
 	        cid: getcid(),
 	        ec: 'CMP',
-	        ea: name
+	        ea: name,
+	        ni: 1
 	    };
 	
 	    var url = 'https://www.google-analytics.com/collect';

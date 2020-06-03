@@ -319,6 +319,7 @@ function sendGAEvent(name) {
         cid: getcid(),
         ec: 'CMP',
         ea: name,
+        ni: 1
     };
 
     const url = 'https://www.google-analytics.com/collect';
