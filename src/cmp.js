@@ -256,6 +256,11 @@ function setDataLayerConsents(vendorConsents, additionalVendorConsents) {
 }
 
 function sendMetrics(name) {
+    const isBot = /bot|googlebot|crawler|spider|robot|crawling/i.test(navigator.userAgent);
+    if (isBot) {
+        return;
+    }
+
     var pv = parseInt(localStorage.getItem('as24_cmp_pageview'), 10);
 
     fetch('/frontend-metrics/timeseries', {
@@ -319,7 +324,7 @@ function sendGAEvent(name) {
         cid: getcid(),
         ec: 'CMP',
         ea: name,
-        ni: 1
+        ni: 1,
     };
 
     const url = 'https://www.google-analytics.com/collect';

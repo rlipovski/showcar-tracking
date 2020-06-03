@@ -757,6 +757,11 @@
 	}
 	
 	function sendMetrics(name) {
+	    var isBot = /bot|googlebot|crawler|spider|robot|crawling/i.test(navigator.userAgent);
+	    if (isBot) {
+	        return;
+	    }
+	
 	    var pv = parseInt(localStorage.getItem('as24_cmp_pageview'), 10);
 	
 	    fetch('/frontend-metrics/timeseries', {
