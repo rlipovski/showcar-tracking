@@ -33,14 +33,15 @@ module.exports.loadCmpAsync = once(() => {
         }, 50);
     }
 
-    if (isMobile) {
-        window.__cmp('addEventListener', 'consentToolShouldBeShown', () => {
-            waitForIframe((ifr) => {
-                ifr.parentNode.style =
-                    'width: 100%; heigh: 100%; position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 1000; background-color: rgba(0, 0, 0, 0.35);';
-            });
+    // if (isMobile) {
+    window.__cmp('addEventListener', 'consentToolShouldBeShown', () => {
+        waitForIframe((ifr) => {
+            ifr.parentNode.style =
+                'width: 100%; heigh: 100%; position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 1000; background-color: rgba(0, 0, 0, 0.35);';
         });
-    }
+    });
+    // }
+
     // window.__cmp('addEventListener', 'consentToolShouldBeShown', () => {
     //     waitForIframe((ifr) => {
     //         console.log(ifr);
