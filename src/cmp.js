@@ -344,12 +344,13 @@ function sendGAPageview() {
         t: 'pageview',
         dt: doc.title,
         dl: doc.location.origin + doc.location.pathname, // + doc.location.search,
+        dr: document.referrer,
         ul: navigator.language.toLowerCase(),
         de: doc.characterSet,
         sr: (screen && `${screen.width}x${screen.height}`) || '',
         vp: `${document.documentElement.clientWidth}x${document.documentElement.clientHeight}`,
         cid: getcid(),
-        cd1: !!localStorage[consentCacheKey] ? 'decided' : 'undecided',
+        cd1: /lastConsentChange/.test(document.cookie) ? 'decided' : 'undecided', // !!localStorage[consentCacheKey] ? 'decided' : 'undecided',
     };
 
     const url = 'https://www.google-analytics.com/collect';
