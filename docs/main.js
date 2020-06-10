@@ -746,6 +746,10 @@
 	
 	    var kruxConsent = vendorConsents && vendorConsents.purposeConsents[1] && vendorConsents.purposeConsents[2] && vendorConsents.purposeConsents[3] && vendorConsents.purposeConsents[4] && vendorConsents.purposeConsents[5] && additionalVendorConsents.vendorConsents[25];
 	
+	    var criteoConsent = vendorConsents && vendorConsents.purposeConsents[1] && vendorConsents.purposeConsents[2] && vendorConsents.vendorConsents[91];
+	
+	    var rtbConsent = vendorConsents && vendorConsents.purposeConsents[1] && vendorConsents.purposeConsents[2] && vendorConsents.vendorConsents[16];
+	
 	    window.dataLayer = window.dataLayer || [];
 	    window.dataLayer.push({
 	        cmp_facebook_consent: facebookConsent,
@@ -753,7 +757,9 @@
 	        cmp_googleAds_consent: googleAdsConsent,
 	        cmp_bing_consent: bingConsent,
 	        cmp_mouseFlow_consent: mouseFlowConsent,
-	        cmp_krux_consent: kruxConsent
+	        cmp_krux_consent: kruxConsent,
+	        cmp_criteo_consent: criteoConsent,
+	        cmp_rtb_consent: rtbConsent
 	    });
 	}
 	

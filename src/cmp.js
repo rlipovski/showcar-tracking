@@ -245,6 +245,18 @@ function setDataLayerConsents(vendorConsents, additionalVendorConsents) {
         vendorConsents.purposeConsents[5] &&
         additionalVendorConsents.vendorConsents[25];
 
+    const criteoConsent =
+        vendorConsents &&
+        vendorConsents.purposeConsents[1] &&
+        vendorConsents.purposeConsents[2] &&
+        vendorConsents.vendorConsents[91];
+
+    const rtbConsent =
+        vendorConsents &&
+        vendorConsents.purposeConsents[1] &&
+        vendorConsents.purposeConsents[2] &&
+        vendorConsents.vendorConsents[16];
+
     window.dataLayer = window.dataLayer || [];
     window.dataLayer.push({
         cmp_facebook_consent: facebookConsent,
@@ -253,6 +265,8 @@ function setDataLayerConsents(vendorConsents, additionalVendorConsents) {
         cmp_bing_consent: bingConsent,
         cmp_mouseFlow_consent: mouseFlowConsent,
         cmp_krux_consent: kruxConsent,
+        cmp_criteo_consent: criteoConsent,
+        cmp_rtb_consent: rtbConsent,
     });
 }
 
