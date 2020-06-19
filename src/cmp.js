@@ -1,23 +1,86 @@
 const { once } = require('./util');
 
 const consentCacheKey = '__cmp_consent_cache';
-var isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini|mobil/i.test(navigator.userAgent);
+const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini|mobil/i.test(navigator.userAgent);
 
-module.exports.loadCmpStubSync = () => {
-    // require('./liveramp-stub');
-};
+const optimizelyEnabled = window.location.href.indexOf('__cmp-optimizely') >= 0;
 
 module.exports.loadCmpAsync = once(() => {
     const script = document.createElement('script');
     const ref = document.getElementsByTagName('script')[0];
     ref.parentNode.insertBefore(script, ref);
-    script.src = 'https://config-prod.choice.faktor.io/ea93c094-1e43-49f8-8c62-75128f08f70b/faktor.js';
 
     try {
         var pv = parseInt(localStorage.getItem('as24_cmp_pageview') || '0', 10);
         localStorage.setItem('as24_cmp_pageview', pv + 1);
+
+        if (optimizelyEnabled && !localStorage.getItem('__as24_cmp_userid')) {
+            // delete decision cookies when user gets into an experiment where they haven't been before
+
+            deleteCookie('769b8c9a-14d7-4f0f-bc59-2748c96ec403faktorId');
+            deleteCookie('769b8c9a-14d7-4f0f-bc59-2748c96ec403faktorChecksum');
+            deleteCookie('769b8c9a-14d7-4f0f-bc59-2748c96ec403cconsent');
+            deleteCookie('769b8c9a-14d7-4f0f-bc59-2748c96ec403euconsent');
+
+            deleteCookie('ea93c094-1e43-49f8-8c62-75128f08f70bfaktorChecksum');
+            deleteCookie('ea93c094-1e43-49f8-8c62-75128f08f70beuconsent');
+            deleteCookie('ea93c094-1e43-49f8-8c62-75128f08f70bcconsent');
+            deleteCookie('ea93c094-1e43-49f8-8c62-75128f08f70bfaktorId');
+
+            deleteCookie('lastConsentChange');
+        }
+
+        getCmpVariationData().then(({ userid, variation }) => {
+            window.__as24_cmp_userid = userid;
+            window.__as24_cmp_variation = variation;
+
+            loadCmp(variation);
+
+            localStorage.setItem('__as24_cmp_userid', userid);
+            localStorage.setItem('__as24_cmp_variation', variation);
+
+            if (variation) {
+                window.__as24_cmp_opt_sendevent = function (event) {
+                    new Image().src =
+                        'https://cmp-optimizely-fs.as24-media.eu-west-1.infinity.as24.tech/sendevent/' +
+                        userid +
+                        '/' +
+                        event;
+                };
+            }
+        });
+
+        console.log(window.__as24_cmp_userid, window.__as24_cmp_variation);
     } catch (ex) {
         //
+    }
+
+    function getCmpVariationData() {
+        if (!optimizelyEnabled) {
+            return Promise.resolve({ variation: null, userid: '' });
+        }
+
+        if (localStorage.getItem('__as24_cmp_userid') && localStorage.getItem('__as24_cmp_variation')) {
+            return Promise.resolve({
+                variation: localStorage.getItem('__as24_cmp_variation'),
+                userid: localStorage.getItem('__as24_cmp_userid'),
+            });
+        }
+
+        const userid = uuidv4();
+
+        return fetch(
+            'https://cmp-optimizely-fs.as24-media.eu-west-1.infinity.as24.tech/activate/cmp_classic_vs__nextgen/' +
+                userid
+        ).then((r) => r.json());
+    }
+
+    function loadCmp(variation) {
+        if (variation === 'classic') {
+            script.src = 'https://config-prod.choice.faktor.io/769b8c9a-14d7-4f0f-bc59-2748c96ec403/faktor.js';
+        } else {
+            script.src = 'https://config-prod.choice.faktor.io/ea93c094-1e43-49f8-8c62-75128f08f70b/faktor.js';
+        }
     }
 
     function waitForIframe(cb) {
@@ -369,4 +432,9 @@ function sendGAPageview() {
 
     const url = 'https://www.google-analytics.com/collect';
     new Image().src = `${url}?${serialize(params)}`;
+}
+
+function deleteCookie(name) {
+    const domain = location.hostname.replace('www.', '.').replace('local.', '.');
+    document.cookie = name + '=; path=/; domain=' + domain + '; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
 }
