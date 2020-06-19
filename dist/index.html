@@ -5,6 +5,7 @@
         window.cmpEnabled = false;
         if (isInCmpExperiment()) {
             window.cmpEnabled = true;
+            // window.__as24_cmp_variation = 'original';
             loadCMPStub();
         }
 
