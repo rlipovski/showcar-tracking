@@ -259,6 +259,14 @@ module.exports.sendMetricsOnEvents = () => {
 
     events.forEach((event) => window.__cmp('addEventListener', event, () => sendMetrics(event)));
     events.forEach((event) => window.__cmp('addEventListener', event, () => sendGAEvent(event)));
+
+    window.__cmp('addEventListener', ' acceptAllButtonClicked', () => {
+        window.__as24_cmp_opt_sendevent && window.__as24_cmp_opt_sendevent('acceptAll');
+    });
+
+    window.__cmp('addEventListener', ' rejectAllButtonClicked', () => {
+        window.__as24_cmp_opt_sendevent && window.__as24_cmp_opt_sendevent('rejectAll');
+    });
 };
 
 function setDataLayerConsents(vendorConsents, additionalVendorConsents) {

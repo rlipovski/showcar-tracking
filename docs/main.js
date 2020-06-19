@@ -791,6 +791,14 @@
 	            return sendGAEvent(event);
 	        });
 	    });
+	
+	    window.__cmp('addEventListener', ' acceptAllButtonClicked', function () {
+	        window.__as24_cmp_opt_sendevent && window.__as24_cmp_opt_sendevent('acceptAll');
+	    });
+	
+	    window.__cmp('addEventListener', ' rejectAllButtonClicked', function () {
+	        window.__as24_cmp_opt_sendevent && window.__as24_cmp_opt_sendevent('rejectAll');
+	    });
 	};
 	
 	function setDataLayerConsents(vendorConsents, additionalVendorConsents) {
