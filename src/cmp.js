@@ -36,16 +36,26 @@ module.exports.loadCmpAsync = once(() => {
 
             loadCmp(variation);
 
-            localStorage.setItem('__as24_cmp_userid', userid);
-            localStorage.setItem('__as24_cmp_variation', variation);
-
             if (variation) {
+                localStorage.setItem('__as24_cmp_userid', userid);
+                localStorage.setItem('__as24_cmp_variation', variation);
+
                 window.__as24_cmp_opt_sendevent = function (event) {
-                    new Image().src =
+                    const url =
                         'https://cmp-optimizely-fs.as24-media.eu-west-1.infinity.as24.tech/sendevent/' +
                         userid +
                         '/' +
                         event;
+
+                    if ('sendBeacon' in navigator) {
+                        navigator.sendBeacon(url);
+                    } else {
+                        new Image().src =
+                            'https://cmp-optimizely-fs.as24-media.eu-west-1.infinity.as24.tech/sendevent/' +
+                            userid +
+                            '/' +
+                            event;
+                    }
                 };
             }
         });
@@ -260,12 +270,37 @@ module.exports.sendMetricsOnEvents = () => {
     events.forEach((event) => window.__cmp('addEventListener', event, () => sendMetrics(event)));
     events.forEach((event) => window.__cmp('addEventListener', event, () => sendGAEvent(event)));
 
-    window.__cmp('addEventListener', ' acceptAllButtonClicked', () => {
-        window.__as24_cmp_opt_sendevent && window.__as24_cmp_opt_sendevent('acceptAll');
+    window.__cmp('addEventListener', 'acceptAllButtonClicked', () => {
+        window.__as24_cmp_opt_sendevent && window.__as24_cmp_opt_sendevent('cmpAcceptAll');
     });
 
-    window.__cmp('addEventListener', ' rejectAllButtonClicked', () => {
-        window.__as24_cmp_opt_sendevent && window.__as24_cmp_opt_sendevent('rejectAll');
+    window.__cmp('addEventListener', 'rejectAllButtonClicked', () => {
+        window.__as24_cmp_opt_sendevent && window.__as24_cmp_opt_sendevent('cmpRejectAll');
+    });
+
+    window.__cmp('addEventListener', 'exitButtonClicked', () => {
+        window.__as24_cmp_opt_sendevent && window.__as24_cmp_opt_sendevent('cmpExit');
+    });
+
+    window.__cmp('addEventListener', 'consentToolShouldBeShown', () => {
+        window.__as24_cmp_opt_sendevent && window.__as24_cmp_opt_sendevent('cmpShown');
+
+        var interaction = false;
+        const interactionEvents = [
+            'acceptAllButtonClicked',
+            'rejectAllButtonClicked',
+            'exitButtonClicked',
+            'privacySettingsButtonClicked',
+        ];
+
+        interactionEvents.forEach((event) => window.__cmp('addEventListener', event, () => (interaction = true)));
+
+        window.addEventListener('unload', () => {
+            if (!interaction) {
+                // track if user navigates to a new AS24 page without interacting with the page
+                window.__as24_cmp_opt_sendevent && window.__as24_cmp_opt_sendevent('cmpNavigationWithoutInteraction');
+            }
+        });
     });
 };
 
@@ -412,6 +447,7 @@ function sendGAEvent(name, cd1) {
         ea: name,
         ni: 1,
         cd1: !!localStorage[consentCacheKey] ? 'decided' : 'undecided',
+        cd2: window.__as24_cmp_variation,
     };
 
     const url = 'https://www.google-analytics.com/collect';
