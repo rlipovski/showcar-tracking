@@ -174,14 +174,14 @@ function hasGivenConsent(vendorConsents) {
 
 module.exports.waitForConsentAgreementIfNeeded = () => {
     return new Promise((resolve) => {
-        try {
+        /*try {
             const cache = JSON.parse(localStorage.getItem(consentCacheKey));
             if(cache) {
                 resolve(hasGivenConsent(cache.vendorConsents));
                 return;
             }
         } catch (e) {
-        }
+        }*/
 
         const handler = (e) => {
             window.__cmp('getVendorConsents', undefined, (vendorData) => {
