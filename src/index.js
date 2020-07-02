@@ -72,7 +72,15 @@ const run = () => {
 
     cmp.sendMetricsOnEvents();
 
-    cmp.waitForConsentIfNeeded().then(() => startTracking());
+    if (window.location.href.indexOf('__cmp') >= 0) {
+        cmp.waitForConsentAgreementIfNeeded().then((hasGivenConsent) => {
+            if (hasGivenConsent) {
+                startTracking();
+            }
+        });
+    } else {
+        cmp.waitForConsentIfNeeded().then(() => startTracking());
+    }
 
     // if (cmp.trySetDataLayerVariablesFromCache()) {
     //     // We have consent data in cache so we can proceed loading GTM
