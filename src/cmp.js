@@ -162,6 +162,38 @@ module.exports.waitForConsentIfNeeded = () => {
     });
 };
 
+function hasGivenConsent(vendorConsents) {
+    const hasGivenConsent = !!(
+        vendorConsents.purposeConsents[1] &&
+        vendorConsents.purposeConsents[2] &&
+        vendorConsents.purposeConsents[3] &&
+        vendorConsents.purposeConsents[4] &&
+        vendorConsents.purposeConsents[5]);
+    return hasGivenConsent;
+};
+
+module.exports.waitForConsentAgreementIfNeeded = () => {
+    return new Promise((resolve) => {
+        try {
+            const cache = JSON.parse(localStorage.getItem(consentCacheKey));
+            if(cache) {
+                resolve(hasGivenConsent(cache.vendorConsents));
+                return;
+            }
+        } catch (e) {
+        }
+
+        const handler = (e) => {
+            window.__cmp('getVendorConsents', undefined, (vendorData) => {
+                window.__cmp('removeEventListener', 'consentChanged', handler);
+                resolve(hasGivenConsent(vendorData));
+            });
+        };
+
+        window.__cmp('addEventListener', 'consentChanged', handler);
+    });
+};
+
 module.exports.waitForFirstCmpDecision = () => {
     return new Promise((resolve) => {
         const handler = (e) => {

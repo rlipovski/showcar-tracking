@@ -94,7 +94,11 @@ function trackPageview(data) {
 
     setTimeout(function () {
         if (firstPageview) {
-            gtm.loadContainer(containerId);
+            if (window.location.href.indexOf('__cmp') >= 0) {
+                gtm.loadContainerOnlyWidthConsent(containerId);
+            } else {
+                gtm.loadContainer(containerId);
+            }            
 
             gtm.push({
                 event: 'common_data_ready',
