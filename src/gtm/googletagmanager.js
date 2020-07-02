@@ -1,3 +1,5 @@
+const cmp = require('../cmp');
+
 var dataLayer = (window.dataLayer = window.dataLayer || []);
 var useNewArrayLogic = window.location.href.indexOf('tracking-arrays=true') >= 0;
 
@@ -24,6 +26,14 @@ module.exports = {
             j.src = '//www.googletagmanager.com/gtm.js?id=' + i + dl;
             f.parentNode.insertBefore(j, f);
         })(window, document, 'script', 'dataLayer', containerId);
+    },
+
+    loadContainerOnlyWidthConsent: function(containerId) {
+        cmp.waitForConsentAgreementIfNeededthis().then((hasGivenConsent) => {
+            if(hasGivenConsent) {
+                this.loadContainer(containerId);
+            }
+        });
     },
 
     push: function () {
