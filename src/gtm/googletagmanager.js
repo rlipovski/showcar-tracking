@@ -29,7 +29,7 @@ module.exports = {
     },
 
     loadContainerOnlyWidthConsent: function(containerId) {
-        cmp.waitForConsentAgreementIfNeededthis().then((hasGivenConsent) => {
+        cmp.waitForConsentAgreementIfNeeded().then((hasGivenConsent) => {
             if(hasGivenConsent) {
                 this.loadContainer(containerId);
             }
