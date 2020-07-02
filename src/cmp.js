@@ -174,22 +174,21 @@ function hasGivenConsent(vendorConsents) {
 
 module.exports.waitForConsentAgreementIfNeeded = () => {
     return new Promise((resolve) => {
-        try {
-            const cache = JSON.parse(localStorage.getItem(consentCacheKey));
-            if(cache) {
-                resolve(hasGivenConsent(cache.vendorConsents));
-                return;
-            }
-        } catch (e) {
-        }
-
+        window.__cmp('consentDataExist', null, (consentDataExists) => {
+            if (consentDataExists === true) {
+                window.__cmp('getVendorConsents', undefined, (vendorData) => {
+                    window.__cmp('removeEventListener', 'consentChanged', handler);
+                    resolve(hasGivenConsent(vendorData));
+                });
+            } 
+        });   
+        
         const handler = (e) => {
             window.__cmp('getVendorConsents', undefined, (vendorData) => {
                 window.__cmp('removeEventListener', 'consentChanged', handler);
                 resolve(hasGivenConsent(vendorData));
             });
         };
-
         window.__cmp('addEventListener', 'consentChanged', handler);
     });
 };
