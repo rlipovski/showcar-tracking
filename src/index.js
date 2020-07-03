@@ -72,7 +72,8 @@ const run = () => {
 
     cmp.sendMetricsOnEvents();
 
-    if (window.location.href.indexOf('__cmp') >= 0) {
+    // !!! We don't load GTM in NL without consent !!!
+    if (cmp.isCmpEnabled() && window.location.hostname.split('.').pop() === 'nl') {
         cmp.waitForConsentAgreementIfNeeded().then((hasGivenConsent) => {
             if (hasGivenConsent) {
                 startTracking();

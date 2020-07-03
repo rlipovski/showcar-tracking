@@ -94,7 +94,8 @@ function trackPageview(data) {
 
     setTimeout(function () {
         if (firstPageview) {
-            if (window.location.href.indexOf('__cmp') >= 0) {
+            // !!! We don't load GTM in NL without consent !!!
+            if (window.cmpEnabled && window.location.hostname.split('.').pop() === 'nl') {
                 gtm.loadContainerOnlyWidthConsent(containerId);
             } else {
                 gtm.loadContainer(containerId);
