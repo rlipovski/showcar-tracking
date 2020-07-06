@@ -5,6 +5,11 @@ const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini|
 
 const optimizelyEnabled = window.location.href.indexOf('__cmp-optimizely') >= 0;
 
+const cmpSiteIds = {
+    'de': '769b8c9a-14d7-4f0f-bc59-2748c96ec403',
+    'nl': '11590dc9-3700-43b4-aacd-731ef5261fdf'
+}
+
 module.exports.loadCmpAsync = once(() => {
     const script = document.createElement('script');
     const ref = document.getElementsByTagName('script')[0];
@@ -86,10 +91,16 @@ module.exports.loadCmpAsync = once(() => {
     }
 
     function loadCmp(variation) {
-        if (variation === 'classic') {
-            script.src = 'https://config-prod.choice.faktor.io/769b8c9a-14d7-4f0f-bc59-2748c96ec403/faktor.js';
+        const tld = window.location.hostname.split('.').pop();
+        if(tld === 'de') {
+            if (variation === 'classic') {
+                script.src = 'https://config-prod.choice.faktor.io/769b8c9a-14d7-4f0f-bc59-2748c96ec403/faktor.js';
+            } else {
+                script.src = 'https://config-prod.choice.faktor.io/ea93c094-1e43-49f8-8c62-75128f08f70b/faktor.js';
+            }
         } else {
-            script.src = 'https://config-prod.choice.faktor.io/ea93c094-1e43-49f8-8c62-75128f08f70b/faktor.js';
+            const cmpSiteId = cmpSiteIds[tld] || cmpSiteIds['de'];
+            script.src = `https://config-prod.choice.faktor.io/${cmpSiteId}/faktor.js`;
         }
     }
 
