@@ -7,6 +7,7 @@ const optimizelyEnabled = window.location.href.indexOf('__cmp-optimizely') >= 0;
 
 const cmpSiteIds = {
     'de': '769b8c9a-14d7-4f0f-bc59-2748c96ec403',
+    'it': '7dc55efc-b43a-4ab6-a31b-d084591ee853',
     'nl': '11590dc9-3700-43b4-aacd-731ef5261fdf'
 }
 

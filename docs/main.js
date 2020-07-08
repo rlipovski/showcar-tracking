@@ -59,7 +59,7 @@
 	
 	var startTracking = function startTracking() {
 	    var gtm = __webpack_require__(2);
-	    var dealerGtm = __webpack_require__(9);
+	    var dealerGtm = __webpack_require__(11);
 	
 	    function processCommand(data) {
 	        var fn, args;
@@ -94,7 +94,7 @@
 	        ut.forEach(processCommand);
 	    }
 	
-	    __webpack_require__(10);
+	    __webpack_require__(12);
 	
 	    module.exports = {
 	        gtm: gtm,
@@ -102,7 +102,7 @@
 	    };
 	};
 	
-	var cmp = __webpack_require__(11);
+	var cmp = __webpack_require__(7);
 	
 	var run = function run() {
 	    if (!trackingEnabled) {
@@ -129,9 +129,18 @@
 	
 	    cmp.sendMetricsOnEvents();
 	
-	    cmp.waitForConsentIfNeeded().then(function () {
-	        return startTracking();
-	    });
+	    // !!! We don't load GTM in NL without consent !!!
+	    if (cmp.isCmpEnabled() && window.location.hostname.split('.').pop() === 'nl') {
+	        cmp.waitForConsentAgreementIfNeeded().then(function (hasGivenConsent) {
+	            if (hasGivenConsent) {
+	                startTracking();
+	            }
+	        });
+	    } else {
+	        cmp.waitForConsentIfNeeded().then(function () {
+	            return startTracking();
+	        });
+	    }
 	
 	    // if (cmp.trySetDataLayerVariablesFromCache()) {
 	    //     // We have consent data in cache so we can proceed loading GTM
@@ -157,8 +166,8 @@
 	var merge = __webpack_require__(3);
 	
 	var gtm = __webpack_require__(6);
-	var containerId = __webpack_require__(7)(location.hostname);
-	var viewport = __webpack_require__(8);
+	var containerId = __webpack_require__(9)(location.hostname);
+	var viewport = __webpack_require__(10);
 	
 	var pagename;
 	
@@ -235,7 +244,12 @@
 	
 	    setTimeout(function () {
 	        if (firstPageview) {
-	            gtm.loadContainer(containerId);
+	            // !!! We don't load GTM in NL without consent !!!
+	            if (window.cmpEnabled && window.location.hostname.split('.').pop() === 'nl') {
+	                gtm.loadContainerOnlyWidthConsent(containerId);
+	            } else {
+	                gtm.loadContainer(containerId);
+	            }
 	
 	            gtm.push({
 	                event: 'common_data_ready'
@@ -310,9 +324,11 @@
 
 /***/ }),
 /* 6 */
-/***/ (function(module, exports) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
+	
+	var cmp = __webpack_require__(7);
 	
 	var dataLayer = window.dataLayer = window.dataLayer || [];
 	var useNewArrayLogic = window.location.href.indexOf('tracking-arrays=true') >= 0;
@@ -339,6 +355,16 @@
 	            j.src = '//www.googletagmanager.com/gtm.js?id=' + i + dl;
 	            f.parentNode.insertBefore(j, f);
 	        })(window, document, 'script', 'dataLayer', containerId);
+	    },
+	
+	    loadContainerOnlyWidthConsent: function loadContainerOnlyWidthConsent(containerId) {
+	        var _this = this;
+	
+	        cmp.waitForConsentAgreementIfNeeded().then(function (hasGivenConsent) {
+	            if (hasGivenConsent) {
+	                _this.loadContainer(containerId);
+	            }
+	        });
 	    },
 	
 	    push: function push() {
@@ -368,172 +394,25 @@
 
 /***/ }),
 /* 7 */
-/***/ (function(module, exports) {
-
-	'use strict';
-	
-	var containerIdsByTld = {
-	    de: 'GTM-MK57H2',
-	    at: 'GTM-WBZ87G',
-	    be: 'GTM-5BWB2M',
-	    lu: 'GTM-NDBDCZ',
-	    es: 'GTM-PS6QHN',
-	    fr: 'GTM-PD93LD',
-	    it: 'GTM-WTCSNR',
-	    nl: 'GTM-TW48BJ',
-	    com: 'GTM-KWX9NX'
-	};
-	
-	module.exports = function (hostname) {
-	    var tld = hostname.split('.').pop();
-	    return containerIdsByTld[tld] || containerIdsByTld['com'];
-	};
-
-/***/ }),
-/* 8 */
-/***/ (function(module, exports) {
-
-	'use strict';
-	
-	var viewportWidth = Math.min(document.documentElement.clientWidth, window.innerWidth || screen.width);
-	
-	module.exports = {
-	    session_viewport: viewportWidth >= 994 ? 'l' : viewportWidth >= 768 ? 'm' : viewportWidth >= 480 ? 's' : 'xs'
-	};
-
-/***/ }),
-/* 9 */
-/***/ (function(module, exports) {
-
-	"use strict";
-	
-	var currentVehicles = [];
-	
-	function add(data) {
-	    currentVehicles.push(data);
-	}
-	
-	function commit() {
-	    window.dataLayer = window.dataLayer || [];
-	    window.dataLayer.push({
-	        list_productidsall: currentVehicles
-	    });
-	
-	    currentVehicles = [];
-	}
-	
-	module.exports = {
-	    add: add,
-	    commit: commit
-	};
-
-/***/ }),
-/* 10 */
-/***/ (function(module, exports) {
-
-	'use strict';
-	
-	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-	
-	var as24tracking = _extends(Object.create(HTMLElement.prototype), {
-	    inDev: false,
-	    supportedActions: ['set', 'click', 'pageview'],
-	    supportedTypes: ['gtm', 'pagename'],
-	    reservedWords: ['type', 'action', 'as24-tracking-value', 'as24-tracking-click-target'],
-	
-	    attachedCallback: function attachedCallback() {
-	        var _this = this;
-	
-	        var values = this.getAdditionalProperties();
-	        var type = this.getAttribute('type');
-	        var action = this.getAttribute('action');
-	        var args = [type, action];
-	
-	        if (Object.keys(values).length > 0) {
-	            args.push(values);
-	        }
-	
-	        if (type === 'pagename') {
-	            args.splice(1, 1);
-	        }
-	
-	        var clickTarget = this.getAttribute('as24-tracking-click-target');
-	        if (clickTarget) {
-	            var elements = document.querySelectorAll(clickTarget);
-	
-	            for (var i = 0; i < elements.length; i++) {
-	                elements[i].addEventListener('click', function () {
-	                    return _this.track(args);
-	                });
-	            }
-	        } else {
-	            this.track(args);
-	        }
-	    },
-	    getAdditionalProperties: function getAdditionalProperties() {
-	        var _this2 = this;
-	
-	        var trackingValue = this.getAttribute('as24-tracking-value');
-	        var values = trackingValue ? JSON.parse(trackingValue) : {};
-	
-	        if (Array.isArray(values)) {
-	            return values;
-	        }
-	
-	        return Array.prototype.slice.call(this.attributes).filter(function (element) {
-	            return !(_this2.reservedWords.indexOf(element.nodeName) > -1);
-	        }).reduce(function (prev, curr) {
-	            var attrName = _this2.decodeAttributeName(curr.nodeName);
-	            prev[attrName] = curr.nodeValue;
-	            return prev;
-	        }, values);
-	    },
-	    decodeAttributeName: function decodeAttributeName(attrName) {
-	        if (attrName.indexOf('-') > -1) {
-	            attrName = attrName.replace(/-([a-z])/g, function (g) {
-	                return g[1].toUpperCase();
-	            });
-	        }
-	        return attrName;
-	    },
-	    track: function track(args) {
-	        if (this.inDev) {
-	            console.log(args);
-	        } else {
-	            window.ut = window.ut || [];
-	            window.ut.push(args);
-	        }
-	    }
-	});
-	
-	try {
-	    var ctor = document.createElement('as24-tracking').constructor;
-	    if (ctor === HTMLElement || ctor === HTMLUnknownElement) {
-	        document.registerElement('as24-tracking', {
-	            prototype: as24tracking
-	        });
-	    }
-	} catch (e) {
-	    if (window && window.console) {
-	        window.console.warn('Failed to register CustomElement "as24-tracking".', e);
-	    }
-	}
-
-/***/ }),
-/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
 	
-	var _require = __webpack_require__(12),
+	var _require = __webpack_require__(8),
 	    once = _require.once;
 	
 	var consentCacheKey = '__cmp_consent_cache';
 	var isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini|mobil/i.test(navigator.userAgent);
 	
 	var optimizelyEnabled = window.location.href.indexOf('__cmp-optimizely') >= 0;
+	
+	var cmpSiteIds = {
+	    'de': '769b8c9a-14d7-4f0f-bc59-2748c96ec403',
+	    'it': '7dc55efc-b43a-4ab6-a31b-d084591ee853',
+	    'nl': '11590dc9-3700-43b4-aacd-731ef5261fdf'
+	};
 	
 	module.exports.loadCmpAsync = once(function () {
 	    var script = document.createElement('script');
@@ -610,10 +489,16 @@
 	    }
 	
 	    function loadCmp(variation) {
-	        if (variation === 'classic') {
-	            script.src = 'https://config-prod.choice.faktor.io/769b8c9a-14d7-4f0f-bc59-2748c96ec403/faktor.js';
+	        var tld = window.location.hostname.split('.').pop();
+	        if (tld === 'de') {
+	            if (variation === 'classic') {
+	                script.src = 'https://config-prod.choice.faktor.io/769b8c9a-14d7-4f0f-bc59-2748c96ec403/faktor.js';
+	            } else {
+	                script.src = 'https://config-prod.choice.faktor.io/ea93c094-1e43-49f8-8c62-75128f08f70b/faktor.js';
+	            }
 	        } else {
-	            script.src = 'https://config-prod.choice.faktor.io/ea93c094-1e43-49f8-8c62-75128f08f70b/faktor.js';
+	            var cmpSiteId = cmpSiteIds[tld] || cmpSiteIds['de'];
+	            script.src = 'https://config-prod.choice.faktor.io/' + cmpSiteId + '/faktor.js';
 	        }
 	    }
 	
@@ -681,6 +566,32 @@
 	            });
 	        };
 	
+	        window.__cmp('addEventListener', 'consentChanged', handler);
+	    });
+	};
+	
+	function hasGivenConsent(vendorConsents) {
+	    var hasGivenConsent = !!(vendorConsents.purposeConsents[1] && vendorConsents.purposeConsents[2] && vendorConsents.purposeConsents[3] && vendorConsents.purposeConsents[4] && vendorConsents.purposeConsents[5]);
+	    return hasGivenConsent;
+	};
+	
+	module.exports.waitForConsentAgreementIfNeeded = function () {
+	    return new Promise(function (resolve) {
+	        window.__cmp('consentDataExist', null, function (consentDataExists) {
+	            if (consentDataExists === true) {
+	                window.__cmp('getVendorConsents', undefined, function (vendorData) {
+	                    window.__cmp('removeEventListener', 'consentChanged', handler);
+	                    resolve(hasGivenConsent(vendorData));
+	                });
+	            }
+	        });
+	
+	        var handler = function handler(e) {
+	            window.__cmp('getVendorConsents', undefined, function (vendorData) {
+	                window.__cmp('removeEventListener', 'consentChanged', handler);
+	                resolve(hasGivenConsent(vendorData));
+	            });
+	        };
 	        window.__cmp('addEventListener', 'consentChanged', handler);
 	    });
 	};
@@ -813,7 +724,6 @@
 	    window.__cmp('addEventListener', 'consentToolShouldBeShown', function () {
 	        window.__as24_cmp_opt_sendevent && window.__as24_cmp_opt_sendevent('cmpShown');
 	
-	        // TODO: track if user navigates to a new AS24 page without interacting with the page
 	        var interaction = false;
 	        var interactionEvents = ['acceptAllButtonClicked', 'rejectAllButtonClicked', 'exitButtonClicked', 'privacySettingsButtonClicked'];
 	
@@ -825,6 +735,7 @@
 	
 	        window.addEventListener('unload', function () {
 	            if (!interaction) {
+	                // track if user navigates to a new AS24 page without interacting with the page
 	                window.__as24_cmp_opt_sendevent && window.__as24_cmp_opt_sendevent('cmpNavigationWithoutInteraction');
 	            }
 	        });
@@ -967,7 +878,7 @@
 	}
 
 /***/ }),
-/* 12 */
+/* 8 */
 /***/ (function(module, exports) {
 
 	"use strict";
@@ -981,6 +892,159 @@
 	        }
 	    };
 	};
+
+/***/ }),
+/* 9 */
+/***/ (function(module, exports) {
+
+	'use strict';
+	
+	var containerIdsByTld = {
+	    de: 'GTM-MK57H2',
+	    at: 'GTM-WBZ87G',
+	    be: 'GTM-5BWB2M',
+	    lu: 'GTM-NDBDCZ',
+	    es: 'GTM-PS6QHN',
+	    fr: 'GTM-PD93LD',
+	    it: 'GTM-WTCSNR',
+	    nl: 'GTM-TW48BJ',
+	    com: 'GTM-KWX9NX'
+	};
+	
+	module.exports = function (hostname) {
+	    var tld = hostname.split('.').pop();
+	    return containerIdsByTld[tld] || containerIdsByTld['com'];
+	};
+
+/***/ }),
+/* 10 */
+/***/ (function(module, exports) {
+
+	'use strict';
+	
+	var viewportWidth = Math.min(document.documentElement.clientWidth, window.innerWidth || screen.width);
+	
+	module.exports = {
+	    session_viewport: viewportWidth >= 994 ? 'l' : viewportWidth >= 768 ? 'm' : viewportWidth >= 480 ? 's' : 'xs'
+	};
+
+/***/ }),
+/* 11 */
+/***/ (function(module, exports) {
+
+	"use strict";
+	
+	var currentVehicles = [];
+	
+	function add(data) {
+	    currentVehicles.push(data);
+	}
+	
+	function commit() {
+	    window.dataLayer = window.dataLayer || [];
+	    window.dataLayer.push({
+	        list_productidsall: currentVehicles
+	    });
+	
+	    currentVehicles = [];
+	}
+	
+	module.exports = {
+	    add: add,
+	    commit: commit
+	};
+
+/***/ }),
+/* 12 */
+/***/ (function(module, exports) {
+
+	'use strict';
+	
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+	
+	var as24tracking = _extends(Object.create(HTMLElement.prototype), {
+	    inDev: false,
+	    supportedActions: ['set', 'click', 'pageview'],
+	    supportedTypes: ['gtm', 'pagename'],
+	    reservedWords: ['type', 'action', 'as24-tracking-value', 'as24-tracking-click-target'],
+	
+	    attachedCallback: function attachedCallback() {
+	        var _this = this;
+	
+	        var values = this.getAdditionalProperties();
+	        var type = this.getAttribute('type');
+	        var action = this.getAttribute('action');
+	        var args = [type, action];
+	
+	        if (Object.keys(values).length > 0) {
+	            args.push(values);
+	        }
+	
+	        if (type === 'pagename') {
+	            args.splice(1, 1);
+	        }
+	
+	        var clickTarget = this.getAttribute('as24-tracking-click-target');
+	        if (clickTarget) {
+	            var elements = document.querySelectorAll(clickTarget);
+	
+	            for (var i = 0; i < elements.length; i++) {
+	                elements[i].addEventListener('click', function () {
+	                    return _this.track(args);
+	                });
+	            }
+	        } else {
+	            this.track(args);
+	        }
+	    },
+	    getAdditionalProperties: function getAdditionalProperties() {
+	        var _this2 = this;
+	
+	        var trackingValue = this.getAttribute('as24-tracking-value');
+	        var values = trackingValue ? JSON.parse(trackingValue) : {};
+	
+	        if (Array.isArray(values)) {
+	            return values;
+	        }
+	
+	        return Array.prototype.slice.call(this.attributes).filter(function (element) {
+	            return !(_this2.reservedWords.indexOf(element.nodeName) > -1);
+	        }).reduce(function (prev, curr) {
+	            var attrName = _this2.decodeAttributeName(curr.nodeName);
+	            prev[attrName] = curr.nodeValue;
+	            return prev;
+	        }, values);
+	    },
+	    decodeAttributeName: function decodeAttributeName(attrName) {
+	        if (attrName.indexOf('-') > -1) {
+	            attrName = attrName.replace(/-([a-z])/g, function (g) {
+	                return g[1].toUpperCase();
+	            });
+	        }
+	        return attrName;
+	    },
+	    track: function track(args) {
+	        if (this.inDev) {
+	            console.log(args);
+	        } else {
+	            window.ut = window.ut || [];
+	            window.ut.push(args);
+	        }
+	    }
+	});
+	
+	try {
+	    var ctor = document.createElement('as24-tracking').constructor;
+	    if (ctor === HTMLElement || ctor === HTMLUnknownElement) {
+	        document.registerElement('as24-tracking', {
+	            prototype: as24tracking
+	        });
+	    }
+	} catch (e) {
+	    if (window && window.console) {
+	        window.console.warn('Failed to register CustomElement "as24-tracking".', e);
+	    }
+	}
 
 /***/ })
 /******/ ]);
