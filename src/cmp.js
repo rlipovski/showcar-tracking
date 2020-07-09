@@ -7,7 +7,7 @@ const optimizelyEnabled = window.location.href.indexOf('__cmp-optimizely') >= 0;
 
 const cmpSiteIds = {
     'de': '769b8c9a-14d7-4f0f-bc59-2748c96ec403',
-    'it': '7dc55efc-b43a-4ab6-a31b-d084591ee853',
+    'it': '769b8c9a-14d7-4f0f-bc59-2748c96ec403',
     'nl': '11590dc9-3700-43b4-aacd-731ef5261fdf'
 }
 
@@ -118,12 +118,20 @@ module.exports.loadCmpAsync = once(() => {
         }, 50);
     }
 
+    function isOnPrivacyInfoPage() {
+        return window.location.href.indexOf('__cmp_privacy') >= 0;
+    }
+
     // if (isMobile) {
     window.__cmp('addEventListener', 'consentToolShouldBeShown', () => {
-        waitForIframe((ifr) => {
-            ifr.parentNode.style =
-                'width: 100%; heigh: 100%; position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 1000; background-color: rgba(0, 0, 0, 0.35);';
-        });
+        if (isOnPrivacyInfoPage()) {
+            window.__cmp('showConsentTool', false);
+        } else {
+            waitForIframe((ifr) => {
+                ifr.parentNode.style =
+                    'width: 100%; heigh: 100%; position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 1000; background-color: rgba(0, 0, 0, 0.35);';
+            });
+        }
     });
     // }
 
