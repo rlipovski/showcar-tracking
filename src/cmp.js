@@ -119,7 +119,7 @@ module.exports.loadCmpAsync = once(() => {
     }
 
     function isOnPrivacyInfoPage() {
-        return window.location.href.indexOf('__cmp_privacy') >= 0;
+        return window.location.href.indexOf('__cmp_privacy') >= 0 || document.querySelector('as24-tracking[pageid="au-company-privacy"]');
     }
 
     // if (isMobile) {
