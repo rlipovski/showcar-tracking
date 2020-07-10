@@ -11,6 +11,8 @@
 
         function isInCmpExperiment() {
             try {
+                var tld = window.location.hostname.split('.').pop();
+                
                 if (window.location.href.indexOf('__cmp') >= 0) {
                     return true;
                 }
@@ -19,7 +21,7 @@
                     return false;
                 }
 
-                if (window.location.hostname.split('.').pop() === 'de') {
+                if (tld === 'de' || tld === 'nl' || tld === 'it') {
                     return true;
                     // var cmpExperimentBucket =
                     //     parseInt(localStorage.getItem('as24_cmp_experiment'), 10) || (Math.random() * 100) | 0;
@@ -27,10 +29,6 @@
                     // localStorage.setItem('as24_cmp_experiment', cmpExperimentBucket);
 
                     // return cmpExperimentBucket < 3;
-                }
-
-                if (window.location.hostname.split('.').pop() === 'nl') {
-                    return true;
                 }
 
                 return false;
