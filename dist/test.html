@@ -530,6 +530,7 @@
 
                 function isInCmpExperiment() {
                     try {
+                        var releasedCountries = ['at', 'de', 'nl', 'it'];
                         var tld = window.location.hostname.split('.').pop();
                         
                         if (window.location.href.indexOf('__cmp') >= 0) {
@@ -540,7 +541,7 @@
                             return false;
                         }
 
-                        if (tld === 'de' || tld === 'nl' || tld === 'it') {
+                        if (releasedCountries.filter(rc => rc === tld).length > 0) {
                             return true;
                             // var cmpExperimentBucket =
                             //     parseInt(localStorage.getItem('as24_cmp_experiment'), 10) || (Math.random() * 100) | 0;
