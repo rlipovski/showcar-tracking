@@ -45,6 +45,10 @@ const startTracking = () => {
     };
 };
 
+if (window.location.hostname.split('.').pop() === 'de') {
+    require('./ivw');
+}
+
 const cmp = require('./cmp');
 
 const run = () => {

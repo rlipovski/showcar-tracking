@@ -102,6 +102,10 @@
 	    };
 	};
 	
+	if (window.location.hostname.split('.').pop() === 'de') {
+	    __webpack_require__(13);
+	}
+	
 	var cmp = __webpack_require__(7);
 	
 	var run = function run() {
@@ -409,7 +413,11 @@
 	var optimizelyEnabled = window.location.href.indexOf('__cmp-optimizely') >= 0;
 	
 	var cmpSiteIds = {
+	    'at': 'c8515c6b-cf35-47d8-8078-15cc075b3207',
+	    'be': 'a9a510e9-b6b9-4499-99f6-131880e92aaa',
 	    'de': '769b8c9a-14d7-4f0f-bc59-2748c96ec403',
+	    'es': '052e7f91-7b7c-432a-bb9e-d99911139da7',
+	    'fr': 'f6a34410-a99a-4e8d-836c-f19620914569',
 	    'it': '7dc55efc-b43a-4ab6-a31b-d084591ee853',
 	    'nl': '11590dc9-3700-43b4-aacd-731ef5261fdf'
 	};
@@ -515,11 +523,19 @@
 	        }, 50);
 	    }
 	
+	    function isOnPrivacyInfoPage() {
+	        return window.location.href.indexOf('__cmp_privacy') >= 0 || document.querySelector('as24-tracking[pageid="au-company-privacy"]');
+	    }
+	
 	    // if (isMobile) {
 	    window.__cmp('addEventListener', 'consentToolShouldBeShown', function () {
-	        waitForIframe(function (ifr) {
-	            ifr.parentNode.style = 'width: 100%; heigh: 100%; position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 1000; background-color: rgba(0, 0, 0, 0.35);';
-	        });
+	        if (isOnPrivacyInfoPage()) {
+	            window.__cmp('showConsentTool', false);
+	        } else {
+	            waitForIframe(function (ifr) {
+	                ifr.parentNode.style = 'width: 100%; heigh: 100%; position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 1000; background-color: rgba(0, 0, 0, 0.35);';
+	            });
+	        }
 	    });
 	    // }
 	
@@ -1044,6 +1060,97 @@
 	    if (window && window.console) {
 	        window.console.warn('Failed to register CustomElement "as24-tracking".', e);
 	    }
+	}
+
+/***/ }),
+/* 13 */
+/***/ (function(module, exports) {
+
+	'use strict';
+	
+	var isMobile = window.innerWidth < 789;
+	
+	var market = function () {
+	    try {
+	        return document.querySelector('as24-tracking[type=pagename]').getAttribute('market');
+	    } catch (e) {
+	        return 'vm';
+	    }
+	}();
+	
+	var category = function () {
+	    try {
+	        return document.querySelector('as24-tracking[type=pagename]').getAttribute('category');
+	    } catch (e) {
+	        return 'uc';
+	    }
+	}();
+	
+	function pageview() {
+	    loadScript('https://script.ioam.de/iam.js').then(function () {
+	        window.iam_data = {
+	            st: isMobile ? 'mobaus24' : 'aus24',
+	            cp: ('as24/de/' + market + '/' + category).toLowerCase(),
+	            sv: isMobile ? 'mo' : 'i2',
+	            co: ''
+	        };
+	
+	        iom.c(window.iam_data, 1);
+	    });
+	}
+	
+	function home() {
+	    loadScript('https://script.ioam.de/iam.js').then(function () {
+	        window.iam_data = {
+	            st: isMobile ? 'mobaus24' : 'aus24',
+	            cp: ('as24/de/' + market + '/home').toLowerCase(),
+	            sv: 'ke',
+	            co: ''
+	        };
+	
+	        iom.c(window.iam_data, 1);
+	    });
+	}
+	
+	function detailGallery() {
+	    loadScript('https://script.ioam.de/iam.js').then(function () {
+	        window.iam_data = {
+	            st: isMobile ? 'mobaus24' : 'aus24',
+	            cp: ('as24/de/' + market + '/' + category).toLowerCase(),
+	            sv: isMobile ? 'mo' : 'i2',
+	            co: ''
+	        };
+	
+	        iom.c(window.iam_data, 1);
+	    });
+	}
+	
+	function loadScript(src) {
+	    return new Promise(function (resolve) {
+	        var script = document.createElement('script');
+	        var ref = document.getElementsByTagName('script')[0];
+	        ref.parentNode.insertBefore(script, ref);
+	        script.onload = resolve;
+	        script.src = src;
+	    });
+	}
+	
+	document.addEventListener('list-items:changed', function (e) {
+	    return pageview();
+	});
+	
+	if (window.location.pathname.startsWith('/angebote')) {
+	    document.querySelector('as24-carousel').addEventListener('as24-carousel.slide', function (e) {
+	        return detailGallery();
+	    });
+	}
+	
+	var onHomepage = window.location.pathname === '/' || window.location.pathname === '/motorrad';
+	
+	if (onHomepage) {
+	    home();
+	} else {
+	    pageview();
 	}
 
 /***/ })
