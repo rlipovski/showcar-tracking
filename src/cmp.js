@@ -86,11 +86,13 @@ module.exports.loadCmpAsync = once(() => {
     }
 
     function loadCmp(variation) {
-        if (variation === 'classic') {
-            script.src = 'https://config-prod.choice.faktor.io/769b8c9a-14d7-4f0f-bc59-2748c96ec403/faktor.js';
-        } else {
-            script.src = 'https://config-prod.choice.faktor.io/ea93c094-1e43-49f8-8c62-75128f08f70b/faktor.js';
-        }
+        script.src =
+            'https://gdpr-wrapper.privacymanager.io/gdpr/da2cfc8d-9835-4892-8bea-c9eba235ff98/gdpr-liveramp.js';
+        // if (variation === 'classic') {
+        //     script.src = 'https://config-prod.choice.faktor.io/769b8c9a-14d7-4f0f-bc59-2748c96ec403/faktor.js';
+        // } else {
+        //     script.src = 'https://config-prod.choice.faktor.io/ea93c094-1e43-49f8-8c62-75128f08f70b/faktor.js';
+        // }
     }
 
     function waitForIframe(cb) {
