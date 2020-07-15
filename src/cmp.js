@@ -12,6 +12,7 @@ const cmpSiteIds = {
     es: '052e7f91-7b7c-432a-bb9e-d99911139da7',
     fr: 'f6a34410-a99a-4e8d-836c-f19620914569',
     it: '7dc55efc-b43a-4ab6-a31b-d084591ee853',
+    lu: '3f009a85-9789-4acc-a4a3-a6c45994c3ca',
     nl: '11590dc9-3700-43b4-aacd-731ef5261fdf',
 };
 
