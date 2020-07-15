@@ -6,14 +6,14 @@ const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini|
 const optimizelyEnabled = window.location.href.indexOf('__cmp-optimizely') >= 0;
 
 const cmpSiteIds = {
-    'at': 'c8515c6b-cf35-47d8-8078-15cc075b3207',
-    'be': 'a9a510e9-b6b9-4499-99f6-131880e92aaa',
-    'de': '769b8c9a-14d7-4f0f-bc59-2748c96ec403',
-    'es': '052e7f91-7b7c-432a-bb9e-d99911139da7',
-    'fr': 'f6a34410-a99a-4e8d-836c-f19620914569',
-    'it': '7dc55efc-b43a-4ab6-a31b-d084591ee853',
-    'nl': '11590dc9-3700-43b4-aacd-731ef5261fdf'
-}
+    at: 'c8515c6b-cf35-47d8-8078-15cc075b3207',
+    be: 'a9a510e9-b6b9-4499-99f6-131880e92aaa',
+    de: '769b8c9a-14d7-4f0f-bc59-2748c96ec403',
+    es: '052e7f91-7b7c-432a-bb9e-d99911139da7',
+    fr: 'f6a34410-a99a-4e8d-836c-f19620914569',
+    it: '7dc55efc-b43a-4ab6-a31b-d084591ee853',
+    nl: '11590dc9-3700-43b4-aacd-731ef5261fdf',
+};
 
 module.exports.loadCmpAsync = once(() => {
     const script = document.createElement('script');
@@ -97,7 +97,7 @@ module.exports.loadCmpAsync = once(() => {
 
     function loadCmp(variation) {
         const tld = window.location.hostname.split('.').pop();
-        if(tld === 'de') {
+        if (tld === 'de') {
             if (variation === 'classic') {
                 script.src = 'https://config-prod.choice.faktor.io/769b8c9a-14d7-4f0f-bc59-2748c96ec403/faktor.js';
             } else {
@@ -123,7 +123,10 @@ module.exports.loadCmpAsync = once(() => {
     }
 
     function isOnPrivacyInfoPage() {
-        return window.location.href.indexOf('__cmp_privacy') >= 0 || document.querySelector('as24-tracking[pageid="au-company-privacy"]');
+        return (
+            window.location.href.indexOf('__cmp_privacy') >= 0 ||
+            document.querySelector('as24-tracking[pageid="au-company-privacy"]')
+        );
     }
 
     // if (isMobile) {
@@ -148,14 +151,11 @@ module.exports.loadCmpAsync = once(() => {
     // });
 
     sendMetrics('cmp_pageview');
-    // sendGAEvent('pageview');
-    sendGAPageview();
 
     try {
         const userMadeDecision = !!localStorage[consentCacheKey];
         if (!userMadeDecision) {
             sendMetrics('cmp_pageview_without_decision');
-            sendGAEvent('pageview_without_decision');
         }
     } catch (ex) {
         //
@@ -192,9 +192,10 @@ function hasGivenConsent(vendorConsents) {
         vendorConsents.purposeConsents[2] &&
         vendorConsents.purposeConsents[3] &&
         vendorConsents.purposeConsents[4] &&
-        vendorConsents.purposeConsents[5]);
+        vendorConsents.purposeConsents[5]
+    );
     return hasGivenConsent;
-};
+}
 
 module.exports.waitForConsentAgreementIfNeeded = () => {
     return new Promise((resolve) => {
@@ -204,9 +205,9 @@ module.exports.waitForConsentAgreementIfNeeded = () => {
                     window.__cmp('removeEventListener', 'consentChanged', handler);
                     resolve(hasGivenConsent(vendorData));
                 });
-            } 
-        });   
-        
+            }
+        });
+
         const handler = (e) => {
             window.__cmp('getVendorConsents', undefined, (vendorData) => {
                 window.__cmp('removeEventListener', 'consentChanged', handler);
@@ -323,7 +324,6 @@ module.exports.sendMetricsOnEvents = () => {
     ];
 
     events.forEach((event) => window.__cmp('addEventListener', event, () => sendMetrics(event)));
-    events.forEach((event) => window.__cmp('addEventListener', event, () => sendGAEvent(event)));
 
     window.__cmp('addEventListener', 'acceptAllButtonClicked', () => {
         window.__as24_cmp_opt_sendevent && window.__as24_cmp_opt_sendevent('cmpAcceptAll');
@@ -481,57 +481,6 @@ const serialize = (obj) => {
         .map((key) => `${key}=${encodeURIComponent(obj[key])}`)
         .join('&');
 };
-
-function sendGAEvent(name, cd1) {
-    const doc = document;
-    const params = {
-        z: Math.random(),
-        tid: 'UA-168366960-1',
-        aip: 1,
-        v: 1,
-        ds: 'web',
-        t: 'event',
-        dt: doc.title,
-        dl: doc.location.origin + doc.location.pathname, // + doc.location.search,
-        ul: navigator.language.toLowerCase(),
-        de: doc.characterSet,
-        sr: (screen && `${screen.width}x${screen.height}`) || '',
-        vp: `${document.documentElement.clientWidth}x${document.documentElement.clientHeight}`,
-        cid: getcid(),
-        ec: 'CMP',
-        ea: name,
-        ni: 1,
-        cd1: !!localStorage[consentCacheKey] ? 'decided' : 'undecided',
-        cd2: window.__as24_cmp_variation,
-    };
-
-    const url = 'https://www.google-analytics.com/collect';
-    new Image().src = `${url}?${serialize(params)}`;
-}
-
-function sendGAPageview() {
-    const doc = document;
-    const params = {
-        z: Math.random(),
-        tid: 'UA-168366960-1',
-        aip: 1,
-        v: 1,
-        ds: 'web',
-        t: 'pageview',
-        dt: doc.title,
-        dl: doc.location.origin + doc.location.pathname, // + doc.location.search,
-        dr: document.referrer,
-        ul: navigator.language.toLowerCase(),
-        de: doc.characterSet,
-        sr: (screen && `${screen.width}x${screen.height}`) || '',
-        vp: `${document.documentElement.clientWidth}x${document.documentElement.clientHeight}`,
-        cid: getcid(),
-        cd1: /lastConsentChange/.test(document.cookie) ? 'decided' : 'undecided', // !!localStorage[consentCacheKey] ? 'decided' : 'undecided',
-    };
-
-    const url = 'https://www.google-analytics.com/collect';
-    new Image().src = `${url}?${serialize(params)}`;
-}
 
 function deleteCookie(name) {
     const domain = location.hostname.replace('www.', '.').replace('local.', '.');
