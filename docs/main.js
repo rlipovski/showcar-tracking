@@ -413,13 +413,13 @@
 	var optimizelyEnabled = window.location.href.indexOf('__cmp-optimizely') >= 0;
 	
 	var cmpSiteIds = {
-	    'at': 'c8515c6b-cf35-47d8-8078-15cc075b3207',
-	    'be': 'a9a510e9-b6b9-4499-99f6-131880e92aaa',
-	    'de': '769b8c9a-14d7-4f0f-bc59-2748c96ec403',
-	    'es': '052e7f91-7b7c-432a-bb9e-d99911139da7',
-	    'fr': 'f6a34410-a99a-4e8d-836c-f19620914569',
-	    'it': '7dc55efc-b43a-4ab6-a31b-d084591ee853',
-	    'nl': '11590dc9-3700-43b4-aacd-731ef5261fdf'
+	    at: 'c8515c6b-cf35-47d8-8078-15cc075b3207',
+	    be: 'a9a510e9-b6b9-4499-99f6-131880e92aaa',
+	    de: '769b8c9a-14d7-4f0f-bc59-2748c96ec403',
+	    es: '052e7f91-7b7c-432a-bb9e-d99911139da7',
+	    fr: 'f6a34410-a99a-4e8d-836c-f19620914569',
+	    it: '7dc55efc-b43a-4ab6-a31b-d084591ee853',
+	    nl: '11590dc9-3700-43b4-aacd-731ef5261fdf'
 	};
 	
 	module.exports.loadCmpAsync = once(function () {
@@ -548,14 +548,11 @@
 	    // });
 	
 	    sendMetrics('cmp_pageview');
-	    // sendGAEvent('pageview');
-	    sendGAPageview();
 	
 	    try {
 	        var userMadeDecision = !!localStorage[consentCacheKey];
 	        if (!userMadeDecision) {
 	            sendMetrics('cmp_pageview_without_decision');
-	            sendGAEvent('pageview_without_decision');
 	        }
 	    } catch (ex) {
 	        //
@@ -589,7 +586,7 @@
 	function hasGivenConsent(vendorConsents) {
 	    var hasGivenConsent = !!(vendorConsents.purposeConsents[1] && vendorConsents.purposeConsents[2] && vendorConsents.purposeConsents[3] && vendorConsents.purposeConsents[4] && vendorConsents.purposeConsents[5]);
 	    return hasGivenConsent;
-	};
+	}
 	
 	module.exports.waitForConsentAgreementIfNeeded = function () {
 	    return new Promise(function (resolve) {
@@ -719,11 +716,6 @@
 	            return sendMetrics(event);
 	        });
 	    });
-	    events.forEach(function (event) {
-	        return window.__cmp('addEventListener', event, function () {
-	            return sendGAEvent(event);
-	        });
-	    });
 	
 	    window.__cmp('addEventListener', 'acceptAllButtonClicked', function () {
 	        window.__as24_cmp_opt_sendevent && window.__as24_cmp_opt_sendevent('cmpAcceptAll');
@@ -836,57 +828,6 @@
 	        return key + '=' + encodeURIComponent(obj[key]);
 	    }).join('&');
 	};
-	
-	function sendGAEvent(name, cd1) {
-	    var doc = document;
-	    var params = {
-	        z: Math.random(),
-	        tid: 'UA-168366960-1',
-	        aip: 1,
-	        v: 1,
-	        ds: 'web',
-	        t: 'event',
-	        dt: doc.title,
-	        dl: doc.location.origin + doc.location.pathname, // + doc.location.search,
-	        ul: navigator.language.toLowerCase(),
-	        de: doc.characterSet,
-	        sr: screen && screen.width + 'x' + screen.height || '',
-	        vp: document.documentElement.clientWidth + 'x' + document.documentElement.clientHeight,
-	        cid: getcid(),
-	        ec: 'CMP',
-	        ea: name,
-	        ni: 1,
-	        cd1: !!localStorage[consentCacheKey] ? 'decided' : 'undecided',
-	        cd2: window.__as24_cmp_variation
-	    };
-	
-	    var url = 'https://www.google-analytics.com/collect';
-	    new Image().src = url + '?' + serialize(params);
-	}
-	
-	function sendGAPageview() {
-	    var doc = document;
-	    var params = {
-	        z: Math.random(),
-	        tid: 'UA-168366960-1',
-	        aip: 1,
-	        v: 1,
-	        ds: 'web',
-	        t: 'pageview',
-	        dt: doc.title,
-	        dl: doc.location.origin + doc.location.pathname, // + doc.location.search,
-	        dr: document.referrer,
-	        ul: navigator.language.toLowerCase(),
-	        de: doc.characterSet,
-	        sr: screen && screen.width + 'x' + screen.height || '',
-	        vp: document.documentElement.clientWidth + 'x' + document.documentElement.clientHeight,
-	        cid: getcid(),
-	        cd1: /lastConsentChange/.test(document.cookie) ? 'decided' : 'undecided' // !!localStorage[consentCacheKey] ? 'decided' : 'undecided',
-	    };
-	
-	    var url = 'https://www.google-analytics.com/collect';
-	    new Image().src = url + '?' + serialize(params);
-	}
 	
 	function deleteCookie(name) {
 	    var domain = location.hostname.replace('www.', '.').replace('local.', '.');
