@@ -22,9 +22,6 @@ module.exports.loadCmpAsync = once(() => {
     ref.parentNode.insertBefore(script, ref);
 
     try {
-        var pv = parseInt(localStorage.getItem('as24_cmp_pageview') || '0', 10);
-        localStorage.setItem('as24_cmp_pageview', pv + 1);
-
         if (optimizelyEnabled && !localStorage.getItem('__as24_cmp_userid')) {
             // delete decision cookies when user gets into an experiment where they haven't been before
 
@@ -438,8 +435,6 @@ function sendMetrics(name) {
         return;
     }
 
-    var pv = parseInt(localStorage.getItem('as24_cmp_pageview'), 10);
-
     fetch('/frontend-metrics/timeseries', {
         method: 'POST',
         headers: {
@@ -455,7 +450,6 @@ function sendMetrics(name) {
                     tags: {
                         service: 'showcar-tracking',
                         device: isMobile ? 'mobile' : 'desktop',
-                        pageview: pv > 5 ? 5 : pv,
                     },
                 },
             ],
