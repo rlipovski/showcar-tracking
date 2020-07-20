@@ -419,6 +419,7 @@
 	    es: '052e7f91-7b7c-432a-bb9e-d99911139da7',
 	    fr: 'f6a34410-a99a-4e8d-836c-f19620914569',
 	    it: '7dc55efc-b43a-4ab6-a31b-d084591ee853',
+	    lu: '3f009a85-9789-4acc-a4a3-a6c45994c3ca',
 	    nl: '11590dc9-3700-43b4-aacd-731ef5261fdf'
 	};
 	
@@ -428,9 +429,6 @@
 	    ref.parentNode.insertBefore(script, ref);
 	
 	    try {
-	        var pv = parseInt(localStorage.getItem('as24_cmp_pageview') || '0', 10);
-	        localStorage.setItem('as24_cmp_pageview', pv + 1);
-	
 	        if (optimizelyEnabled && !localStorage.getItem('__as24_cmp_userid')) {
 	            // delete decision cookies when user gets into an experiment where they haven't been before
 	
@@ -786,8 +784,6 @@
 	        return;
 	    }
 	
-	    var pv = parseInt(localStorage.getItem('as24_cmp_pageview'), 10);
-	
 	    fetch('/frontend-metrics/timeseries', {
 	        method: 'POST',
 	        headers: {
@@ -801,8 +797,7 @@
 	                value: 1,
 	                tags: {
 	                    service: 'showcar-tracking',
-	                    device: isMobile ? 'mobile' : 'desktop',
-	                    pageview: pv > 5 ? 5 : pv
+	                    device: isMobile ? 'mobile' : 'desktop'
 	                }
 	            }]
 	        })

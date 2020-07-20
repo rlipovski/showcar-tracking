@@ -11,6 +11,7 @@ module.exports = function (grunt) {
     grunt.initConfig({
         webpack: {
             default: loadConfig('webpack')['ui'],
+            cashstack: loadConfig('webpack-cashstack')['ui'],
             docs: loadConfig('webpack-docs')['ui'],
         },
         watch: loadConfig('watch'),
@@ -19,7 +20,7 @@ module.exports = function (grunt) {
     });
 
     grunt.registerTask('docs', ['webpack:docs']);
-    grunt.registerTask('build', ['webpack:default', 'docs']);
+    grunt.registerTask('build', ['webpack:default', 'webpack:cashstack', 'docs']);
     grunt.registerTask('test', ['karma']);
 
     grunt.registerTask('default', ['build']);
