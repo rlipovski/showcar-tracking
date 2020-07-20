@@ -95,8 +95,6 @@ function loadCMPStub() {
     }
 }
 
-function checkGtmConsent() {}
-
 function setDataLayerConsents(vendorConsents, additionalVendorConsents) {
     const facebookConsent =
         vendorConsents &&
