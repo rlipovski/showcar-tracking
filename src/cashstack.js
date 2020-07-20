@@ -1,5 +1,7 @@
 const { loadCmpAsync } = require('./cmp');
 
+const tld = window.location.hostname.split('.').pop();
+
 function loadGTM() {
     const containerIdsByTld = {
         de: 'GTM-MK57H2',
@@ -13,7 +15,6 @@ function loadGTM() {
         com: 'GTM-KWX9NX',
     };
 
-    const tld = window.location.hostname.split('.').pop();
     const containerId = containerIdsByTld[tld] || containerIdsByTld['com'];
 
     (function (w, d, s, l, i) {
@@ -93,6 +94,8 @@ function loadCMPStub() {
         window.__cmp.start = faktorCmpStart;
     }
 }
+
+function checkGtmConsent() {}
 
 function setDataLayerConsents(vendorConsents, additionalVendorConsents) {
     const facebookConsent =
@@ -177,7 +180,21 @@ if (window.cmpEnabled) {
     window.__cmp('getVendorConsents', null, function (vendorConsents) {
         window.__cmp('getAdditionalVendorConsents', null, function (additionalVendorConsents) {
             setDataLayerConsents(vendorConsents, additionalVendorConsents);
-            loadGTM();
+
+            // In NL we need all 5 purposes to load GTM
+            if (tld === 'nl') {
+                if (
+                    vendorConsents.purposeConsents[1] &&
+                    vendorConsents.purposeConsents[2] &&
+                    vendorConsents.purposeConsents[3] &&
+                    vendorConsents.purposeConsents[4] &&
+                    vendorConsents.purposeConsents[5]
+                ) {
+                    loadGTM();
+                }
+            } else {
+                loadGTM();
+            }
         });
     });
 }
