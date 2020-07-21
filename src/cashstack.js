@@ -169,7 +169,7 @@ function setDataLayerConsents(vendorConsents, additionalVendorConsents) {
 
 if (window.cmpEnabled) {
     window.dataLayer = window.dataLayer || [];
-    window.dataLayer.push({ cmp_enabled: false });
+    window.dataLayer.push({ cmp_enabled: true });
 
     loadCMPStub();
 
