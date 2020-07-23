@@ -231,6 +231,7 @@ module.exports.waitForConsentAgreementIfNeeded = () => {
                 });                    
             };
             window.__cmp('addEventListener', 'consentWallClosed', handler);
+            window.__cmp('addEventListener', 'consentManagerClosed', handler);
         });
     } else {
         return new Promise((resolve) => {
