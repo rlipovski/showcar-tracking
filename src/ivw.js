@@ -68,7 +68,9 @@ function loadScript(src) {
 document.addEventListener('list-items:changed', (e) => pageview());
 
 if (window.location.pathname.startsWith('/angebote')) {
-    document.querySelector('as24-carousel').addEventListener('as24-carousel.slide', (e) => detailGallery());
+    try {
+        document.querySelector('as24-carousel').addEventListener('as24-carousel.slide', (e) => detailGallery());
+    } catch(e) {}
 }
 
 const onHomepage = window.location.pathname === '/' || window.location.pathname === '/motorrad';
