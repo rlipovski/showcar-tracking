@@ -49,6 +49,10 @@ if (window.location.hostname.split('.').pop() === 'de') {
     require('./ivw');
 }
 
+if (window.location.hostname.split('.').pop() === 'at') {
+    require('./oewa');
+}
+
 const cmp = require('./cmp');
 
 const run = () => {
