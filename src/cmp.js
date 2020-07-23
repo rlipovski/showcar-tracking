@@ -195,25 +195,63 @@ function hasGivenConsent(vendorConsents) {
     return hasGivenConsent;
 }
 
+function hasGivenConsentGtm(vendorConsents, additionalVendorConsents) {
+    const hasGivenConsent = !!(
+        vendorConsents.purposeConsents[1] &&
+        vendorConsents.purposeConsents[2] &&
+        vendorConsents.purposeConsents[3] &&
+        vendorConsents.purposeConsents[4] &&
+        vendorConsents.purposeConsents[5] &&
+        additionalVendorConsents.vendorConsents[6]
+    );
+    console.log('Has agreed to GTM ' + additionalVendorConsents.vendorConsents[6]);
+    return hasGivenConsent;
+}
+
 module.exports.waitForConsentAgreementIfNeeded = () => {
-    return new Promise((resolve) => {
-        window.__cmp('consentDataExist', null, (consentDataExists) => {
-            if (consentDataExists === true) {
+    if(window.location.href.indexOf('__cmp_gtm_check') > -1) {
+        return new Promise((resolve) => {
+            window.__cmp('consentDataExist', null, (consentDataExists) => {
+                if (consentDataExists === true) {
+                    window.__cmp('getVendorConsents', undefined, (vendorData) => {
+                        window.__cmp('getAdditionalVendorConsents', undefined, function(additionalVendorConsents) {
+                            window.__cmp('removeEventListener', 'consentChanged', handler);
+                            resolve(hasGivenConsentGtm(vendorData, additionalVendorConsents));
+                        });
+                    });
+                }
+            });
+
+            const handler = (e) => {
+                window.__cmp('getVendorConsents', undefined, (vendorData) => {
+                    window.__cmp('getAdditionalVendorConsents', undefined, function(additionalVendorConsents) {
+                        window.__cmp('removeEventListener', 'consentChanged', handler);
+                        resolve(hasGivenConsentGtm(vendorData, additionalVendorConsents));
+                    });
+                });                    
+            };
+            window.__cmp('addEventListener', 'consentWallClosed', handler);
+        });
+    } else {
+        return new Promise((resolve) => {
+            window.__cmp('consentDataExist', null, (consentDataExists) => {
+                if (consentDataExists === true) {
+                    window.__cmp('getVendorConsents', undefined, (vendorData) => {
+                        window.__cmp('removeEventListener', 'consentChanged', handler);
+                        resolve(hasGivenConsent(vendorData));
+                    });
+                }
+            });
+
+            const handler = (e) => {
                 window.__cmp('getVendorConsents', undefined, (vendorData) => {
                     window.__cmp('removeEventListener', 'consentChanged', handler);
                     resolve(hasGivenConsent(vendorData));
                 });
-            }
+            };
+            window.__cmp('addEventListener', 'consentChanged', handler);
         });
-
-        const handler = (e) => {
-            window.__cmp('getVendorConsents', undefined, (vendorData) => {
-                window.__cmp('removeEventListener', 'consentChanged', handler);
-                resolve(hasGivenConsent(vendorData));
-            });
-        };
-        window.__cmp('addEventListener', 'consentChanged', handler);
-    });
+    }
 };
 
 module.exports.waitForFirstCmpDecision = () => {
