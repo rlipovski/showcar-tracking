@@ -155,7 +155,7 @@ function setDataLayerConsents(vendorConsents, additionalVendorConsents) {
         vendorConsents.vendorConsents[16];
 
     window.dataLayer = window.dataLayer || [];
-    window.dataLayer.push({
+    window.dataLayer.unshift({
         cmp_facebook_consent: facebookConsent,
         cmp_googleAnalytics_consent: googleAnalyticsConsent,
         cmp_googleAds_consent: googleAdsConsent,
@@ -169,7 +169,7 @@ function setDataLayerConsents(vendorConsents, additionalVendorConsents) {
 
 if (window.cmpEnabled) {
     window.dataLayer = window.dataLayer || [];
-    window.dataLayer.push({ cmp_enabled: true });
+    window.dataLayer.unshift({ cmp_enabled: true });
 
     loadCMPStub();
 
