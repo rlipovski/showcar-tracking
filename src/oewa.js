@@ -26,14 +26,14 @@ function detailPage(){
     loadScript('https://script-at.iocnt.net/iam.js').then(() => {
         if(window.iom){
             // OEWA VERSION="3.0" 
-            oewa_data = {
+            window.oewa_data = {
                 cn: 'at', // country 
                 st: 'at_w_atascout24', // sitename 
                 cp: "Service/Rubrikenmaerkte/Automarkt", // kategorienpfad  
                 sv: 'mo', // die Befragungseinladung wird im mobilen Format ausgespielt 
                 ps: 'lin' // Privacy setting 
             };
-            iom.c(oewa_data,1); 
+            iom.c(window.oewa_data,1); 
         }
     });
 }
@@ -42,14 +42,14 @@ function allPages() {
     loadScript('https://script-at.iocnt.net/iam.js').then(() => {
         if(window.iom){
             // OEWA VERSION="3.0" 
-            oewa_data = {
+            window.oewa_data = {
                 cn: 'at', // country 
                 st: 'at_w_atascout24', // sitename 
                 cp: pixelPath, // kategorienpfad 
                 sv: 'mo', // die Befragungseinladung wird im mobilen Format ausgespielt 
                 ps: 'lin' // Privacy setting 
             };
-            iom.c(oewa_data,1); 
+            iom.c(window.oewa_data,1); 
         }
     });
 }
