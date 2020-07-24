@@ -6,14 +6,15 @@ const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini|
 const optimizelyEnabled = window.location.href.indexOf('__cmp-optimizely') >= 0;
 
 const cmpSiteIds = {
-    at: 'c8515c6b-cf35-47d8-8078-15cc075b3207',
-    be: 'a9a510e9-b6b9-4499-99f6-131880e92aaa',
-    de: '769b8c9a-14d7-4f0f-bc59-2748c96ec403',
-    es: '052e7f91-7b7c-432a-bb9e-d99911139da7',
-    fr: 'f6a34410-a99a-4e8d-836c-f19620914569',
-    it: '7dc55efc-b43a-4ab6-a31b-d084591ee853',
-    lu: '3f009a85-9789-4acc-a4a3-a6c45994c3ca',
-    nl: '11590dc9-3700-43b4-aacd-731ef5261fdf',
+    at:  'c8515c6b-cf35-47d8-8078-15cc075b3207',
+    be:  'a9a510e9-b6b9-4499-99f6-131880e92aaa',
+    com: 'c1adba9f-4737-4aaf-ad78-f406e961c345',
+    de:  '769b8c9a-14d7-4f0f-bc59-2748c96ec403',
+    es:  '052e7f91-7b7c-432a-bb9e-d99911139da7',
+    fr:  'f6a34410-a99a-4e8d-836c-f19620914569',
+    it:  '7dc55efc-b43a-4ab6-a31b-d084591ee853',
+    lu:  '3f009a85-9789-4acc-a4a3-a6c45994c3ca',
+    nl:  '11590dc9-3700-43b4-aacd-731ef5261fdf',
 };
 
 module.exports.loadCmpAsync = once(() => {
