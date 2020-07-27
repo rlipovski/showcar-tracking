@@ -6,14 +6,15 @@ const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini|
 const optimizelyEnabled = window.location.href.indexOf('__cmp-optimizely') >= 0;
 
 const cmpSiteIds = {
-    at: 'c8515c6b-cf35-47d8-8078-15cc075b3207',
-    be: 'a9a510e9-b6b9-4499-99f6-131880e92aaa',
-    de: '769b8c9a-14d7-4f0f-bc59-2748c96ec403',
-    es: '052e7f91-7b7c-432a-bb9e-d99911139da7',
-    fr: 'f6a34410-a99a-4e8d-836c-f19620914569',
-    it: '7dc55efc-b43a-4ab6-a31b-d084591ee853',
-    lu: '3f009a85-9789-4acc-a4a3-a6c45994c3ca',
-    nl: '11590dc9-3700-43b4-aacd-731ef5261fdf',
+    at:  'c8515c6b-cf35-47d8-8078-15cc075b3207',
+    be:  'a9a510e9-b6b9-4499-99f6-131880e92aaa',
+    com: 'c1adba9f-4737-4aaf-ad78-f406e961c345',
+    de:  '769b8c9a-14d7-4f0f-bc59-2748c96ec403',
+    es:  '052e7f91-7b7c-432a-bb9e-d99911139da7',
+    fr:  'f6a34410-a99a-4e8d-836c-f19620914569',
+    it:  '7dc55efc-b43a-4ab6-a31b-d084591ee853',
+    lu:  '3f009a85-9789-4acc-a4a3-a6c45994c3ca',
+    nl:  '11590dc9-3700-43b4-aacd-731ef5261fdf',
 };
 
 module.exports.loadCmpAsync = once(() => {
@@ -195,25 +196,64 @@ function hasGivenConsent(vendorConsents) {
     return hasGivenConsent;
 }
 
+function hasGivenConsentGtm(vendorConsents, additionalVendorConsents) {
+    const hasGivenConsent = !!(
+        vendorConsents.purposeConsents[1] &&
+        vendorConsents.purposeConsents[2] &&
+        vendorConsents.purposeConsents[3] &&
+        vendorConsents.purposeConsents[4] &&
+        vendorConsents.purposeConsents[5] &&
+        additionalVendorConsents.vendorConsents[6]
+    );
+    console.log('Has agreed to GTM ' + additionalVendorConsents.vendorConsents[6]);
+    return hasGivenConsent;
+}
+
 module.exports.waitForConsentAgreementIfNeeded = () => {
-    return new Promise((resolve) => {
-        window.__cmp('consentDataExist', null, (consentDataExists) => {
-            if (consentDataExists === true) {
+    if(window.location.href.indexOf('__cmp_gtm_check') > -1) {
+        return new Promise((resolve) => {
+            window.__cmp('consentDataExist', null, (consentDataExists) => {
+                if (consentDataExists === true) {
+                    window.__cmp('getVendorConsents', undefined, (vendorData) => {
+                        window.__cmp('getAdditionalVendorConsents', undefined, function(additionalVendorConsents) {
+                            window.__cmp('removeEventListener', 'consentChanged', handler);
+                            resolve(hasGivenConsentGtm(vendorData, additionalVendorConsents));
+                        });
+                    });
+                }
+            });
+
+            const handler = (e) => {
+                window.__cmp('getVendorConsents', undefined, (vendorData) => {
+                    window.__cmp('getAdditionalVendorConsents', undefined, function(additionalVendorConsents) {
+                        window.__cmp('removeEventListener', 'consentChanged', handler);
+                        resolve(hasGivenConsentGtm(vendorData, additionalVendorConsents));
+                    });
+                });                    
+            };
+            window.__cmp('addEventListener', 'consentWallClosed', handler);
+            window.__cmp('addEventListener', 'consentManagerClosed', handler);
+        });
+    } else {
+        return new Promise((resolve) => {
+            window.__cmp('consentDataExist', null, (consentDataExists) => {
+                if (consentDataExists === true) {
+                    window.__cmp('getVendorConsents', undefined, (vendorData) => {
+                        window.__cmp('removeEventListener', 'consentChanged', handler);
+                        resolve(hasGivenConsent(vendorData));
+                    });
+                }
+            });
+
+            const handler = (e) => {
                 window.__cmp('getVendorConsents', undefined, (vendorData) => {
                     window.__cmp('removeEventListener', 'consentChanged', handler);
                     resolve(hasGivenConsent(vendorData));
                 });
-            }
+            };
+            window.__cmp('addEventListener', 'consentChanged', handler);
         });
-
-        const handler = (e) => {
-            window.__cmp('getVendorConsents', undefined, (vendorData) => {
-                window.__cmp('removeEventListener', 'consentChanged', handler);
-                resolve(hasGivenConsent(vendorData));
-            });
-        };
-        window.__cmp('addEventListener', 'consentChanged', handler);
-    });
+    }
 };
 
 module.exports.waitForFirstCmpDecision = () => {

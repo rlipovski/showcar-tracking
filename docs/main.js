@@ -586,25 +586,57 @@
 	    return hasGivenConsent;
 	}
 	
+	function hasGivenConsentGtm(vendorConsents, additionalVendorConsents) {
+	    var hasGivenConsent = !!(vendorConsents.purposeConsents[1] && vendorConsents.purposeConsents[2] && vendorConsents.purposeConsents[3] && vendorConsents.purposeConsents[4] && vendorConsents.purposeConsents[5] && additionalVendorConsents.vendorConsents[6]);
+	    console.log('Has agreed to GTM ' + additionalVendorConsents.vendorConsents[6]);
+	    return hasGivenConsent;
+	}
+	
 	module.exports.waitForConsentAgreementIfNeeded = function () {
-	    return new Promise(function (resolve) {
-	        window.__cmp('consentDataExist', null, function (consentDataExists) {
-	            if (consentDataExists === true) {
+	    if (window.location.href.indexOf('__cmp_gtm_check') > -1) {
+	        return new Promise(function (resolve) {
+	            window.__cmp('consentDataExist', null, function (consentDataExists) {
+	                if (consentDataExists === true) {
+	                    window.__cmp('getVendorConsents', undefined, function (vendorData) {
+	                        window.__cmp('getAdditionalVendorConsents', undefined, function (additionalVendorConsents) {
+	                            window.__cmp('removeEventListener', 'consentChanged', handler);
+	                            resolve(hasGivenConsentGtm(vendorData, additionalVendorConsents));
+	                        });
+	                    });
+	                }
+	            });
+	
+	            var handler = function handler(e) {
+	                window.__cmp('getVendorConsents', undefined, function (vendorData) {
+	                    window.__cmp('getAdditionalVendorConsents', undefined, function (additionalVendorConsents) {
+	                        window.__cmp('removeEventListener', 'consentChanged', handler);
+	                        resolve(hasGivenConsentGtm(vendorData, additionalVendorConsents));
+	                    });
+	                });
+	            };
+	            window.__cmp('addEventListener', 'consentWallClosed', handler);
+	            window.__cmp('addEventListener', 'consentManagerClosed', handler);
+	        });
+	    } else {
+	        return new Promise(function (resolve) {
+	            window.__cmp('consentDataExist', null, function (consentDataExists) {
+	                if (consentDataExists === true) {
+	                    window.__cmp('getVendorConsents', undefined, function (vendorData) {
+	                        window.__cmp('removeEventListener', 'consentChanged', handler);
+	                        resolve(hasGivenConsent(vendorData));
+	                    });
+	                }
+	            });
+	
+	            var handler = function handler(e) {
 	                window.__cmp('getVendorConsents', undefined, function (vendorData) {
 	                    window.__cmp('removeEventListener', 'consentChanged', handler);
 	                    resolve(hasGivenConsent(vendorData));
 	                });
-	            }
+	            };
+	            window.__cmp('addEventListener', 'consentChanged', handler);
 	        });
-	
-	        var handler = function handler(e) {
-	            window.__cmp('getVendorConsents', undefined, function (vendorData) {
-	                window.__cmp('removeEventListener', 'consentChanged', handler);
-	                resolve(hasGivenConsent(vendorData));
-	            });
-	        };
-	        window.__cmp('addEventListener', 'consentChanged', handler);
-	    });
+	    }
 	};
 	
 	module.exports.waitForFirstCmpDecision = function () {
@@ -1076,9 +1108,11 @@
 	});
 	
 	if (window.location.pathname.startsWith('/angebote')) {
-	    document.querySelector('as24-carousel').addEventListener('as24-carousel.slide', function (e) {
-	        return detailGallery();
-	    });
+	    try {
+	        document.querySelector('as24-carousel').addEventListener('as24-carousel.slide', function (e) {
+	            return detailGallery();
+	        });
+	    } catch (e) {}
 	}
 	
 	var onHomepage = window.location.pathname === '/' || window.location.pathname === '/motorrad';
