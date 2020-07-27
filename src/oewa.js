@@ -67,12 +67,14 @@ function loadScript(src) {
 
 const onDetailPage = path.startsWith('/angebote') && document.querySelector('as24-tracking[type=pagename]').getAttribute('pageid') === 'detail';
 
-if (path.startsWith('/angebote')) {
-    document.querySelector('as24-carousel').addEventListener('as24-carousel.slide', (e) => detailPage());
-}
 
 if (onDetailPage) {
     detailPage();
+
+    try {
+        document.querySelector('as24-carousel').addEventListener('as24-carousel.slide', (e) => detailPage());
+    } catch(e) {}
+
 } else {
     if(pixelPath !== 'not_available'){
         allPages();
