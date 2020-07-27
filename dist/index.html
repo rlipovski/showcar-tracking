@@ -24,6 +24,9 @@
             window.cmpEnabled = true;
             window.dataLayer = window.dataLayer || [];
             window.dataLayer.push({ cmp_enabled: true });
+            document.addEventListener('list-items:changed', function () {
+                window.dataLayer.push({ cmp_enabled: true });
+            });
             // window.__as24_cmp_variation = 'original';
             loadCMPStub();
         }
