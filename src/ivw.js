@@ -70,13 +70,18 @@ document.addEventListener('list-items:changed', (e) => pageview());
 if (window.location.pathname.startsWith('/angebote')) {
     try {
         document.querySelector('as24-carousel').addEventListener('as24-carousel.slide', (e) => detailGallery());
-    } catch(e) {}
+    } catch (e) {}
 }
 
 const onHomepage = window.location.pathname === '/' || window.location.pathname === '/motorrad';
 
+// On the dealer info list page the `list-items:changed` event is fired even on the first pageview.
+// This causes the pageview  to be double tracked.
+// To prevent this we don't track the real pageview on the dealer info list pages.
+const onDealerInfoListPage = /\/haendler\/.+\/fahrzeuge/.test(window.location.pathname);
+
 if (onHomepage) {
     home();
-} else {
+} else if (!onDealerInfoListPage) {
     pageview();
 }
