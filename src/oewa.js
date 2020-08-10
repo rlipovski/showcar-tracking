@@ -7,7 +7,7 @@ const pixelPath = (() => {
         case RegExp('(^\/promo\/preisbewertung)|(^\/auto\-verkaufen)|(^\/fahrzeugbewertung)|(^\/promo\/preisbewertung)').test(path):
             return 'Service/Sonstiges/Sonstiges';
             break;
-        case RegExp('^\/motorrad').test(path):
+        case RegExp('(^\/motorrad)|(^\/lst)').test(path):
             return 'Service/Rubrikenmaerkte/Automarkt';
             break;
         case RegExp('(^\/informieren)|(^\/auto)|(^\/moto)').test(path):
@@ -29,7 +29,7 @@ function detailPage(){
             window.oewa_data = {
                 cn: 'at', // country 
                 st: 'at_w_atascout24', // sitename 
-                cp: "Service/Rubrikenmaerkte/Automarkt", // kategorienpfad  
+                cp: 'Service/Rubrikenmaerkte/Automarkt', // kategorienpfad  
                 sv: 'mo', // die Befragungseinladung wird im mobilen Format ausgespielt 
                 ps: 'lin' // Privacy setting 
             };
@@ -75,6 +75,7 @@ if (onDetailPage) {
         document.querySelector('as24-carousel').addEventListener('as24-carousel.slide', (e) => detailPage());
     } catch(e) {}
 
+    
 } else {
     if(pixelPath !== 'not_available'){
         allPages();
