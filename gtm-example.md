@@ -99,6 +99,40 @@ function hasBingConsent() {
 }
 ```
 
+## Facebook
+
+```js
+function hasFacebookConsent() {
+  var consent = false;
+
+  if (window.__tcfapi) {
+    __tcfapi(
+      'checkConsent',
+      2,
+      function (data, success) {
+        consent = data;
+      },
+      { data: { vendorId: 20089 } }
+    );
+  } else if (window.__cmp && window.cmpEnabled) {
+    window.__cmp('getVendorConsents', null, function (vendorConsents) {
+      window.__cmp('getAdditionalVendorConsents', null, function (additionalVendorConsents) {
+        consent =
+          vendorConsents.purposeConsents[1] &&
+          vendorConsents.purposeConsents[2] &&
+          vendorConsents.purposeConsents[3] &&
+          vendorConsents.purposeConsents[5] &&
+          additionalVendorConsents.vendorConsents[16];
+      });
+    });
+  } else {
+    return true;
+  }
+
+  return consent;
+}
+```
+
 ## Krux
 
 ```js
