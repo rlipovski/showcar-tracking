@@ -1,3 +1,5 @@
+## Google Analytics - not needed, due to GA being "essential"
+
 ```js
 function hasGoogleAnalyticsConsent() {
   var consent = false;
@@ -27,6 +29,8 @@ function hasGoogleAnalyticsConsent() {
   return consent;
 }
 ```
+
+## Google Ads - TCF 2.0 ID missing!!!
 
 ```js
 function hasGoogleAdsConsent() {
@@ -59,6 +63,8 @@ function hasGoogleAdsConsent() {
   return consent;
 }
 ```
+
+## Bing
 
 ```js
 function hasBingConsent() {
@@ -118,6 +124,66 @@ function hasKruxConsent() {
           vendorConsents.purposeConsents[4] &&
           vendorConsents.purposeConsents[5] &&
           additionalVendorConsents.vendorConsents[25];
+      });
+    });
+  } else {
+    return true;
+  }
+
+  return consent;
+}
+```
+
+## RTB House
+
+```js
+function hasRTBHouseConsent() {
+  var consent = false;
+
+  if (window.__tcfapi) {
+    __tcfapi(
+      'checkConsent',
+      2,
+      function (data, success) {
+        consent = data;
+      },
+      { data: { vendorId: 16 } }
+    );
+  } else if (window.__cmp && window.cmpEnabled) {
+    window.__cmp('getVendorConsents', null, function (vendorConsents) {
+      consent =
+        vendorConsents.purposeConsents[1] && vendorConsents.purposeConsents[2] && vendorConsents.vendorConsents[16];
+    });
+  } else {
+    return true;
+  }
+
+  return consent;
+}
+```
+
+## MouseFlow
+
+```js
+function hasMouseFlowConsent() {
+  var consent = false;
+
+  if (window.__tcfapi) {
+    __tcfapi(
+      'checkConsent',
+      2,
+      function (data, success) {
+        consent = data;
+      },
+      { data: { vendorId: 10188 } }
+    );
+  } else if (window.__cmp && window.cmpEnabled) {
+    window.__cmp('getVendorConsents', null, function (vendorConsents) {
+      window.__cmp('getAdditionalVendorConsents', null, function (additionalVendorConsents) {
+        consent =
+          vendorConsents.purposeConsents[1] &&
+          vendorConsents.purposeConsents[5] &&
+          additionalVendorConsents.vendorConsents[223];
       });
     });
   } else {
