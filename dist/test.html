@@ -520,6 +520,28 @@
 
         <as24-tracking type="gtm" action="pageview" as24-tracking-value='{"attribute":"pagination|1"}'></as24-tracking>
 
+        <script>
+            (function () {
+                function getCookieValue(a) {
+                    var b = document.cookie.match('(^|;)\\s*' + a + '\\s*=\\s*([^;]+)');
+                    return b ? b.pop() : '';
+                }
+
+                var as24Visitor = getCookieValue('as24Visitor');
+
+                if (!as24Visitor) {
+                    function uuidv4() {
+                        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+                            var r = (Math.random() * 16) | 0,
+                                v = c == 'x' ? r : (r & 0x3) | 0x8;
+                            return v.toString(16);
+                        });
+                    }
+
+                    document.cookie = `as24Visitor=${uuidv4()}; path='/'; max-age=31536000`;
+                }
+            })();
+        </script>
         <script src="//cdnjs.cloudflare.com/ajax/libs/document-register-element/0.4.3/document-register-element.js"></script>
         <script data-pagespeed-no-defer>
             (function () {
@@ -538,15 +560,97 @@
                 var tld = window.location.hostname.split('.').pop();
                 var liverampTcf2Id = liverampIdTldMap[tld];
 
+                function loadLiveRampCmp2(uid) {
+                    var script = document.createElement('script');
+                    var ref = document.getElementsByTagName('script')[0];
+                    ref.parentNode.insertBefore(script, ref);
+                    script.src = 'https://gdpr-wrapper.privacymanager.io/gdpr/' + uid + '/gdpr-liveramp.js';
+                }
+
                 if (window.location.search.indexOf('tcf20') >= 0 && liverampTcf2Id) {
                     // TCF stub
                     // prettier-ignore
                     !function(e){var t={};function n(r){if(t[r])return t[r].exports;var a=t[r]={i:r,l:!1,exports:{}};return e[r].call(a.exports,a,a.exports,n),a.l=!0,a.exports}n.m=e,n.c=t,n.d=function(e,t,r){n.o(e,t)||Object.defineProperty(e,t,{enumerable:!0,get:r})},n.r=function(e){"undefined"!=typeof Symbol&&Symbol.toStringTag&&Object.defineProperty(e,Symbol.toStringTag,{value:"Module"}),Object.defineProperty(e,"__esModule",{value:!0})},n.t=function(e,t){if(1&t&&(e=n(e)),8&t)return e;if(4&t&&"object"==typeof e&&e&&e.__esModule)return e;var r=Object.create(null);if(n.r(r),Object.defineProperty(r,"default",{enumerable:!0,value:e}),2&t&&"string"!=typeof e)for(var a in e)n.d(r,a,function(t){return e[t]}.bind(null,a));return r},n.n=function(e){var t=e&&e.__esModule?function(){return e.default}:function(){return e};return n.d(t,"a",t),t},n.o=function(e,t){return Object.prototype.hasOwnProperty.call(e,t)},n.p="https://gdpr.privacymanager.io/1.0.5/",n(n.s=38)}({38:function(e,t){!function(){if("function"!=typeof window.__tcfapi){var e,t=[],n=window,r=n.document,a=n.__tcfapi?n.__tcfapi.start:function(){};!n.__tcfapi&&function e(){var t=!!n.frames.__tcfapiLocator;if(!t)if(r.body){var a=r.createElement("iframe");a.style.cssText="display:none",a.name="__tcfapiLocator",r.body.appendChild(a)}else setTimeout(e,5);return!t}()&&(n.__tcfapi=function(n,r,a,o){var i=[n,r,a,o];if(!i.length)return t;if("setGdprApplies"===i[0])i.length>3&&2===parseInt(i[1],10)&&"boolean"==typeof i[3]&&(e=i[3],"function"==typeof i[2]&&i[2]("set",!0));else if("ping"===i[0]){var c={gdprApplies:e,cmpLoaded:!1,apiVersion:"2.0"};"function"==typeof i[2]&&i[2](c,!0)}else t.push(i)},n.__tcfapi.commandQueue=t,n.__tcfapi.start=a,n.addEventListener("message",(function(e){var t="string"==typeof e.data,r={};try{r=t?JSON.parse(e.data):e.data}catch(e){}var a=r.__tcfapiCall;a&&n.__tcfapi(a.command,a.version,(function(n,r){if(e.source){var o={__tcfapiReturn:{returnValue:n,success:r,callId:a.callId,command:a.command}};t&&(o=JSON.stringify(o)),e.source.postMessage(o,"*")}}),a.parameter)}),!1))}}()}});
 
-                    var script = document.createElement('script');
-                    var ref = document.getElementsByTagName('script')[0];
-                    ref.parentNode.insertBefore(script, ref);
-                    script.src = 'https://gdpr-wrapper.privacymanager.io/gdpr/' + liverampTcf2Id + '/gdpr-liveramp.js';
+                    if (tld !== 'de') {
+                        loadLiveRampCmp2(liverampTcf2Id);
+                    }
+
+                    function getCookieValue(a) {
+                        var b = document.cookie.match('(^|;)\\s*' + a + '\\s*=\\s*([^;]+)');
+                        return b ? b.pop() : '';
+                    }
+
+                    var userId = getCookieValue('as24Visitor');
+
+                    fetch(
+                        'https://cmp-optimizely-fs.as24-media.eu-west-1.infinity.as24.tech/activate/cmp_themes_comparison/' +
+                            userId
+                    )
+                        .then(function (r) {
+                            return r.json();
+                        })
+                        .then(function (data) {
+                            // data.userid
+                            // data.variation
+
+                            function sendEvent(event) {
+                                new Image().src =
+                                    'https://cmp-optimizely-fs.as24-media.eu-west-1.infinity.as24.tech/sendevent/' +
+                                    data.userid +
+                                    '/' +
+                                    event;
+                            }
+
+                            window.__tcfapi(
+                                'addEventListener',
+                                2,
+                                function () {
+                                    sendEvent('cmpAcceptAll');
+                                },
+                                'acceptAllButtonClicked'
+                            );
+
+                            window.__tcfapi(
+                                'addEventListener',
+                                2,
+                                function () {
+                                    sendEvent('cmpSaveAndExit');
+                                },
+                                'saveAndExitButtonClicked'
+                            );
+
+                            // window.__tcfapi('addEventListener', 2, (a, b) => console.log(a, b), 'consentChanged');
+
+                            window.__tcfapi(
+                                'addEventListener',
+                                2,
+                                function () {
+                                    sendEvent('cmpExit');
+                                },
+                                'exitButtonClicked'
+                            );
+                            window.__tcfapi(
+                                'addEventListener',
+                                2,
+                                function () {
+                                    sendEvent('cmpShown');
+                                },
+                                'consentManagerDisplayed'
+                            );
+
+                            var liverampIdByVariation = {
+                                variation_1: '110d886b-ed81-45b5-ae2b-716b2f723ee9',
+                                variation_2: 'c05a5065-d405-47de-875a-9bdb14d9b960',
+                                variation_3: 'b906c984-4280-47dd-a90b-a322954fc01b',
+                                variation_4: 'a7e8fb93-5f1f-4375-b321-8e998143ae61',
+                            };
+
+                            var liverampid = liverampIdByVariation[data.variation];
+
+                            loadLiveRampCmp2(liverampid);
+                        });
+
                     return;
                 }
 

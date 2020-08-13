@@ -361,8 +361,6 @@
 	                }
 	            };
 	            window.__tcfapi('addEventListener', 2, callback);
-	            // } else if (window.__cmp && window.cmpEnabled) {
-	            // wait for consent
 	        } else {
 	            loadContainer();
 	        }
