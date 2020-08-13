@@ -106,6 +106,10 @@
 	    __webpack_require__(13);
 	}
 	
+	if (window.location.hostname.split('.').pop() === 'at') {
+	    __webpack_require__(14);
+	}
+	
 	var cmp = __webpack_require__(7);
 	
 	var run = function run() {
@@ -349,16 +353,32 @@
 	
 	        document.documentElement.className += ' ' + gtmAlreadyLoadedClassName;
 	
-	        (function (w, d, s, l, i) {
-	            w[l] = w[l] || [];
-	            w[l].push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' });
-	            var f = d.getElementsByTagName(s)[0],
-	                j = d.createElement(s),
-	                dl = l != 'dataLayer' ? '&l=' + l : '';
-	            j.async = true;
-	            j.src = '//www.googletagmanager.com/gtm.js?id=' + i + dl;
-	            f.parentNode.insertBefore(j, f);
-	        })(window, document, 'script', 'dataLayer', containerId);
+	        if (window.__tcfapi) {
+	            var callback = function callback(tcData, success) {
+	                if (success && (tcData.eventStatus === 'tcloaded' || tcData.eventStatus === 'useractioncomplete')) {
+	                    window.__tcfapi('removeEventListener', 2, function () {}, tcData.listenerId);
+	                    loadContainer();
+	                }
+	            };
+	            window.__tcfapi('addEventListener', 2, callback);
+	            // } else if (window.__cmp && window.cmpEnabled) {
+	            // wait for consent
+	        } else {
+	            loadContainer();
+	        }
+	
+	        function loadContainer() {
+	            (function (w, d, s, l, i) {
+	                w[l] = w[l] || [];
+	                w[l].push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' });
+	                var f = d.getElementsByTagName(s)[0],
+	                    j = d.createElement(s),
+	                    dl = l != 'dataLayer' ? '&l=' + l : '';
+	                j.async = true;
+	                j.src = '//www.googletagmanager.com/gtm.js?id=' + i + dl;
+	                f.parentNode.insertBefore(j, f);
+	            })(window, document, 'script', 'dataLayer', containerId);
+	        }
 	    },
 	
 	    loadContainerOnlyWidthConsent: function loadContainerOnlyWidthConsent(containerId) {
@@ -415,6 +435,7 @@
 	var cmpSiteIds = {
 	    at: 'c8515c6b-cf35-47d8-8078-15cc075b3207',
 	    be: 'a9a510e9-b6b9-4499-99f6-131880e92aaa',
+	    com: 'c1adba9f-4737-4aaf-ad78-f406e961c345',
 	    de: '769b8c9a-14d7-4f0f-bc59-2748c96ec403',
 	    es: '052e7f91-7b7c-432a-bb9e-d99911139da7',
 	    fr: 'f6a34410-a99a-4e8d-836c-f19620914569',
@@ -687,6 +708,17 @@
 	                    localStorage.setItem(consentCacheKey, JSON.stringify({ vendorConsents: vendorConsents, additionalVendorConsents: additionalVendorConsents }));
 	                });
 	            }
+	        });
+	    });
+	
+	    document.addEventListener('list-items:changed', function () {
+	        getAllConsents().then(function (_ref6) {
+	            var _ref7 = _slicedToArray(_ref6, 2),
+	                vendorConsents = _ref7[0],
+	                additionalVendorConsents = _ref7[1];
+	
+	            setDataLayerConsents(vendorConsents, additionalVendorConsents);
+	            localStorage.setItem(consentCacheKey, JSON.stringify({ vendorConsents: vendorConsents, additionalVendorConsents: additionalVendorConsents }));
 	        });
 	    });
 	};
@@ -1117,10 +1149,103 @@
 	
 	var onHomepage = window.location.pathname === '/' || window.location.pathname === '/motorrad';
 	
+	// On the dealer info list page the `list-items:changed` event is fired even on the first pageview.
+	// This causes the pageview  to be double tracked.
+	// To prevent this we don't track the real pageview on the dealer info list pages.
+	var onDealerInfoListPage = /\/haendler\/.+\/fahrzeuge/.test(window.location.pathname);
+	
 	if (onHomepage) {
 	    home();
-	} else {
+	} else if (!onDealerInfoListPage) {
 	    pageview();
+	}
+
+/***/ }),
+/* 14 */
+/***/ (function(module, exports) {
+
+	'use strict';
+	
+	var path = window.location.pathname;
+	var pixelPath = function () {
+	    switch (true) {
+	        case RegExp('^\/$').test(path):
+	            return 'Service/Homepage/Homepage';
+	            break;
+	        case RegExp('(^\/promo\/preisbewertung)|(^\/auto\-verkaufen)|(^\/fahrzeugbewertung)|(^\/promo\/preisbewertung)').test(path):
+	            return 'Service/Sonstiges/Sonstiges';
+	            break;
+	        case RegExp('(^\/motorrad)|(^\/lst)').test(path):
+	            return 'Service/Rubrikenmaerkte/Automarkt';
+	            break;
+	        case RegExp('(^\/informieren)|(^\/auto)|(^\/moto)').test(path):
+	            return 'RedCont/AutoUndMotor/AutoUndMotor';
+	            break;
+	        case RegExp('^\/unternehmen').test(path):
+	            return 'Service/Unternehmenskommunikation/Unternehmenskommunikation';
+	            break;
+	        default:
+	            return 'not_available';
+	            break;
+	    }
+	}();
+	
+	function detailPage() {
+	    loadScript('https://script-at.iocnt.net/iam.js').then(function () {
+	        if (window.iom) {
+	            // OEWA VERSION="3.0" 
+	            window.oewa_data = {
+	                cn: 'at', // country 
+	                st: 'at_w_atascout24', // sitename 
+	                cp: 'Service/Rubrikenmaerkte/Automarkt', // kategorienpfad  
+	                sv: 'mo', // die Befragungseinladung wird im mobilen Format ausgespielt 
+	                ps: 'lin' // Privacy setting 
+	            };
+	            iom.c(window.oewa_data, 1);
+	        }
+	    });
+	}
+	
+	function allPages() {
+	    loadScript('https://script-at.iocnt.net/iam.js').then(function () {
+	        if (window.iom) {
+	            // OEWA VERSION="3.0" 
+	            window.oewa_data = {
+	                cn: 'at', // country 
+	                st: 'at_w_atascout24', // sitename 
+	                cp: pixelPath, // kategorienpfad 
+	                sv: 'mo', // die Befragungseinladung wird im mobilen Format ausgespielt 
+	                ps: 'lin' // Privacy setting 
+	            };
+	            iom.c(window.oewa_data, 1);
+	        }
+	    });
+	}
+	
+	function loadScript(src) {
+	    return new Promise(function (resolve) {
+	        var script = document.createElement('script');
+	        var ref = document.getElementsByTagName('script')[0];
+	        ref.parentNode.insertBefore(script, ref);
+	        script.onload = resolve;
+	        script.src = src;
+	    });
+	}
+	
+	var onDetailPage = path.startsWith('/angebote') && document.querySelector('as24-tracking[type=pagename]').getAttribute('pageid') === 'detail';
+	
+	if (onDetailPage) {
+	    detailPage();
+	
+	    try {
+	        document.querySelector('as24-carousel').addEventListener('as24-carousel.slide', function (e) {
+	            return detailPage();
+	        });
+	    } catch (e) {}
+	} else {
+	    if (pixelPath !== 'not_available') {
+	        allPages();
+	    }
 	}
 
 /***/ })
