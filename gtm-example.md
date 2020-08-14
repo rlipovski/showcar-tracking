@@ -1,4 +1,4 @@
-## Google Analytics - not needed, due to GA being "essential"
+## Google Analytics
 
 ```js
 function hasGoogleAnalyticsConsent() {
@@ -30,7 +30,7 @@ function hasGoogleAnalyticsConsent() {
 }
 ```
 
-## Google Ads - TCF 2.0 ID missing!!!
+## Google Ads
 
 ```js
 function hasGoogleAdsConsent() {
