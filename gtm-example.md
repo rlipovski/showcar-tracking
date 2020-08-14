@@ -51,7 +51,7 @@ function hasGoogleAdsConsent() {
       function (data, success) {
         consent = data;
       },
-      { data: { vendorId: 755 } }
+      { data: { vendorId: 10210 } }
     );
   } else if (window.__cmp && window.cmpEnabled) {
     window.__cmp('getVendorConsents', null, function (vendorConsents) {
