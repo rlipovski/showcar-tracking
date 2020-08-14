@@ -1,3 +1,11 @@
+## CMP Enabled
+
+```js
+function isCmpEnabled() {
+  return !!window.__tcfapi || (!!window.__cmp && window.cmpEnabled);
+}
+```
+
 ## Google Analytics
 
 ```js
