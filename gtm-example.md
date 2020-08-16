@@ -269,3 +269,36 @@ function hasSurveyConsent() {
   return consent;
 }
 ```
+
+## Criteo
+
+```js
+function hasGoogleAnalyticsConsent() {
+  var consent = false;
+
+  if (window.__tcfapi) {
+    __tcfapi(
+      'checkConsent',
+      2,
+      function (data, success) {
+        consent = data;
+      },
+      { data: { vendorId: 91 } }
+    );
+  } else if (window.__cmp && window.cmpEnabled) {
+    window.__cmp('getVendorConsents', null, function (vendorConsents) {
+      window.__cmp('getAdditionalVendorConsents', null, function (additionalVendorConsents) {
+        consent =
+          vendorConsents &&
+          vendorConsents.purposeConsents[1] &&
+          vendorConsents.purposeConsents[2] &&
+          vendorConsents.vendorConsents[91];
+      });
+    });
+  } else {
+    return true;
+  }
+
+  return consent;
+}
+```
