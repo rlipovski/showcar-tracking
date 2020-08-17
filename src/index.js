@@ -61,6 +61,11 @@ const run = () => {
         return;
     }
 
+    if (window.__tcfapi) {
+        startTracking();
+        return;
+    }
+
     if (!cmp.isCmpEnabled()) {
         window.dataLayer = window.dataLayer || [];
         window.dataLayer.push({ cmp_enabled: false });

@@ -118,6 +118,11 @@
 	        return;
 	    }
 	
+	    if (window.__tcfapi) {
+	        startTracking();
+	        return;
+	    }
+	
 	    if (!cmp.isCmpEnabled()) {
 	        window.dataLayer = window.dataLayer || [];
 	        window.dataLayer.push({ cmp_enabled: false });
@@ -591,7 +596,7 @@
 	});
 	
 	module.exports.isCmpEnabled = function () {
-	    return window.cmpEnabled;
+	    return !window.__tcfapi && window.cmpEnabled;
 	};
 	
 	module.exports.waitForConsentIfNeeded = function () {

@@ -166,7 +166,7 @@ module.exports.loadCmpAsync = once(() => {
 });
 
 module.exports.isCmpEnabled = () => {
-    return window.cmpEnabled;
+    return !window.__tcfapi && window.cmpEnabled;
 };
 
 module.exports.waitForConsentIfNeeded = () => {
