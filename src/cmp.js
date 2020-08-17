@@ -18,6 +18,10 @@ const cmpSiteIds = {
 };
 
 module.exports.loadCmpAsync = once(() => {
+    if (window.__tcfapi) {
+        return;
+    }
+
     const script = document.createElement('script');
     const ref = document.getElementsByTagName('script')[0];
     ref.parentNode.insertBefore(script, ref);

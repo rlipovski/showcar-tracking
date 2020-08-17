@@ -453,6 +453,10 @@
 	};
 	
 	module.exports.loadCmpAsync = once(function () {
+	    if (window.__tcfapi) {
+	        return;
+	    }
+	
 	    var script = document.createElement('script');
 	    var ref = document.getElementsByTagName('script')[0];
 	    ref.parentNode.insertBefore(script, ref);
