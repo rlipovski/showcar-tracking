@@ -7,9 +7,13 @@
     }
 
     if (window.location.search.indexOf('tcf20') >= 0) {
+        window.cmpEnabled = false;
         tcf20();
+        window.cmpEnabled = false;
     } else {
+        window.cmpEnabled = true;
         tcf11();
+        window.cmpEnabled = true;
     }
 
     function tcf20() {
