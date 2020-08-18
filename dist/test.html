@@ -615,11 +615,17 @@
                             // data.variation
 
                             function sendEvent(event) {
-                                new Image().src =
+                                var url =
                                     'https://cmp-optimizely-fs.as24-media.eu-west-1.infinity.as24.tech/sendevent/' +
                                     data.userid +
                                     '/' +
                                     event;
+
+                                if ('sendBeacon' in navigator) {
+                                    navigator.sendBeacon(url);
+                                } else {
+                                    new Image().src = url;
+                                }
                             }
 
                             window.__tcfapi(
@@ -648,14 +654,53 @@
                                 },
                                 'exitButtonClicked'
                             );
+
+                            window.__tcfapi(
+                                'addEventListener',
+                                2,
+                                function () {
+                                    sendEvent('cmpExit');
+                                },
+                                'saveAndExitButtonClicked'
+                            );
+
+                            window.__tcfapi(
+                                'addEventListener',
+                                2,
+                                function () {
+                                    sendEvent('cmpExit');
+                                },
+                                'acceptAllButtonClicked'
+                            );
+
                             window.__tcfapi(
                                 'addEventListener',
                                 2,
                                 function () {
                                     sendEvent('cmpShown');
                                 },
-                                'consentManagerDisplayed'
+                                'consentToolShouldBeShown'
                             );
+
+                            if (window.location.pathname.startsWith('/angebote/')) {
+                                window.addEventListener('click', function* (e) {
+                                    if (!e || !e.target || !e.target.closest) {
+                                        return;
+                                    }
+
+                                    var isCallButton = !!e.target.closest('a[href^="tel:"]');
+                                    if (isCallButton) {
+                                        sendEvent('cmpCall');
+                                        return;
+                                    }
+
+                                    var isEmailButton = !!e.target.closest('[data-cip-id="submit"]');
+                                    if (isEmailButton) {
+                                        sendEvent('cmpEmail');
+                                        return;
+                                    }
+                                });
+                            }
 
                             var liverampIdByVariation = {
                                 variation_1: '110d886b-ed81-45b5-ae2b-716b2f723ee9',
