@@ -554,6 +554,10 @@
                     return;
                 }
 
+                if (/disable-cmp=true/.test(document.cookie)) {
+                    return false;
+                }
+
                 // if (window.location.search.indexOf('tcf20') >= 0) {
                 window.cmpEnabled = false;
                 tcf20();
