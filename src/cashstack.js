@@ -47,11 +47,11 @@
             __tcfapi('changeLanguage', null, function () {}, location.pathname.startsWith('/nl') ? 'nl' : 'fr');
         }
 
-        const callback = (tcData, success) => {
-            if (success && (tcData.eventStatus === 'tcloaded' || tcData.eventStatus === 'useractioncomplete')) {
-                window.__tcfapi('removeEventListener', 2, () => {}, tcData.listenerId);
+        if (tld === 'nl') {
+            const callback = (tcData, success) => {
+                if (success && (tcData.eventStatus === 'tcloaded' || tcData.eventStatus === 'useractioncomplete')) {
+                    window.__tcfapi('removeEventListener', 2, () => {}, tcData.listenerId);
 
-                if (tld === 'nl') {
                     __tcfapi('getTCData', 2, function (tcData, success) {
                         if (
                             tcData.purpose.consents[1] &&
@@ -68,13 +68,13 @@
                             loadGTM();
                         }
                     });
-                } else {
-                    loadGTM();
                 }
-            }
-        };
+            };
 
-        window.__tcfapi('addEventListener', 2, callback);
+            window.__tcfapi('addEventListener', 2, callback);
+        } else {
+            loadGTM();
+        }
 
         if (tld !== 'de') {
             loadLiveRampCmp2(liverampTcf2Id);
