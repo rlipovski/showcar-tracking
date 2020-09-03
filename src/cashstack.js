@@ -1,5 +1,6 @@
 (function () {
-    var releasedCountries = ['at', 'be', 'com', 'de', 'es', 'fr', 'nl', 'lu', 'it'];
+    var releasedCountries = ['at', 'be', 'com', 'de', 'es', 'fr', 'nl', 'lu', 'it', 'bg', 'cz', 'ru', 'pl', 'hu', 'hr', 'ro', 'se', 'tr', 'ua'];
+
     var tld = window.location.hostname.split('.').pop();
 
     if (!releasedCountries.includes(tld)) {
@@ -27,6 +28,16 @@
             lu: 'd32b30c5-1df5-4e45-825e-1f0d7ce19b08',
             nl: '7a9273aa-bc97-4542-bed2-4ee53960a5ae',
             com: '94a59b49-b7ea-4e1c-93c9-95a65811342b',
+            bg: 'c91d7583-8f6b-4377-9930-d2f4121c077e',
+            cz: 'af726efc-d085-4dcd-b1b2-d70bec664c9b',
+            ru: '1f94bd98-a90c-42b8-b0f6-dd27eab93973',
+            pl: 'f45e019f-1401-499f-a329-19c20067273d',
+            hu: '47d0ac99-7029-4dae-91ac-15dd5793eded',
+            hr: '04a29971-bbd1-4577-a5fb-07e85b4933d3',
+            ro: 'c4949c4e-b1b9-4434-919d-c766202554e5',
+            se: '5aeab49d-a921-494f-9b8a-84001adbab72',
+            tr: 'd54e7f74-947c-49b3-9eb8-248cbad044fb',
+            ua: '730298e4-c5c4-463b-a86c-ead192d21c6f',
         };
 
         var tld = window.location.hostname.split('.').pop();
@@ -386,6 +397,16 @@ function loadGTM() {
         it: 'GTM-WTCSNR',
         nl: 'GTM-TW48BJ',
         com: 'GTM-KWX9NX',
+        bg: 'GTM-KWX9NX',
+        cz: 'GTM-KWX9NX',
+        ru: 'GTM-KWX9NX',
+        pl: 'GTM-KWX9NX',
+        hu: 'GTM-KWX9NX',
+        hr: 'GTM-KWX9NX',
+        ro: 'GTM-KWX9NX',
+        se: 'GTM-KWX9NX',
+        tr: 'GTM-KWX9NX',
+        ua: 'GTM-KWX9NX',
     };
 
     const containerId = containerIdsByTld[tld] || containerIdsByTld['com'];
