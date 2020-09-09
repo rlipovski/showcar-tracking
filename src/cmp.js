@@ -166,7 +166,7 @@ module.exports.loadCmpAsync = once(() => {
 });
 
 module.exports.isCmpEnabled = () => {
-    return !window.__tcfapi && window.cmpEnabled;
+    return !window.__tcfapi && window.cmpEnabled && window.hostname !== "accounts.autoscout24.com";
 };
 
 module.exports.waitForConsentIfNeeded = () => {
