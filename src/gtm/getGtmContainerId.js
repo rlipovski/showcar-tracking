@@ -15,10 +15,17 @@ var isIdentityPage = function (hostname) {
 };
 
 var extractTldFromRedirectUrl = function (url) {
-    var regexp = new RegExp(/24\.([a-z]{2,3})/g);
+    // search for autoscout24.xxx in URL
+    var regexp = new RegExp(/autoscout24\.([a-z]{2,3})/g);
     var matches = url.match(regexp);
+    var tld = 'com';
 
-    return matches ? matches.slice(-1).join('').split('.')[1] : 'com';
+    if (matches) {
+        var lastMatch = matches.slice(-1).join(''); // i.e. autoscout24.de
+        tld = lastMatch.split('.')[1];
+    }
+
+    return tld;
 };
 
 module.exports = function (hostname) {

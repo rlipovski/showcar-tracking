@@ -132,9 +132,13 @@ module.exports.loadCmpAsync = once(() => {
         );
     }
 
+    function isOnIdentityPage() {
+        return window.location.hostname === "accounts.autoscout24.com"
+    }
+
     // if (isMobile) {
     window.__cmp('addEventListener', 'consentToolShouldBeShown', () => {
-        if (isOnPrivacyInfoPage()) {
+        if (isOnPrivacyInfoPage() || isOnIdentityPage()) {
             window.__cmp('showConsentTool', false);
         } else {
             waitForIframe((ifr) => {
@@ -166,7 +170,7 @@ module.exports.loadCmpAsync = once(() => {
 });
 
 module.exports.isCmpEnabled = () => {
-    return !window.__tcfapi && window.cmpEnabled && window.location.hostname !== "accounts.autoscout24.com";
+    return !window.__tcfapi && window.cmpEnabled;
 };
 
 module.exports.waitForConsentIfNeeded = () => {
