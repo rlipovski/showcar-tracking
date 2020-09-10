@@ -132,9 +132,13 @@ module.exports.loadCmpAsync = once(() => {
         );
     }
 
+    function isOnIdentityPage() {
+        return window.location.hostname === "accounts.autoscout24.com"
+    }
+
     // if (isMobile) {
     window.__cmp('addEventListener', 'consentToolShouldBeShown', () => {
-        if (isOnPrivacyInfoPage()) {
+        if (isOnPrivacyInfoPage() || isOnIdentityPage()) {
             window.__cmp('showConsentTool', false);
         } else {
             waitForIframe((ifr) => {

@@ -13,6 +13,8 @@ fail() {
 prepare_assets() {
     sed -i -e "s=@@ASSET_PATH=${ASSET_PATH}=" dist/index.html
     sed -i -e "s=index.min.js.map=${ASSET_PATH}/index.min.js.map=" dist/index.min.js
+
+    cp dist/index.min.js dist/brave-flamingo.min.js
 }
 
 upload_to_s3() {
@@ -27,6 +29,8 @@ upload_to_s3() {
     aws --region "eu-west-1" s3 cp dist "s3://as24-assets-eu-west-1/${SERVICE}/" --recursive --exclude "*" --include "*-fragment.html" --cache-control "max-age=300" --acl public-read
 
     aws --region "eu-west-1" s3 cp dist "s3://as24-assets-eu-west-1/${SERVICE}/" --recursive --exclude "*" --include "cashstack.min.js" --cache-control "max-age=300" --acl public-read
+
+    aws --region "eu-west-1" s3 cp dist "s3://as24-assets-eu-west-1/${SERVICE}/${BRANCH}/latest/" --recursive --exclude "*" --include "brave-flamingo.min.js" --cache-control "max-age=300" --acl public-read
 }
 
 prepare_assets

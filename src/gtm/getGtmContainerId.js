@@ -10,7 +10,25 @@ var containerIdsByTld = {
     com: 'GTM-KWX9NX',
 };
 
+var isIdentityPage = function (hostname) {
+    return hostname === "accounts.autoscout24.com";
+};
+
+var extractTldFromRedirectUrl = function (url) {
+    // search for ui_locales=xx in URL
+    var regexp = new RegExp(/ui_locales=([a-z]+)/g);
+    var matches = window.location.href.match(regexp);
+    var tld = 'com';
+
+    if (matches) {
+        var match = matches.join(''); // i.e. ui_locales=de
+        tld = match.split('=')[1];
+    }
+
+    return tld;
+};
+
 module.exports = function (hostname) {
-    var tld = hostname.split('.').pop();
+    var tld = isIdentityPage(hostname) ? extractTldFromRedirectUrl(window.location.href) : hostname.split('.').pop();
     return containerIdsByTld[tld] || containerIdsByTld['com'];
 };
