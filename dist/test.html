@@ -24,6 +24,18 @@
             commodo sunt qui velit sunt quis excepteur laborum nulla veniam elit dolore laboris velit. Ullamco magna
             anim sunt aute consequat labore laboris velit et id aliquip.
         </p>
+        <as24-tracking
+            type="gtm"
+            action="set"
+            as24-tracking-click-target="button.button-for-click-tracking"
+            as24-tracking-value='{"classified_leadPlacement" : "main-CTA"}'
+        ></as24-tracking>
+        <button
+            class="button-for-click-tracking"
+            data-click-datalayer-push='{ "event": "event_trigger", "event_category": "category", "event_action": "action" }'
+        >
+            Push to dataLayer { "event": "event_trigger", "event_category": "category", "event_action": "action" }
+        </button>
         <p>
             Exercitation magna voluptate aliquip est do non voluptate esse ad veniam anim ut sit Lorem. Consectetur
             incididunt do adipisicing occaecat elit fugiat sunt nostrud magna laborum aute commodo tempor laboris. Et eu
@@ -31,6 +43,10 @@
             commodo sunt qui velit sunt quis excepteur laborum nulla veniam elit dolore laboris velit. Ullamco magna
             anim sunt aute consequat labore laboris velit et id aliquip.
         </p>
+        <!-- This is invalid for now
+        <button data-dataLayer-push='{ event: "event_trigger", event_category: "category", event_action: "action" }'>
+            Push to dataLayer { "event": "event_trigger", "event_category": "category", "event_action": "action" }
+        </button> -->
         <p>
             Exercitation magna voluptate aliquip est do non voluptate esse ad veniam anim ut sit Lorem. Consectetur
             incididunt do adipisicing occaecat elit fugiat sunt nostrud magna laborum aute commodo tempor laboris. Et eu

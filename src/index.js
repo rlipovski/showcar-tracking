@@ -45,6 +45,8 @@ const startTracking = () => {
     };
 };
 
+require('./clickTrackingAttributes.js');
+
 if (window.location.hostname.split('.').pop() === 'de') {
     require('./ivw');
 }
