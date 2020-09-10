@@ -1,20 +1,8 @@
 (function () {
-    var releasedCountries = ['at', 'be', 'com', 'de', 'es', 'fr', 'nl', 'lu', 'it'];
-    var tld = window.location.hostname.split('.').pop();
-
-    if (!releasedCountries.includes(tld)) {
-        return;
-    }
-
-    // if (window.location.search.indexOf('tcf20') >= 0) {
+ 
     window.cmpEnabled = false;
     tcf20();
     window.cmpEnabled = false;
-    // } else {
-    //     window.cmpEnabled = true;
-    //     tcf11();
-    //     window.cmpEnabled = true;
-    // }
 
     function tcf20() {
         var tldToLiveRampMap = {
@@ -27,6 +15,16 @@
             lu: 'd32b30c5-1df5-4e45-825e-1f0d7ce19b08',
             nl: '7a9273aa-bc97-4542-bed2-4ee53960a5ae',
             com: '94a59b49-b7ea-4e1c-93c9-95a65811342b',
+            bg: 'c91d7583-8f6b-4377-9930-d2f4121c077e',
+            cz: 'af726efc-d085-4dcd-b1b2-d70bec664c9b',
+            ru: '1f94bd98-a90c-42b8-b0f6-dd27eab93973',
+            pl: 'f45e019f-1401-499f-a329-19c20067273d',
+            hu: '47d0ac99-7029-4dae-91ac-15dd5793eded',
+            hr: '04a29971-bbd1-4577-a5fb-07e85b4933d3',
+            ro: 'c4949c4e-b1b9-4434-919d-c766202554e5',
+            se: '5aeab49d-a921-494f-9b8a-84001adbab72',
+            tr: 'd54e7f74-947c-49b3-9eb8-248cbad044fb',
+            ua: '730298e4-c5c4-463b-a86c-ead192d21c6f',
         };
 
         var tld = window.location.hostname.split('.').pop();
@@ -198,180 +196,7 @@
                 loadLiveRampCmp2(liverampid);
             });
     }
-
-    function tcf11() {
-        const { loadCmpAsync } = require('./cmp');
-
-        const tld = window.location.hostname.split('.').pop();
-
-        function loadCMPStub() {
-            if (!window.__cmp || typeof window.__cmp !== 'function') {
-                var faktorCmpStart = window.__cmp ? window.__cmp.start : {};
-
-                window.__cmp = (function () {
-                    var listen = window.attachEvent || window.addEventListener;
-                    listen('message', function (event) {
-                        window.__cmp.receiveMessage(event);
-                    });
-
-                    function addLocatorFrame() {
-                        if (!window.frames['__cmpLocator']) {
-                            if (document.body) {
-                                var frame = document.createElement('iframe');
-                                frame.style.display = 'none';
-                                frame.name = '__cmpLocator';
-                                document.body.appendChild(frame);
-                            } else {
-                                setTimeout(addLocatorFrame, 5);
-                            }
-                        }
-                    }
-
-                    addLocatorFrame();
-
-                    var commandQueue = [];
-                    var cmp = function (command, parameter, callback) {
-                        if (command === 'ping') {
-                            if (callback) {
-                                callback({
-                                    gdprAppliesGlobally: !!(
-                                        window.__cmp &&
-                                        window.__cmp.config &&
-                                        window.__cmp.config.storeConsentGlobally
-                                    ),
-                                    cmpLoaded: false,
-                                });
-                            }
-                        } else {
-                            commandQueue.push({
-                                command: command,
-                                parameter: parameter,
-                                callback: callback,
-                            });
-                        }
-                    };
-                    cmp.commandQueue = commandQueue;
-                    cmp.receiveMessage = function (event) {
-                        var data = event && event.data && event.data.__cmpCall;
-                        if (data) {
-                            commandQueue.push({
-                                callId: data.callId,
-                                command: data.command,
-                                parameter: data.parameter,
-                                event: event,
-                            });
-                        }
-                    };
-
-                    return cmp;
-                })();
-
-                window.__cmp.start = faktorCmpStart;
-            }
-        }
-
-        function setDataLayerConsents(vendorConsents, additionalVendorConsents) {
-            const facebookConsent =
-                vendorConsents &&
-                vendorConsents.purposeConsents[1] &&
-                vendorConsents.purposeConsents[2] &&
-                vendorConsents.purposeConsents[3] &&
-                vendorConsents.purposeConsents[5] &&
-                additionalVendorConsents.vendorConsents[16];
-
-            const googleAnalyticsConsent =
-                vendorConsents &&
-                vendorConsents.purposeConsents[1] &&
-                vendorConsents.purposeConsents[5] &&
-                additionalVendorConsents.vendorConsents[4];
-
-            const googleAdsConsent =
-                vendorConsents &&
-                vendorConsents.purposeConsents[1] &&
-                vendorConsents.purposeConsents[2] &&
-                vendorConsents.purposeConsents[3] &&
-                vendorConsents.purposeConsents[5] &&
-                additionalVendorConsents.vendorConsents[91];
-
-            const bingConsent =
-                vendorConsents &&
-                vendorConsents.purposeConsents[1] &&
-                vendorConsents.purposeConsents[2] &&
-                vendorConsents.purposeConsents[3] &&
-                vendorConsents.purposeConsents[4] &&
-                vendorConsents.purposeConsents[5] &&
-                additionalVendorConsents.vendorConsents[21];
-
-            const mouseFlowConsent =
-                vendorConsents &&
-                vendorConsents.purposeConsents[1] &&
-                vendorConsents.purposeConsents[5] &&
-                additionalVendorConsents.vendorConsents[223];
-
-            const kruxConsent =
-                vendorConsents &&
-                vendorConsents.purposeConsents[1] &&
-                vendorConsents.purposeConsents[2] &&
-                vendorConsents.purposeConsents[3] &&
-                vendorConsents.purposeConsents[4] &&
-                vendorConsents.purposeConsents[5] &&
-                additionalVendorConsents.vendorConsents[25];
-
-            const criteoConsent =
-                vendorConsents &&
-                vendorConsents.purposeConsents[1] &&
-                vendorConsents.purposeConsents[2] &&
-                vendorConsents.vendorConsents[91];
-
-            const rtbConsent =
-                vendorConsents &&
-                vendorConsents.purposeConsents[1] &&
-                vendorConsents.purposeConsents[2] &&
-                vendorConsents.vendorConsents[16];
-
-            window.dataLayer = window.dataLayer || [];
-            window.dataLayer.unshift({
-                cmp_facebook_consent: facebookConsent,
-                cmp_googleAnalytics_consent: googleAnalyticsConsent,
-                cmp_googleAds_consent: googleAdsConsent,
-                cmp_bing_consent: bingConsent,
-                cmp_mouseFlow_consent: mouseFlowConsent,
-                cmp_krux_consent: kruxConsent,
-                cmp_criteo_consent: criteoConsent,
-                cmp_rtb_consent: rtbConsent,
-            });
-        }
-
-        if (window.cmpEnabled) {
-            window.dataLayer = window.dataLayer || [];
-            window.dataLayer.unshift({ cmp_enabled: true });
-
-            loadCMPStub();
-
-            loadCmpAsync();
-
-            window.__cmp('getVendorConsents', null, function (vendorConsents) {
-                window.__cmp('getAdditionalVendorConsents', null, function (additionalVendorConsents) {
-                    setDataLayerConsents(vendorConsents, additionalVendorConsents);
-
-                    // In NL we need all 5 purposes to load GTM
-                    if (tld === 'nl') {
-                        if (
-                            vendorConsents.purposeConsents[1] &&
-                            vendorConsents.purposeConsents[2] &&
-                            vendorConsents.purposeConsents[3] &&
-                            vendorConsents.purposeConsents[4] &&
-                            vendorConsents.purposeConsents[5]
-                        ) {
-                            loadGTM();
-                        }
-                    } else {
-                        loadGTM();
-                    }
-                });
-            });
-        }
-    }
+    
 })();
 
 function loadGTM() {
