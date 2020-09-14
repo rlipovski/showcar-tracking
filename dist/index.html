@@ -6,6 +6,19 @@
             return false;
         }
 
+        if (!/as24Visitor/.test(document.cookie)) {
+            function uuidv4() {
+                return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+                    var r = (Math.random() * 16) | 0,
+                        v = c == 'x' ? r : (r & 0x3) | 0x8;
+                    return v.toString(16);
+                });
+            }
+
+            var domain = window.location.hostname.replace('www.', '').replace('local.', '');
+            document.cookie = 'as24Visitor=' + uuidv4() + ';path=/;max-age=31536000;domain=' + domain;
+        }
+
         window.cmpEnabled = false;
         tcf20();
         window.cmpEnabled = false;
@@ -42,6 +55,8 @@
                 ref.parentNode.insertBefore(script, ref);
                 script.src = 'https://gdpr-wrapper.privacymanager.io/gdpr/' + uid + '/gdpr-liveramp.js';
             }
+
+            // __tcfapi('toggleConsentTool', 2, (result) => {console.log(result)}, false);
 
             // TCF stub
             // prettier-ignore
@@ -174,7 +189,6 @@
                     loadLiveRampCmp2(liverampid);
                 });
         }
-
     })();
 </script>
 <script src="@@ASSET_PATH/index.min.js" defer data-pagespeed-no-defer></script>
