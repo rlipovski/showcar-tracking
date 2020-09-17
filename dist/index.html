@@ -62,7 +62,8 @@
 
             if (
                 window.location.hostname === 'accounts.autoscout24.com' ||
-                document.querySelector('as24-tracking[pageid="au-company-privacy"]')
+                document.querySelector('as24-tracking[pageid="au-company-privacy"]') ||
+                window.self !== window.top // inside an iframe
             ) {
                 // Hide CMP on privacy and identity pages
                 __tcfapi(
