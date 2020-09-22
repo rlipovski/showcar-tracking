@@ -83,27 +83,25 @@
                 );
             }
 
-            if (window.location.search.indexOf('__track_cmp') > 0) {
-                function trackEvent(event) {
-                    window.dataLayer = window.dataLayer || [];
+            function trackEvent(event) {
+                window.dataLayer = window.dataLayer || [];
 
-                    if (
-                        dataLayer.filter(function (x) {
-                            return x.event === 'data_ready';
-                        }).length === 0
-                    ) {
-                        setTimeout(function () {
-                            trackEvent(event);
-                        }, 100);
-                        return;
-                    }
-
-                    window.dataLayer.push({
-                        event: 'event_trigger',
-                        event_category: 'CMP',
-                        event_action: event,
-                    });
+                if (
+                    dataLayer.filter(function (x) {
+                        return x.event === 'data_ready';
+                    }).length === 0
+                ) {
+                    setTimeout(function () {
+                        trackEvent(event);
+                    }, 100);
+                    return;
                 }
+
+                window.dataLayer.push({
+                    event: 'event_trigger',
+                    event_category: 'CMP',
+                    event_action: event,
+                });
 
                 var trackedCmpEvents = [
                     'cmpReady',
