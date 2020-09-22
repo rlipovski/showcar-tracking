@@ -83,6 +83,41 @@
                 );
             }
 
+            if (window.location.search.indexOf('__track_cmp') > 0) {
+                function trackEvent(event) {
+                    window.dataLayer = window.dataLayer || [];
+                    window.dataLayer.push({
+                        event: 'event_trigger',
+                        event_category: 'CMP',
+                        event_action: event,
+                    });
+                }
+
+                var trackedCmpEvents = [
+                    'cmpReady',
+                    'acceptAllButtonClicked',
+                    'exitButtonClicked',
+                    'saveAndExitButtonClicked',
+                    'consentToolShouldBeShown',
+                    'denyAllButtonClicked',
+                    'consentManagerDisplayed',
+                    'consentManagerClosed',
+                    'consentNoticeDisplayed',
+                    'consentNoticeClosed',
+                ];
+
+                trackedCmpEvents.forEach(function (event) {
+                    window.__tcfapi(
+                        'addEventListener',
+                        2,
+                        function () {
+                            trackEvent(event);
+                        },
+                        event
+                    );
+                });
+            }
+
             if (tld === 'be') {
                 __tcfapi('changeLanguage', null, function () {}, location.pathname.startsWith('/nl') ? 'nl' : 'fr');
             }
