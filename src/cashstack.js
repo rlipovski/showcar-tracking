@@ -196,33 +196,35 @@
                 loadLiveRampCmp2(liverampid);
             });
     }
+
+    function loadGTM() {
+        const tld = window.location.hostname.split('.').pop();
+        const containerIdsByTld = {
+            de: 'GTM-MK57H2',
+            at: 'GTM-WBZ87G',
+            be: 'GTM-5BWB2M',
+            lu: 'GTM-NDBDCZ',
+            es: 'GTM-PS6QHN',
+            fr: 'GTM-PD93LD',
+            it: 'GTM-WTCSNR',
+            nl: 'GTM-TW48BJ',
+            com: 'GTM-KWX9NX',
+        };
+    
+        const containerId = containerIdsByTld[tld] || containerIdsByTld['com'];
+    
+        (function (w, d, s, l, i) {
+            w[l] = w[l] || [];
+            w[l].push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' });
+            var f = d.getElementsByTagName(s)[0],
+                j = d.createElement(s),
+                dl = l != 'dataLayer' ? '&l=' + l : '';
+            j.async = true;
+            j.src = '//www.googletagmanager.com/gtm.js?id=' + i + dl;
+            f.parentNode.insertBefore(j, f);
+        })(window, document, 'script', 'dataLayer', containerId);
+    }
     
 })();
 
-function loadGTM() {
-    const tld = window.location.hostname.split('.').pop();
-    const containerIdsByTld = {
-        de: 'GTM-MK57H2',
-        at: 'GTM-WBZ87G',
-        be: 'GTM-5BWB2M',
-        lu: 'GTM-NDBDCZ',
-        es: 'GTM-PS6QHN',
-        fr: 'GTM-PD93LD',
-        it: 'GTM-WTCSNR',
-        nl: 'GTM-TW48BJ',
-        com: 'GTM-KWX9NX',
-    };
 
-    const containerId = containerIdsByTld[tld] || containerIdsByTld['com'];
-
-    (function (w, d, s, l, i) {
-        w[l] = w[l] || [];
-        w[l].push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' });
-        var f = d.getElementsByTagName(s)[0],
-            j = d.createElement(s),
-            dl = l != 'dataLayer' ? '&l=' + l : '';
-        j.async = true;
-        j.src = '//www.googletagmanager.com/gtm.js?id=' + i + dl;
-        f.parentNode.insertBefore(j, f);
-    })(window, document, 'script', 'dataLayer', containerId);
-}
