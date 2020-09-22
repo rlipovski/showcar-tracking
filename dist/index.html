@@ -83,52 +83,50 @@
                 );
             }
 
-            if (window.location.search.indexOf('__track_cmp') > 0) {
-                function trackEvent(event) {
-                    window.dataLayer = window.dataLayer || [];
+            function trackEvent(event) {
+                window.dataLayer = window.dataLayer || [];
 
-                    if (
-                        dataLayer.filter(function (x) {
-                            return x.event === 'data_ready';
-                        }).length === 0
-                    ) {
-                        setTimeout(function () {
-                            trackEvent(event);
-                        }, 100);
-                        return;
-                    }
-
-                    window.dataLayer.push({
-                        event: 'event_trigger',
-                        event_category: 'CMP',
-                        event_action: event,
-                    });
+                if (
+                    dataLayer.filter(function (x) {
+                        return x.event === 'data_ready';
+                    }).length === 0
+                ) {
+                    setTimeout(function () {
+                        trackEvent(event);
+                    }, 100);
+                    return;
                 }
 
-                var trackedCmpEvents = [
-                    'cmpReady',
-                    'acceptAllButtonClicked',
-                    'exitButtonClicked',
-                    'saveAndExitButtonClicked',
-                    'consentToolShouldBeShown',
-                    'denyAllButtonClicked',
-                    'consentManagerDisplayed',
-                    'consentManagerClosed',
-                    'consentNoticeDisplayed',
-                    'consentNoticeClosed',
-                ];
-
-                trackedCmpEvents.forEach(function (event) {
-                    window.__tcfapi(
-                        'addEventListener',
-                        2,
-                        function () {
-                            trackEvent(event);
-                        },
-                        event
-                    );
+                window.dataLayer.push({
+                    event: 'event_trigger',
+                    event_category: 'CMP',
+                    event_action: event,
                 });
             }
+
+            var trackedCmpEvents = [
+                'cmpReady',
+                'acceptAllButtonClicked',
+                'exitButtonClicked',
+                'saveAndExitButtonClicked',
+                'consentToolShouldBeShown',
+                'denyAllButtonClicked',
+                'consentManagerDisplayed',
+                'consentManagerClosed',
+                'consentNoticeDisplayed',
+                'consentNoticeClosed',
+            ];
+
+            trackedCmpEvents.forEach(function (event) {
+                window.__tcfapi(
+                    'addEventListener',
+                    2,
+                    function () {
+                        trackEvent(event);
+                    },
+                    event
+                );
+            });
 
             if (tld === 'be') {
                 __tcfapi('changeLanguage', null, function () {}, location.pathname.startsWith('/nl') ? 'nl' : 'fr');
