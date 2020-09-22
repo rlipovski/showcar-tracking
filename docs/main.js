@@ -560,9 +560,13 @@
 	        return window.location.href.indexOf('__cmp_privacy') >= 0 || document.querySelector('as24-tracking[pageid="au-company-privacy"]');
 	    }
 	
+	    function isOnIdentityPage() {
+	        return window.location.hostname === "accounts.autoscout24.com";
+	    }
+	
 	    // if (isMobile) {
 	    window.__cmp('addEventListener', 'consentToolShouldBeShown', function () {
-	        if (isOnPrivacyInfoPage()) {
+	        if (isOnPrivacyInfoPage() || isOnIdentityPage()) {
 	            window.__cmp('showConsentTool', false);
 	        } else {
 	            waitForIframe(function (ifr) {
@@ -941,8 +945,26 @@
 	    com: 'GTM-KWX9NX'
 	};
 	
+	var isIdentityPage = function isIdentityPage(hostname) {
+	    return hostname === "accounts.autoscout24.com";
+	};
+	
+	var extractTldFromRedirectUrl = function extractTldFromRedirectUrl(url) {
+	    // search for ui_locales=xx in URL
+	    var regexp = new RegExp(/ui_locales=([a-z]+)/g);
+	    var matches = window.location.href.match(regexp);
+	    var tld = 'com';
+	
+	    if (matches) {
+	        var match = matches.join(''); // i.e. ui_locales=de
+	        tld = match.split('=')[1];
+	    }
+	
+	    return tld;
+	};
+	
 	module.exports = function (hostname) {
-	    var tld = hostname.split('.').pop();
+	    var tld = isIdentityPage(hostname) ? extractTldFromRedirectUrl(window.location.href) : hostname.split('.').pop();
 	    return containerIdsByTld[tld] || containerIdsByTld['com'];
 	};
 
