@@ -22,7 +22,7 @@ pipeline {
         branch 'master'
       }
 
-      agent { node { label 'deploy-as24assets' } }
+      agent { node { label 'deploy-as24assets-node' } }
 
       steps {
         sh './deploy/build.sh'
@@ -40,7 +40,7 @@ pipeline {
         BRANCH="master"
       }
 
-      agent { node { label 'deploy-as24assets' } }
+      agent { node { label 'deploy-as24assets-node' } }
 
       steps {
         unstash 'output-dist'
