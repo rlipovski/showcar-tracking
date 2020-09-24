@@ -1,0 +1,37 @@
+#!/bin/bash
+
+set -ev
+
+COMMIT_HASH=$(git rev-parse HEAD)
+ASSET_PATH="/assets/external/${SERVICE}/${BRANCH}/${COMMIT_HASH}"
+
+fail() {
+  echo "FAIL: $*"
+  exit 1
+}
+
+prepare_assets() {
+    sed -i -e "s=@@ASSET_PATH=${ASSET_PATH}=" dist/index.html
+    sed -i -e "s=index.min.js.map=${ASSET_PATH}/index.min.js.map=" dist/index.min.js
+
+    cp dist/index.min.js dist/brave-flamingo.min.js
+}
+
+upload_to_s3() {
+    echo "Uploading assets to S3"
+
+    aws --region "eu-west-1" s3 cp dist "s3://act-showcar-assets/${SERVICE}/${BRANCH}/${COMMIT_HASH}/" --recursive --exclude "*.html" --cache-control "max-age=2592000" --acl public-read
+    aws --region "eu-west-1" s3 cp dist "s3://act-showcar-assets/${SERVICE}/${BRANCH}/${COMMIT_HASH}/" --recursive --exclude "*" --include "*.html" --cache-control "max-age=300" --acl public-read
+
+    aws --region "eu-west-1" s3 cp dist "s3://act-showcar-assets/${SERVICE}/${BRANCH}/latest/" --recursive --exclude "*.html" --cache-control "max-age=2592000" --acl public-read
+    aws --region "eu-west-1" s3 cp dist "s3://act-showcar-assets/${SERVICE}/${BRANCH}/latest/" --recursive --exclude "*" --include "*.html" --cache-control "max-age=300" --acl public-read
+
+    aws --region "eu-west-1" s3 cp dist "s3://act-showcar-assets/${SERVICE}/" --recursive --exclude "*" --include "*-fragment.html" --cache-control "max-age=300" --acl public-read
+
+    aws --region "eu-west-1" s3 cp dist "s3://act-showcar-assets/${SERVICE}/" --recursive --exclude "*" --include "cashstack.min.js" --cache-control "max-age=300" --acl public-read
+
+    aws --region "eu-west-1" s3 cp dist "s3://act-showcar-assets/${SERVICE}/${BRANCH}/latest/" --recursive --exclude "*" --include "brave-flamingo.min.js" --cache-control "max-age=300" --acl public-read
+}
+
+prepare_assets
+upload_to_s3
