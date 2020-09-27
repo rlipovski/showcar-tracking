@@ -598,6 +598,38 @@
                 // }
 
                 function tcf20() {
+                    function setCmpCookiesIfProvidedAsQueryStrings() {
+                        var urlParams = new URLSearchParams(window.location.search);
+                        var euconsentv2 = urlParams.get('euconsent-v2');
+                        var cconsentv2 = urlParams.get('cconsent-v2');
+                        var gdprAuditId = urlParams.get('gdpr-auditId');
+                        var addtlConsent = urlParams.get('addtl_consent');
+                        var gdprLastInteraction = (Date.now() / 1000).toFixed(3);
+
+                        var domain = 'domain=' + document.location.hostname.replace('www.', '').replace('local.', '');
+                        var path = 'path=/';
+                        var maxAge = 'max-age=31536000';
+                        var sameSite = 'samesite=Lax';
+
+                        if (euconsentv2 && cconsentv2 && gdprAuditId && addtlConsent) {
+                            document.cookie = ['euconsent-v2=' + euconsentv2, path, maxAge, domain, sameSite].join(';');
+                            document.cookie = ['cconsent-v2=' + cconsentv2, path, maxAge, domain, sameSite].join(';');
+                            document.cookie = ['gdpr-auditId=' + gdprAuditId, path, maxAge, domain, sameSite].join(';');
+                            document.cookie = ['addtl_consent=' + addtlConsent, path, maxAge, domain, sameSite].join(
+                                ';'
+                            );
+                            document.cookie = [
+                                'gdpr-last-interaction=' + gdprLastInteraction,
+                                path,
+                                maxAge,
+                                domain,
+                                sameSite,
+                            ].join(';');
+                        }
+                    }
+
+                    setCmpCookiesIfProvidedAsQueryStrings();
+
                     var tldToLiveRampMap = {
                         at: '3e24114e-f793-4eba-8c0f-735086de7eb6',
                         be: '207bd477-df32-4ebe-91f2-69d7feec18b2',
