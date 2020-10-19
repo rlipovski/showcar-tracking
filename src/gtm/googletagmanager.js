@@ -1,5 +1,3 @@
-const cmp = require('../cmp');
-
 var dataLayer = (window.dataLayer = window.dataLayer || []);
 var useNewArrayLogic = window.location.href.indexOf('tracking-arrays=true') >= 0;
 
@@ -23,6 +21,7 @@ module.exports = {
                     window.__tcfapi('removeEventListener', 2, () => {}, tcData.listenerId);
                     __tcfapi('getTCData', 2, function (tcData, success) {
                         if (
+                            success &&
                             tcData.purpose.consents[1] &&
                             tcData.purpose.consents[2] &&
                             tcData.purpose.consents[3] &&
@@ -56,14 +55,6 @@ module.exports = {
                 f.parentNode.insertBefore(j, f);
             })(window, document, 'script', 'dataLayer', containerId);
         }
-    },
-
-    loadContainerOnlyWidthConsent: function (containerId) {
-        cmp.waitForConsentAgreementIfNeeded().then((hasGivenConsent) => {
-            if (hasGivenConsent) {
-                this.loadContainer(containerId);
-            }
-        });
     },
 
     push: function () {

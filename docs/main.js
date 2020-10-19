@@ -59,7 +59,7 @@
 	
 	var startTracking = function startTracking() {
 	    var gtm = __webpack_require__(2);
-	    var dealerGtm = __webpack_require__(11);
+	    var dealerGtm = __webpack_require__(9);
 	
 	    function processCommand(data) {
 	        var fn, args;
@@ -94,7 +94,7 @@
 	        ut.forEach(processCommand);
 	    }
 	
-	    __webpack_require__(12);
+	    __webpack_require__(10);
 	
 	    module.exports = {
 	        gtm: gtm,
@@ -102,17 +102,15 @@
 	    };
 	};
 	
-	__webpack_require__(13);
+	__webpack_require__(11);
 	
 	if (window.location.hostname.split('.').pop() === 'de') {
-	    __webpack_require__(14);
+	    __webpack_require__(12);
 	}
 	
 	if (window.location.hostname.split('.').pop() === 'at') {
-	    __webpack_require__(15);
+	    __webpack_require__(13);
 	}
-	
-	var cmp = __webpack_require__(7);
 	
 	var run = function run() {
 	    if (!trackingEnabled) {
@@ -120,54 +118,7 @@
 	        return;
 	    }
 	
-	    if (window.__tcfapi) {
-	        startTracking();
-	        return;
-	    }
-	
-	    if (!cmp.isCmpEnabled()) {
-	        window.dataLayer = window.dataLayer || [];
-	        window.dataLayer.push({ cmp_enabled: false });
-	        startTracking();
-	        return;
-	    }
-	
-	    window.dataLayer = window.dataLayer || [];
-	    window.dataLayer.push({ cmp_enabled: true });
-	
-	    // We load the CMP and do some magic here
-	    cmp.loadCmpAsync();
-	
-	    // window.__cmp('addEventListener', 'cmpReady', () => {
-	    // When consent changes we update dataLayer and localStorage.__as24_cached_cmp_consent
-	    cmp.updateDataLayerAndCacheOnConsentChange();
-	
-	    cmp.sendMetricsOnEvents();
-	
-	    // !!! We don't load GTM in NL without consent !!!
-	    if (cmp.isCmpEnabled() && window.location.hostname.split('.').pop() === 'nl') {
-	        cmp.waitForConsentAgreementIfNeeded().then(function (hasGivenConsent) {
-	            if (hasGivenConsent) {
-	                startTracking();
-	            }
-	        });
-	    } else {
-	        cmp.waitForConsentIfNeeded().then(function () {
-	            return startTracking();
-	        });
-	    }
-	
-	    // if (cmp.trySetDataLayerVariablesFromCache()) {
-	    //     // We have consent data in cache so we can proceed loading GTM
-	    //     startTracking();
-	    // } else {
-	    //     // We don't have previous consent in cache therefore we are waiting for getting one
-	    //     // This is to avoid losing important conversion tracking events: Google Ads, Facebook
-	    //     // which are fired directly in the pageview
-	    //     cmp.waitForFirstCmpDecision().then(() => {
-	    //         startTracking();
-	    //     });
-	    // }
+	    startTracking();
 	};
 	
 	run();
@@ -181,8 +132,8 @@
 	var merge = __webpack_require__(3);
 	
 	var gtm = __webpack_require__(6);
-	var containerId = __webpack_require__(9)(location.hostname);
-	var viewport = __webpack_require__(10);
+	var containerId = __webpack_require__(7)(location.hostname);
+	var viewport = __webpack_require__(8);
 	
 	var pagename;
 	
@@ -339,11 +290,9 @@
 
 /***/ }),
 /* 6 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(module, exports) {
 
 	'use strict';
-	
-	var cmp = __webpack_require__(7);
 	
 	var dataLayer = window.dataLayer = window.dataLayer || [];
 	var useNewArrayLogic = window.location.href.indexOf('tracking-arrays=true') >= 0;
@@ -366,7 +315,7 @@
 	                if (success && (tcData.eventStatus === 'tcloaded' || tcData.eventStatus === 'useractioncomplete')) {
 	                    window.__tcfapi('removeEventListener', 2, function () {}, tcData.listenerId);
 	                    __tcfapi('getTCData', 2, function (tcData, success) {
-	                        if (tcData.purpose.consents[1] && tcData.purpose.consents[2] && tcData.purpose.consents[3] && tcData.purpose.consents[4] && tcData.purpose.consents[5] && tcData.purpose.consents[6] && tcData.purpose.consents[7] && tcData.purpose.consents[8] && tcData.purpose.consents[9] && tcData.purpose.consents[10]) {
+	                        if (success && tcData.purpose.consents[1] && tcData.purpose.consents[2] && tcData.purpose.consents[3] && tcData.purpose.consents[4] && tcData.purpose.consents[5] && tcData.purpose.consents[6] && tcData.purpose.consents[7] && tcData.purpose.consents[8] && tcData.purpose.consents[9] && tcData.purpose.consents[10]) {
 	                            loadContainer();
 	                        }
 	                    });
@@ -389,16 +338,6 @@
 	                f.parentNode.insertBefore(j, f);
 	            })(window, document, 'script', 'dataLayer', containerId);
 	        }
-	    },
-	
-	    loadContainerOnlyWidthConsent: function loadContainerOnlyWidthConsent(containerId) {
-	        var _this = this;
-	
-	        cmp.waitForConsentAgreementIfNeeded().then(function (hasGivenConsent) {
-	            if (hasGivenConsent) {
-	                _this.loadContainer(containerId);
-	            }
-	        });
 	    },
 	
 	    push: function push() {
@@ -428,507 +367,6 @@
 
 /***/ }),
 /* 7 */
-/***/ (function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
-	
-	var _require = __webpack_require__(8),
-	    once = _require.once;
-	
-	var consentCacheKey = '__cmp_consent_cache';
-	var isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini|mobil/i.test(navigator.userAgent);
-	
-	var optimizelyEnabled = window.location.href.indexOf('__cmp-optimizely') >= 0;
-	
-	var cmpSiteIds = {
-	    at: 'c8515c6b-cf35-47d8-8078-15cc075b3207',
-	    be: 'a9a510e9-b6b9-4499-99f6-131880e92aaa',
-	    com: 'c1adba9f-4737-4aaf-ad78-f406e961c345',
-	    de: '769b8c9a-14d7-4f0f-bc59-2748c96ec403',
-	    es: '052e7f91-7b7c-432a-bb9e-d99911139da7',
-	    fr: 'f6a34410-a99a-4e8d-836c-f19620914569',
-	    it: '7dc55efc-b43a-4ab6-a31b-d084591ee853',
-	    lu: '3f009a85-9789-4acc-a4a3-a6c45994c3ca',
-	    nl: '11590dc9-3700-43b4-aacd-731ef5261fdf'
-	};
-	
-	module.exports.loadCmpAsync = once(function () {
-	    if (window.__tcfapi) {
-	        return;
-	    }
-	
-	    var script = document.createElement('script');
-	    var ref = document.getElementsByTagName('script')[0];
-	    ref.parentNode.insertBefore(script, ref);
-	
-	    try {
-	        if (optimizelyEnabled && !localStorage.getItem('__as24_cmp_userid')) {
-	            // delete decision cookies when user gets into an experiment where they haven't been before
-	
-	            deleteCookie('769b8c9a-14d7-4f0f-bc59-2748c96ec403faktorId');
-	            deleteCookie('769b8c9a-14d7-4f0f-bc59-2748c96ec403faktorChecksum');
-	            deleteCookie('769b8c9a-14d7-4f0f-bc59-2748c96ec403cconsent');
-	            deleteCookie('769b8c9a-14d7-4f0f-bc59-2748c96ec403euconsent');
-	
-	            deleteCookie('ea93c094-1e43-49f8-8c62-75128f08f70bfaktorChecksum');
-	            deleteCookie('ea93c094-1e43-49f8-8c62-75128f08f70beuconsent');
-	            deleteCookie('ea93c094-1e43-49f8-8c62-75128f08f70bcconsent');
-	            deleteCookie('ea93c094-1e43-49f8-8c62-75128f08f70bfaktorId');
-	
-	            deleteCookie('lastConsentChange');
-	        }
-	
-	        getCmpVariationData().then(function (_ref) {
-	            var userid = _ref.userid,
-	                variation = _ref.variation;
-	
-	            window.__as24_cmp_userid = userid;
-	            window.__as24_cmp_variation = variation;
-	
-	            loadCmp(variation);
-	
-	            if (variation) {
-	                localStorage.setItem('__as24_cmp_userid', userid);
-	                localStorage.setItem('__as24_cmp_variation', variation);
-	
-	                window.__as24_cmp_opt_sendevent = function (event) {
-	                    var url = 'https://cmp-optimizely-fs.as24-media.eu-west-1.infinity.as24.tech/sendevent/' + userid + '/' + event;
-	
-	                    if ('sendBeacon' in navigator) {
-	                        navigator.sendBeacon(url);
-	                    } else {
-	                        new Image().src = 'https://cmp-optimizely-fs.as24-media.eu-west-1.infinity.as24.tech/sendevent/' + userid + '/' + event;
-	                    }
-	                };
-	            }
-	        });
-	
-	        console.log(window.__as24_cmp_userid, window.__as24_cmp_variation);
-	    } catch (ex) {
-	        //
-	    }
-	
-	    function getCmpVariationData() {
-	        if (!optimizelyEnabled) {
-	            return Promise.resolve({ variation: null, userid: '' });
-	        }
-	
-	        if (localStorage.getItem('__as24_cmp_userid') && localStorage.getItem('__as24_cmp_variation')) {
-	            return Promise.resolve({
-	                variation: localStorage.getItem('__as24_cmp_variation'),
-	                userid: localStorage.getItem('__as24_cmp_userid')
-	            });
-	        }
-	
-	        var userid = uuidv4();
-	
-	        return fetch('https://cmp-optimizely-fs.as24-media.eu-west-1.infinity.as24.tech/activate/cmp_classic_vs__nextgen/' + userid).then(function (r) {
-	            return r.json();
-	        });
-	    }
-	
-	    function loadCmp(variation) {
-	        var tld = window.location.hostname.split('.').pop();
-	        if (tld === 'de') {
-	            if (variation === 'classic') {
-	                script.src = 'https://config-prod.choice.faktor.io/769b8c9a-14d7-4f0f-bc59-2748c96ec403/faktor.js';
-	            } else {
-	                script.src = 'https://config-prod.choice.faktor.io/ea93c094-1e43-49f8-8c62-75128f08f70b/faktor.js';
-	            }
-	        } else {
-	            var cmpSiteId = cmpSiteIds[tld] || cmpSiteIds['de'];
-	            script.src = 'https://config-prod.choice.faktor.io/' + cmpSiteId + '/faktor.js';
-	        }
-	    }
-	
-	    function waitForIframe(cb) {
-	        var ifr = document.querySelector('iframe#cmp-faktor-io-brand-consent-notice');
-	        // const ifr = document.querySelector('div#cmp-faktor-io-parent');
-	        if (ifr) {
-	            cb(ifr);
-	            return;
-	        }
-	
-	        setTimeout(function () {
-	            waitForIframe(cb);
-	        }, 50);
-	    }
-	
-	    function isOnPrivacyInfoPage() {
-	        return window.location.href.indexOf('__cmp_privacy') >= 0 || document.querySelector('as24-tracking[pageid="au-company-privacy"]');
-	    }
-	
-	    function isOnIdentityPage() {
-	        return window.location.hostname === "accounts.autoscout24.com";
-	    }
-	
-	    // if (isMobile) {
-	    window.__cmp('addEventListener', 'consentToolShouldBeShown', function () {
-	        if (isOnPrivacyInfoPage() || isOnIdentityPage()) {
-	            window.__cmp('showConsentTool', false);
-	        } else {
-	            waitForIframe(function (ifr) {
-	                ifr.parentNode.style = 'width: 100%; heigh: 100%; position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 1000; background-color: rgba(0, 0, 0, 0.35);';
-	            });
-	        }
-	    });
-	    // }
-	
-	    // window.__cmp('addEventListener', 'consentToolShouldBeShown', () => {
-	    //     waitForIframe((ifr) => {
-	    //         console.log(ifr);
-	    //         ifr.parentNode.style = 'position: relative';
-	    //         // 'width: 100%; heigh: 100%; position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 1000; background-color: rgba(0, 0, 0, 0.35);';
-	    //     });
-	    // });
-	
-	    sendMetrics('cmp_pageview');
-	
-	    try {
-	        var userMadeDecision = !!localStorage[consentCacheKey];
-	        if (!userMadeDecision) {
-	            sendMetrics('cmp_pageview_without_decision');
-	        }
-	    } catch (ex) {
-	        //
-	    }
-	});
-	
-	module.exports.isCmpEnabled = function () {
-	    return !window.__tcfapi && window.cmpEnabled;
-	};
-	
-	module.exports.waitForConsentIfNeeded = function () {
-	    return new Promise(function (resolve) {
-	        if (trySetDataLayerVariablesFromCache()) {
-	            resolve();
-	            return;
-	        }
-	
-	        var handler = function handler(e) {
-	            window.__cmp('consentDataExist', null, function (d) {
-	                if (d === true) {
-	                    window.__cmp('removeEventListener', 'consentChanged', handler);
-	                    resolve();
-	                }
-	            });
-	        };
-	
-	        window.__cmp('addEventListener', 'consentChanged', handler);
-	    });
-	};
-	
-	function hasGivenConsent(vendorConsents) {
-	    var hasGivenConsent = !!(vendorConsents.purposeConsents[1] && vendorConsents.purposeConsents[2] && vendorConsents.purposeConsents[3] && vendorConsents.purposeConsents[4] && vendorConsents.purposeConsents[5]);
-	    return hasGivenConsent;
-	}
-	
-	function hasGivenConsentGtm(vendorConsents, additionalVendorConsents) {
-	    var hasGivenConsent = !!(vendorConsents.purposeConsents[1] && vendorConsents.purposeConsents[2] && vendorConsents.purposeConsents[3] && vendorConsents.purposeConsents[4] && vendorConsents.purposeConsents[5] && additionalVendorConsents.vendorConsents[6]);
-	    console.log('Has agreed to GTM ' + additionalVendorConsents.vendorConsents[6]);
-	    return hasGivenConsent;
-	}
-	
-	module.exports.waitForConsentAgreementIfNeeded = function () {
-	    if (window.location.href.indexOf('__cmp_gtm_check') > -1) {
-	        return new Promise(function (resolve) {
-	            window.__cmp('consentDataExist', null, function (consentDataExists) {
-	                if (consentDataExists === true) {
-	                    window.__cmp('getVendorConsents', undefined, function (vendorData) {
-	                        window.__cmp('getAdditionalVendorConsents', undefined, function (additionalVendorConsents) {
-	                            window.__cmp('removeEventListener', 'consentChanged', handler);
-	                            resolve(hasGivenConsentGtm(vendorData, additionalVendorConsents));
-	                        });
-	                    });
-	                }
-	            });
-	
-	            var handler = function handler(e) {
-	                window.__cmp('getVendorConsents', undefined, function (vendorData) {
-	                    window.__cmp('getAdditionalVendorConsents', undefined, function (additionalVendorConsents) {
-	                        window.__cmp('removeEventListener', 'consentChanged', handler);
-	                        resolve(hasGivenConsentGtm(vendorData, additionalVendorConsents));
-	                    });
-	                });
-	            };
-	            window.__cmp('addEventListener', 'consentWallClosed', handler);
-	            window.__cmp('addEventListener', 'consentManagerClosed', handler);
-	        });
-	    } else {
-	        return new Promise(function (resolve) {
-	            window.__cmp('consentDataExist', null, function (consentDataExists) {
-	                if (consentDataExists === true) {
-	                    window.__cmp('getVendorConsents', undefined, function (vendorData) {
-	                        window.__cmp('removeEventListener', 'consentChanged', handler);
-	                        resolve(hasGivenConsent(vendorData));
-	                    });
-	                }
-	            });
-	
-	            var handler = function handler(e) {
-	                window.__cmp('getVendorConsents', undefined, function (vendorData) {
-	                    window.__cmp('removeEventListener', 'consentChanged', handler);
-	                    resolve(hasGivenConsent(vendorData));
-	                });
-	            };
-	            window.__cmp('addEventListener', 'consentChanged', handler);
-	        });
-	    }
-	};
-	
-	module.exports.waitForFirstCmpDecision = function () {
-	    return new Promise(function (resolve) {
-	        var handler = function handler(e) {
-	            window.__cmp('consentDataExist', null, function (d) {
-	                if (d === true) {
-	                    window.__cmp('removeEventListener', 'consentChanged', handler);
-	                    resolve();
-	                }
-	            });
-	        };
-	
-	        window.__cmp('addEventListener', 'consentChanged', handler);
-	    });
-	};
-	
-	function getAllConsents() {
-	    return Promise.all([new Promise(function (resolve) {
-	        return window.__cmp('getVendorConsents', null, resolve);
-	    }), new Promise(function (resolve) {
-	        return window.__cmp('getAdditionalVendorConsents', null, resolve);
-	    })]);
-	}
-	
-	module.exports.updateDataLayerAndCacheOnConsentChange = function () {
-	    window.__cmp('addEventListener', 'consentChanged', function (e) {
-	        getAllConsents().then(function (_ref2) {
-	            var _ref3 = _slicedToArray(_ref2, 2),
-	                vendorConsents = _ref3[0],
-	                additionalVendorConsents = _ref3[1];
-	
-	            setDataLayerConsents(vendorConsents, additionalVendorConsents);
-	            localStorage.setItem(consentCacheKey, JSON.stringify({ vendorConsents: vendorConsents, additionalVendorConsents: additionalVendorConsents }));
-	        });
-	    });
-	
-	    // For safety we update the cache and the dataLayer every time when the cmp loads
-	    cmpReady().then(function () {
-	        consentDataExists().then(function (exists) {
-	            if (exists) {
-	                getAllConsents().then(function (_ref4) {
-	                    var _ref5 = _slicedToArray(_ref4, 2),
-	                        vendorConsents = _ref5[0],
-	                        additionalVendorConsents = _ref5[1];
-	
-	                    setDataLayerConsents(vendorConsents, additionalVendorConsents);
-	                    localStorage.setItem(consentCacheKey, JSON.stringify({ vendorConsents: vendorConsents, additionalVendorConsents: additionalVendorConsents }));
-	                });
-	            }
-	        });
-	    });
-	
-	    document.addEventListener('list-items:changed', function () {
-	        getAllConsents().then(function (_ref6) {
-	            var _ref7 = _slicedToArray(_ref6, 2),
-	                vendorConsents = _ref7[0],
-	                additionalVendorConsents = _ref7[1];
-	
-	            setDataLayerConsents(vendorConsents, additionalVendorConsents);
-	            localStorage.setItem(consentCacheKey, JSON.stringify({ vendorConsents: vendorConsents, additionalVendorConsents: additionalVendorConsents }));
-	        });
-	    });
-	};
-	
-	module.exports.trySetDataLayerVariablesFromCache = function () {
-	    try {
-	        var cache = JSON.parse(localStorage.getItem(consentCacheKey));
-	        setDataLayerConsents(cache.vendorConsents, cache.additionalVendorConsents);
-	        return true;
-	    } catch (e) {
-	        return false;
-	    }
-	};
-	
-	function trySetDataLayerVariablesFromCache() {
-	    if (!/faktorid/i.test(document.cookie)) {
-	        // We do not use cached data if faktor cookies are missing
-	        // (e.g. cookies were deleted by a extension which keeps localStorage)
-	        return false;
-	    }
-	
-	    try {
-	        var cache = JSON.parse(localStorage.getItem(consentCacheKey));
-	        setDataLayerConsents(cache.vendorConsents, cache.additionalVendorConsents);
-	        return true;
-	    } catch (e) {
-	        return false;
-	    }
-	}
-	
-	function cmpReady() {
-	    return new Promise(function (resolve) {
-	        var handler = function handler(e) {
-	            window.__cmp('removeEventListener', 'cmpReady', handler);
-	            resolve(e);
-	        };
-	
-	        window.__cmp('addEventListener', 'cmpReady', handler);
-	    });
-	}
-	
-	function consentDataExists() {
-	    return new Promise(function (resolve) {
-	        window.__cmp('consentDataExist', null, function (x) {
-	            resolve(x);
-	        });
-	    });
-	}
-	
-	module.exports.sendMetricsOnEvents = function () {
-	    var events = ['faktorIdChanged', 'acceptAllButtonClicked', 'rejectAllButtonClicked', 'exitButtonClicked', 'privacySettingsButtonClicked', 'disabledCookies', 'consentManagerDisplayed', 'consentManagerClosed',
-	    // 'consentWallDisplayed',
-	    'consentWallClosed', 'consentToolShouldBeShown', 'cmpReady', 'brandConsentNoticeDisplayed'];
-	
-	    events.forEach(function (event) {
-	        return window.__cmp('addEventListener', event, function () {
-	            return sendMetrics(event);
-	        });
-	    });
-	
-	    window.__cmp('addEventListener', 'acceptAllButtonClicked', function () {
-	        window.__as24_cmp_opt_sendevent && window.__as24_cmp_opt_sendevent('cmpAcceptAll');
-	    });
-	
-	    window.__cmp('addEventListener', 'rejectAllButtonClicked', function () {
-	        window.__as24_cmp_opt_sendevent && window.__as24_cmp_opt_sendevent('cmpRejectAll');
-	    });
-	
-	    window.__cmp('addEventListener', 'exitButtonClicked', function () {
-	        window.__as24_cmp_opt_sendevent && window.__as24_cmp_opt_sendevent('cmpExit');
-	    });
-	
-	    window.__cmp('addEventListener', 'consentToolShouldBeShown', function () {
-	        window.__as24_cmp_opt_sendevent && window.__as24_cmp_opt_sendevent('cmpShown');
-	
-	        var interaction = false;
-	        var interactionEvents = ['acceptAllButtonClicked', 'rejectAllButtonClicked', 'exitButtonClicked', 'privacySettingsButtonClicked'];
-	
-	        interactionEvents.forEach(function (event) {
-	            return window.__cmp('addEventListener', event, function () {
-	                return interaction = true;
-	            });
-	        });
-	
-	        window.addEventListener('unload', function () {
-	            if (!interaction) {
-	                // track if user navigates to a new AS24 page without interacting with the page
-	                window.__as24_cmp_opt_sendevent && window.__as24_cmp_opt_sendevent('cmpNavigationWithoutInteraction');
-	            }
-	        });
-	    });
-	};
-	
-	function setDataLayerConsents(vendorConsents, additionalVendorConsents) {
-	    var facebookConsent = vendorConsents && vendorConsents.purposeConsents[1] && vendorConsents.purposeConsents[2] && vendorConsents.purposeConsents[3] && vendorConsents.purposeConsents[5] && additionalVendorConsents.vendorConsents[16];
-	
-	    var googleAnalyticsConsent = vendorConsents && vendorConsents.purposeConsents[1] && vendorConsents.purposeConsents[5] && additionalVendorConsents.vendorConsents[4];
-	
-	    var googleAdsConsent = vendorConsents && vendorConsents.purposeConsents[1] && vendorConsents.purposeConsents[2] && vendorConsents.purposeConsents[3] && vendorConsents.purposeConsents[5] && additionalVendorConsents.vendorConsents[91];
-	
-	    var bingConsent = vendorConsents && vendorConsents.purposeConsents[1] && vendorConsents.purposeConsents[2] && vendorConsents.purposeConsents[3] && vendorConsents.purposeConsents[4] && vendorConsents.purposeConsents[5] && additionalVendorConsents.vendorConsents[21];
-	
-	    var mouseFlowConsent = vendorConsents && vendorConsents.purposeConsents[1] && vendorConsents.purposeConsents[5] && additionalVendorConsents.vendorConsents[223];
-	
-	    var kruxConsent = vendorConsents && vendorConsents.purposeConsents[1] && vendorConsents.purposeConsents[2] && vendorConsents.purposeConsents[3] && vendorConsents.purposeConsents[4] && vendorConsents.purposeConsents[5] && additionalVendorConsents.vendorConsents[25];
-	
-	    var criteoConsent = vendorConsents && vendorConsents.purposeConsents[1] && vendorConsents.purposeConsents[2] && vendorConsents.vendorConsents[91];
-	
-	    var rtbConsent = vendorConsents && vendorConsents.purposeConsents[1] && vendorConsents.purposeConsents[2] && vendorConsents.vendorConsents[16];
-	
-	    window.dataLayer = window.dataLayer || [];
-	    window.dataLayer.push({
-	        cmp_facebook_consent: facebookConsent,
-	        cmp_googleAnalytics_consent: googleAnalyticsConsent,
-	        cmp_googleAds_consent: googleAdsConsent,
-	        cmp_bing_consent: bingConsent,
-	        cmp_mouseFlow_consent: mouseFlowConsent,
-	        cmp_krux_consent: kruxConsent,
-	        cmp_criteo_consent: criteoConsent,
-	        cmp_rtb_consent: rtbConsent
-	    });
-	}
-	
-	function sendMetrics(name) {
-	    var isBot = /bot|googlebot|crawler|spider|robot|crawling/i.test(navigator.userAgent);
-	    if (isBot) {
-	        return;
-	    }
-	
-	    fetch('/frontend-metrics/timeseries', {
-	        method: 'POST',
-	        headers: {
-	            Accept: 'application/json',
-	            'Content-Type': 'application/json'
-	        },
-	        body: JSON.stringify({
-	            metrics: [{
-	                type: 'increment',
-	                name: 'showcar-tracking-cmp-' + name,
-	                value: 1,
-	                tags: {
-	                    service: 'showcar-tracking',
-	                    device: isMobile ? 'mobile' : 'desktop'
-	                }
-	            }]
-	        })
-	    });
-	}
-	
-	function uuidv4() {
-	    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-	        var r = Math.random() * 16 | 0,
-	            v = c == 'x' ? r : r & 0x3 | 0x8;
-	        return v.toString(16);
-	    });
-	}
-	
-	var getcid = function getcid() {
-	    var cid = localStorage.getItem('__cmp_experiment_cid') || uuidv4();
-	    localStorage.setItem('__cmp_experiment_cid', cid);
-	    return cid;
-	};
-	
-	var serialize = function serialize(obj) {
-	    return Object.keys(obj).map(function (key) {
-	        return key + '=' + encodeURIComponent(obj[key]);
-	    }).join('&');
-	};
-	
-	function deleteCookie(name) {
-	    var domain = location.hostname.replace('www.', '.').replace('local.', '.');
-	    document.cookie = name + '=; path=/; domain=' + domain + '; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
-	}
-
-/***/ }),
-/* 8 */
-/***/ (function(module, exports) {
-
-	"use strict";
-	
-	module.exports.once = function (fn) {
-	    var executed = false;
-	    return function () {
-	        if (!executed) {
-	            executed = true;
-	            fn();
-	        }
-	    };
-	};
-
-/***/ }),
-/* 9 */
 /***/ (function(module, exports) {
 
 	'use strict';
@@ -969,7 +407,7 @@
 	};
 
 /***/ }),
-/* 10 */
+/* 8 */
 /***/ (function(module, exports) {
 
 	'use strict';
@@ -981,7 +419,7 @@
 	};
 
 /***/ }),
-/* 11 */
+/* 9 */
 /***/ (function(module, exports) {
 
 	"use strict";
@@ -1007,7 +445,7 @@
 	};
 
 /***/ }),
-/* 12 */
+/* 10 */
 /***/ (function(module, exports) {
 
 	'use strict';
@@ -1099,7 +537,7 @@
 	}
 
 /***/ }),
-/* 13 */
+/* 11 */
 /***/ (function(module, exports) {
 
 	'use strict';
@@ -1132,7 +570,7 @@
 	});
 
 /***/ }),
-/* 14 */
+/* 12 */
 /***/ (function(module, exports) {
 
 	'use strict';
@@ -1230,7 +668,7 @@
 	}
 
 /***/ }),
-/* 15 */
+/* 13 */
 /***/ (function(module, exports) {
 
 	'use strict';

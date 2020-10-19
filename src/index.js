@@ -55,60 +55,13 @@ if (window.location.hostname.split('.').pop() === 'at') {
     require('./oewa');
 }
 
-const cmp = require('./cmp');
-
 const run = () => {
     if (!trackingEnabled) {
         console.log('Tracking disabled');
         return;
     }
 
-    if (window.__tcfapi) {
-        startTracking();
-        return;
-    }
-
-    if (!cmp.isCmpEnabled()) {
-        window.dataLayer = window.dataLayer || [];
-        window.dataLayer.push({ cmp_enabled: false });
-        startTracking();
-        return;
-    }
-
-    window.dataLayer = window.dataLayer || [];
-    window.dataLayer.push({ cmp_enabled: true });
-
-    // We load the CMP and do some magic here
-    cmp.loadCmpAsync();
-
-    // window.__cmp('addEventListener', 'cmpReady', () => {
-    // When consent changes we update dataLayer and localStorage.__as24_cached_cmp_consent
-    cmp.updateDataLayerAndCacheOnConsentChange();
-
-    cmp.sendMetricsOnEvents();
-
-    // !!! We don't load GTM in NL without consent !!!
-    if (cmp.isCmpEnabled() && window.location.hostname.split('.').pop() === 'nl') {
-        cmp.waitForConsentAgreementIfNeeded().then((hasGivenConsent) => {
-            if (hasGivenConsent) {
-                startTracking();
-            }
-        });
-    } else {
-        cmp.waitForConsentIfNeeded().then(() => startTracking());
-    }
-
-    // if (cmp.trySetDataLayerVariablesFromCache()) {
-    //     // We have consent data in cache so we can proceed loading GTM
-    //     startTracking();
-    // } else {
-    //     // We don't have previous consent in cache therefore we are waiting for getting one
-    //     // This is to avoid losing important conversion tracking events: Google Ads, Facebook
-    //     // which are fired directly in the pageview
-    //     cmp.waitForFirstCmpDecision().then(() => {
-    //         startTracking();
-    //     });
-    // }
+    startTracking();
 };
 
 run();
