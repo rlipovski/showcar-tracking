@@ -18,10 +18,10 @@
     hideCmpIfNeeded();
     trackCmpEvents();
 
-    if (tld !== 'de') {
-        loadCmpWithoutAbTest();
-    } else {
+    if (tld === 'de') {
         loadCmpWitAbTest();
+    } else {
+        loadCmpWithoutAbTest();
     }
 
     /** In case we don't have a visitor id we set one. */
