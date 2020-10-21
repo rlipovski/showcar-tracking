@@ -19,7 +19,7 @@
     trackCmpEvents();
 
     if (tld === 'de') {
-        loadCmpWitAbTest();
+        loadCmpWithAbTest();
     } else {
         loadCmpWithoutAbTest();
     }
