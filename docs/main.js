@@ -210,7 +210,7 @@
 	
 	    setTimeout(function () {
 	        if (firstPageview) {
-				gtm.loadContainer(containerId);	            
+	            gtm.loadContainer(containerId);
 	            gtm.push({
 	                event: 'common_data_ready'
 	            });
