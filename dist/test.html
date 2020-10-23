@@ -690,14 +690,9 @@
                         window.self !== window.top; // inside an iframe
 
                     if (shouldHideCmp) {
-                        __tcfapi(
-                            'addEventListener',
-                            2,
-                            function () {
-                                __tcfapi('toggleConsentTool', 2, function () {}, false);
-                            },
-                            ['consentToolShouldBeShown']
-                        );
+                        __tcfapi('addEventListener', 2, function () {
+                            __tcfapi('toggleConsentTool', 2, function () {}, false);
+                        });
                     }
                 }
 
