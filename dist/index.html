@@ -145,16 +145,10 @@
                 window.location.hostname === 'accounts.autoscout24.com' || // on Identity pages
                 document.querySelector('as24-tracking[pageid="au-company-privacy"]') || // on privacy pages
                 window.self !== window.top; // inside an iframe
-
             if (shouldHideCmp) {
-                __tcfapi(
-                    'addEventListener',
-                    2,
-                    function () {
-                        __tcfapi('toggleConsentTool', 2, function () {}, false);
-                    },
-                    ['consentToolShouldBeShown']
-                );
+                __tcfapi('addEventListener', 2, function () {
+                    __tcfapi('toggleConsentTool', 2, function () {}, false);
+                });
             }
         }
 
