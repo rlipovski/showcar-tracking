@@ -210,13 +210,7 @@
 	
 	    setTimeout(function () {
 	        if (firstPageview) {
-	            // !!! We don't load GTM in NL without consent !!!
-	            if (window.cmpEnabled && window.location.hostname.split('.').pop() === 'nl') {
-	                gtm.loadContainerOnlyWidthConsent(containerId);
-	            } else {
-	                gtm.loadContainer(containerId);
-	            }
-	
+	            gtm.loadContainer(containerId);
 	            gtm.push({
 	                event: 'common_data_ready'
 	            });
