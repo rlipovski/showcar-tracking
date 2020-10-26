@@ -684,23 +684,25 @@
                 }
 
                 function hideCmpIfNeeded() {
-                    var alreadySuppressed = false;
+                    var isOnPrivacyPage = document.querySelector('as24-tracking[pageid="au-company-privacy"]');
 
                     var shouldHideCmp =
                         window.location.hostname === 'accounts.autoscout24.com' || // on Identity pages
-                        document.querySelector('as24-tracking[pageid="au-company-privacy"]') || // on privacy pages
+                        isOnPrivacyPage || // on privacy pages
                         window.self !== window.top; // inside an iframe
 
-                    if (shouldHideCmp) {
-                        __tcfapi('addEventListener', 2, function (tcfResponse) {
-                            if (!alreadySuppressed) {
-                                __tcfapi('toggleConsentTool', 2, function () {}, false);
-                            }
+                    var suppressDialogue = function() {
+                        __tcfapi('toggleConsentTool', 2, function () {}, false);
+                    }
 
-                            if (tcfResponse.eventStatus === 'useractioncomplete') {
-                                alreadySuppressed = true;
-                            }
-                        });
+                    if (shouldHideCmp) {
+                        __tcfapi('addEventListener', 2, suppressDialogue);
+
+                        if(isOnPrivacyPage) {
+                            window.addEventListener('load', function() {
+                                __tcfapi('removeEventListener', 2, suppressDialogue);
+                            });
+                        }
                     }
                 }
 
