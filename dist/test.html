@@ -756,7 +756,7 @@
                         }
 
                         function trackEventInOptimizely(cmpEvent, optimizelyEvent) {
-                            window.__tcfapi('addEventListener', 2, sendEvent.bind(optimizelyEvent), cmpEvent);
+                            window.__tcfapi('addEventListener', 2, () => { sendEvent(optimizelyEvent); }, cmpEvent);
                         }
 
                         trackEventInOptimizely('acceptAllButtonClicked', 'cmpAcceptAll');
