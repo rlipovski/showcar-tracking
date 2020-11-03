@@ -253,7 +253,7 @@ setCmpCookiesIfProvidedAsQueryStrings();
 !function(e){....
 ```
 
-- We guess try to show the cookie banner in the same language as the website or in english.
+- We try to show the cookie banner in the same language as the website or in english.
 
 ```js
 setCmpLanguage(tld, window.location.pathname);
