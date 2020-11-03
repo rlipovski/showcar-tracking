@@ -47,12 +47,7 @@ Example: `group_myTestAttribute` is written as `<as24-tracking group_my-test-att
 Custom element way:
 
 ```html
-<as24-tracking
-  type="pagename"
-  country="de"
-  market="all-webapp"
-  category="all"
-></as24-tracking>
+<as24-tracking type="pagename" country="de" market="all-webapp" category="all"></as24-tracking>
 <as24-tracking type="gtm" action="pageview"></as24-tracking>
 ```
 
@@ -142,11 +137,7 @@ Its value needs to be a valid selector.
 Custom element way:
 
 ```html
-<as24-tracking
-  type="gtm"
-  action="set"
-  test_experiments.tt5="NetGross:Variation1"
-/>
+<as24-tracking type="gtm" action="set" test_experiments.tt5="NetGross:Variation1" />
 ```
 
 JavaScript way:
@@ -173,18 +164,7 @@ JavaScript way:
 ut.push([
   'dealer',
   'listview',
-  [
-    281705316,
-    281702707,
-    281462097,
-    281725748,
-    237276348,
-    281667368,
-    281673373,
-    281661776,
-    281555953,
-    281095563,
-  ],
+  [281705316, 281702707, 281462097, 281725748, 237276348, 281667368, 281673373, 281661776, 281555953, 281095563],
 ]);
 ```
 
@@ -233,12 +213,92 @@ If you want to make sure to only send out one request for more than one tracking
 
 ## CMP - Consent Management Platform
 
-<!-- ### How to develop -->
+The CMP takes care of collecting user consent for storing information on their device in the form of cookies.
+
+The CMP is implemented in showcar-tracking because we needed a way to get it delivered to the users on all webpages across AS24 (also cashstack), GWAT and ATNL even without GTM. Right now on most domains (but not on .NL) we always load GTM but this can change in the future.
+
+### How we load the CMP
+
+The CMP itself is implemented by our partner, LiveRamp. We only have to load a script tag from them. Besides that we add some logic for doing A/B tests and collecting some metrics.
+
+The implementation can be found in [dist/index.html](dist/index.html).
+
+The most interesting parts are the following:
+
+- The CMP can be disabled with a cookie for automated tests, performance measurments, etc.
+
+```js
+if (/disable-cmp=true/.test(document.cookie)) {
+  return false;
+}
+```
+
+- If there is no `as24Visitor` cookie then we generate one. We need this as a fallback for pages without a backend. We need the cookie for A/B tests (this is the user id).
+
+```js
+ensureVisitorId();
+```
+
+- If a page is opened inside an app in a web-view then the apps pass on the user consent in the query params. We need this to not show the cookie banner if the user already accepted or declined cookies in the apps. The vendors and purposes are roughly the same in apps and web.
+
+```js
+setCmpCookiesIfProvidedAsQueryStrings();
+```
+
+- TCF stub code. This defines `window.__tcfapi` for requests which come before the LiveRamp script finishes loading. This stub code must be defined before any ads and other 3rd party code is executed.
+
+```js
+// TCF stub
+// prettier-ignore
+!function(e){....
+```
+
+- We guess try to show the cookie banner in the same language as the website or in english.
+
+```js
+setCmpLanguage(tld, window.location.pathname);
+```
+
+- We have to hide the CMP on some pages, e.g. on privacy pages. Those pages must be readable for the user even without making any decision about accepting cookies.
+
+```js
+hideCmpIfNeeded();
+```
+
+- At the moment we always load Google Analytics. We track the important CMP events, e.g. accept all, banner shown, etc.
+
+```js
+trackCmpEvents();
+```
+
+- In DE we are experimenting with multiple wording variations. On other domains we just load the script.
+
+```js
+if (tld === 'de') {
+  loadCmpWithAbTest();
+} else {
+  loadCmpWithoutAbTest();
+}
+```
+
+### Things to improve
+
+- Move inline CMP code from <dist/index.html> to its own file and generate minified code into <dist/index.html>, <dist/test.html> and <dist/cashstack.min.js>.
+- For CMP tests use Optimizely feature tests instead of A/B tests (lower costs)
+
+### Further resources for the CMP
+
+- [LiveRamp docs](https://faktor.atlassian.net/wiki/spaces/LPM/pages/1014169601/GDPR+for+Web)
+- [IAB TCF 2.0 standard (consent string, standard CMP API, etc.)](https://github.com/InteractiveAdvertisingBureau/GDPR-Transparency-and-Consent-Framework/tree/master/TCFv2)
+
+## How to work on showcar-tracking locally (incl. CMP implementation)
 
 Open two terminals:
 
 - `npx webpack --config config/webpack.conf.js -w`
 - `npx serve dist/`
 
-Go to `http://local.autoscout24.de:3000/test.html?__cmp` with CMP
-or to `http://local.autoscout24.de:3000/test.html` without CMP
+Go to `http://local.autoscout24.de:3000/test.html`
+
+- For the CMP first make the changes in <dist/test.html> and then copy them over to <dist/index.html>
+- For changes in cashtack CMP: copy the changes from <dist/test.html> to <src/cashstack.js>

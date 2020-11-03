@@ -252,18 +252,18 @@
     }
 
     /**
-            Reads cookie value
-            @param {string} cookieName
-            @return {string}
-        */
+        Reads cookie value
+        @param {string} cookieName
+        @return {string}
+    */
     function getCookieValue(cookieName) {
         var x = document.cookie.match('(^|;)\\s*' + cookieName + '\\s*=\\s*([^;]+)');
         return x ? x.pop() : '';
     }
 
     /** Generates a UUID v4
-            @return {string}
-        */
+        @return {string}
+    */
     function uuidv4() {
         return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
             var r = (Math.random() * 16) | 0,
@@ -273,9 +273,9 @@
     }
 
     /**
-            @param {string} userId
-            @return {Promise<{ data: { userid: string; variation: string; } }>}
-        */
+        @param {string} userId
+        @return {Promise<{ data: { userid: string; variation: string; } }>}
+    */
     function fetchExperimentData(userId) {
         return fetch(
             'https://cmp-optimizely-fs.as24-media.eu-west-1.infinity.as24.tech/activate/cmp_themes_comparison/' + userId
@@ -283,6 +283,8 @@
             return r.json();
         });
     }
+
+    /* Keep the things below this comment. Only replace the part above. */
 
     loadGTM();
 
