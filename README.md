@@ -281,6 +281,70 @@ if (tld === 'de') {
 }
 ```
 
+### The TCF 2.0 API
+
+- The standard TCF 2.0 JS API and consent-string can be found in [this IAB GitHub repo](https://github.com/InteractiveAdvertisingBureau/GDPR-Transparency-and-Consent-Framework/tree/master/TCFv2)
+- The LiveRamp documentation with the added functionality can be found here: https://faktor.atlassian.net/wiki/spaces/LPM/pages/1014169601/GDPR+for+Web
+
+**Some examples:**
+
+Check if we have consent for vendorId 10012 (this is non-standard API, it is a LiveRamp extension to the API)
+
+```js
+__tcfapi(
+  'checkConsent',
+  2,
+  function (data, success) {
+    consent = data;
+  },
+  { data: { vendorId: 10012 } }
+);
+```
+
+React on acceptAllButtonClicked CMP event:
+
+```js
+window.__tcfapi(
+  'addEventListener',
+  2,
+  function () {
+    trackInGA(event);
+  },
+  'acceptAllButtonClicked'
+);
+```
+
+On the NL domain only do some action if we have full consent:
+
+```js
+if (tld === 'nl') {
+  const callback = (tcData, success) => {
+    if (success && (tcData.eventStatus === 'tcloaded' || tcData.eventStatus === 'useractioncomplete')) {
+      window.__tcfapi('removeEventListener', 2, () => {}, tcData.listenerId);
+
+      __tcfapi('getTCData', 2, function (tcData, success) {
+        if (
+          tcData.purpose.consents[1] &&
+          tcData.purpose.consents[2] &&
+          tcData.purpose.consents[3] &&
+          tcData.purpose.consents[4] &&
+          tcData.purpose.consents[5] &&
+          tcData.purpose.consents[6] &&
+          tcData.purpose.consents[7] &&
+          tcData.purpose.consents[8] &&
+          tcData.purpose.consents[9] &&
+          tcData.purpose.consents[10]
+        ) {
+          // Do some action which need consent to all purposes
+        }
+      });
+    }
+  };
+
+  window.__tcfapi('addEventListener', 2, callback);
+}
+```
+
 ### Things to improve
 
 - Move inline CMP code from <dist/index.html> to its own file and generate minified code into <dist/index.html>, <dist/test.html> and <dist/cashstack.min.js>.
