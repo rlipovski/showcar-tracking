@@ -17,12 +17,13 @@
     setCmpLanguage(tld, window.location.pathname);
     hideCmpIfNeeded();
     trackCmpEvents();
+    loadCmpWithoutAbTest();
 
-    if (tld === 'de') {
-        loadCmpWithAbTest();
-    } else {
-        loadCmpWithoutAbTest();
-    }
+    // if (tld === 'de') {
+    //     loadCmpWithAbTest();
+    // } else {
+    //     loadCmpWithoutAbTest();
+    // }
 
     /** In case we don't have a visitor id we set one. */
     function ensureVisitorId() {
@@ -162,8 +163,8 @@
     function loadCmpWithoutAbTest() {
         var tldToLiveRampMap = {
             at: '3e24114e-f793-4eba-8c0f-735086de7eb6',
-            be: '207bd477-df32-4ebe-91f2-69d7feec18b2',
-            de: '110d886b-ed81-45b5-ae2b-716b2f723ee9',
+            be: '55b58bfe-4c4d-4943-bbf3-11ec3eedc57b',
+            de: 'a7e8fb93-5f1f-4375-b321-8e998143ae61',
             es: '4411e5b3-1b15-4c38-8b0b-a1bd0a7c1c15',
             fr: 'cd417891-edbe-4abd-9417-c6a2791634e4',
             it: '7fa21d14-bb68-4b5e-b85f-b5ae26b92696',
