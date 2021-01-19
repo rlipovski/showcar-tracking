@@ -225,10 +225,10 @@ The implementation can be found in [dist/index.html](dist/index.html).
 
 The most interesting parts are the following:
 
-- The CMP can be disabled with a cookie for automated tests, performance measurments, etc.
+- The CMP can be disabled with a cookie or url parameter for automated tests, performance measurments, etc.
 
 ```js
-if (/disable-cmp=true/.test(document.cookie)) {
+if (/disable-cmp=true/.test(document.cookie) || location.search.indexOf('disable-cmp=true') > -1) {
   return false;
 }
 ```

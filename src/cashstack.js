@@ -1,7 +1,7 @@
 (function () {
     'use strict';
 
-    if (/disable-cmp=true/.test(document.cookie)) {
+    if (/disable-cmp=true/.test(document.cookie) || location.search.indexOf('disable-cmp=true') > -1) {
         return false;
     }
 
