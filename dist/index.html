@@ -2,7 +2,7 @@
     (function () {
         'use strict';
 
-        if (/disable-cmp=true/.test(document.cookie) || location.search.indexOf('disable-cmp=true') > -1) {
+        if (/disable-cmp=true/.test(document.cookie) || location.href.indexOf('disable-cmp=true') > -1) {
             return false;
         }
 

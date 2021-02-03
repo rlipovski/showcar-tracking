@@ -228,7 +228,7 @@ The most interesting parts are the following:
 - The CMP can be disabled with a cookie or url parameter for automated tests, performance measurments, etc.
 
 ```js
-if (/disable-cmp=true/.test(document.cookie) || location.search.indexOf('disable-cmp=true') > -1) {
+if (/disable-cmp=true/.test(document.cookie) || location.href.indexOf('disable-cmp=true') > -1) {
   return false;
 }
 ```
