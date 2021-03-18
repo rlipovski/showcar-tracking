@@ -5,7 +5,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Tracking Test</title>
     </head>
-    <body>
+    <body data-suppress-cmp="false">
         <button onclick="window.__tcfapi('showConsentManager');">Open Consent Manager</button>
         <p>
             Exercitation magna voluptate aliquip est do non voluptate esse ad veniam anim ut sit Lorem. Consectetur
@@ -687,10 +687,12 @@
 
                 function hideCmpIfNeeded() {
                     var isOnPrivacyPage = document.querySelector('as24-tracking[pageid="au-company-privacy"]');
-
+                    var containsSuppressCmpAttribute = document.querySelector('body[data-suppress-cmp="true"]') !== null;
+                    
                     var shouldHideCmp =
                         window.location.hostname === 'accounts.autoscout24.com' || // on Identity pages
                         isOnPrivacyPage || // on privacy pages
+                        containsSuppressCmpAttribute || // explicit suppress directive
                         window.self !== window.top; // inside an iframe
 
                     var suppressDialogue = function () {
@@ -700,7 +702,7 @@
                     if (shouldHideCmp) {
                         __tcfapi('addEventListener', 2, suppressDialogue);
 
-                        if (isOnPrivacyPage) {
+                        if (isOnPrivacyPage || containsSuppressCmpAttribute) {
                             window.addEventListener('load', function () {
                                 __tcfapi('removeEventListener', 2, suppressDialogue);
                             });
