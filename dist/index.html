@@ -2,7 +2,7 @@
     (function () {
         'use strict';
 
-        if (/disable-cmp=true/.test(document.cookie) || location.href.indexOf('disable-cmp=true') > -1) {
+        if (/disable-cmp=true/.test(document.cookie) || location.href.indexOf('disable-cmp=true') > -1 || document.querySelector('body[data-suppress-cmp="true"]') !== null ) {
             return false;
         }
 
@@ -144,12 +144,10 @@
 
         function hideCmpIfNeeded() {
             var isOnPrivacyPage = document.querySelector('as24-tracking[pageid="au-company-privacy"]');
-            var containsSuppressCmpAttribute = document.querySelector('body[data-suppress-cmp="true"]') !== null;
             
             var shouldHideCmp =
                 window.location.hostname === 'accounts.autoscout24.com' || // on Identity pages
                 isOnPrivacyPage || // on privacy pages
-                containsSuppressCmpAttribute || // explicit suppress directive
                 window.self !== window.top; // inside an iframe
 
             var suppressDialogue = function () {
