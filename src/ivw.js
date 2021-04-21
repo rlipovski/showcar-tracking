@@ -1,5 +1,5 @@
 const isMobile = window.innerWidth < 789;
-
+const iamScript = 'https://script.ioam.de/iam.js';
 const market = (() => {
     try {
         return document.querySelector('as24-tracking[type=pagename]').getAttribute('market');
@@ -17,7 +17,7 @@ const category = (() => {
 })();
 
 function pageview() {
-    loadScript('https://script.ioam.de/iam.js').then(() => {
+    loadScript(iamScript).then(() => {
         window.iam_data = {
             st: isMobile ? 'mobaus24' : 'aus24',
             cp: `as24/de/${market}/${category}`.toLowerCase(),
@@ -29,8 +29,21 @@ function pageview() {
     });
 }
 
+function identity() {
+    loadScript(iamScript).then(() => {
+        window.iam_data = {
+            st: isMobile ? 'mobaus24' : 'aus24',
+            cp: `as24/de/${market}/${category}`.toLowerCase(),
+            sv: 'ke',
+            co: '',
+        };
+
+        iom.c(window.iam_data, 1);
+    });
+}
+
 function home() {
-    loadScript('https://script.ioam.de/iam.js').then(() => {
+    loadScript(iamScript).then(() => {
         window.iam_data = {
             st: isMobile ? 'mobaus24' : 'aus24',
             cp: `as24/de/${market}/home`.toLowerCase(),
@@ -43,7 +56,7 @@ function home() {
 }
 
 function detailGallery() {
-    loadScript('https://script.ioam.de/iam.js').then(() => {
+    loadScript(iamScript).then(() => {
         window.iam_data = {
             st: isMobile ? 'mobaus24' : 'aus24',
             cp: `as24/de/${market}/${category}`.toLowerCase(),
@@ -75,6 +88,8 @@ if (window.location.pathname.startsWith('/angebote')) {
 
 const onHomepage = window.location.pathname === '/' || window.location.pathname === '/motorrad';
 
+const onIdentity = window.location.pathname === '/entry/auth';
+
 // On the dealer info list page the `list-items:changed` event is fired even on the first pageview.
 // This causes the pageview  to be double tracked.
 // To prevent this we don't track the real pageview on the dealer info list pages.
@@ -82,6 +97,8 @@ const onDealerInfoListPage = /\/haendler\/.+\/fahrzeuge/.test(window.location.pa
 
 if (onHomepage) {
     home();
+} else if(onIdentity) {
+    identity();
 } else if (!onDealerInfoListPage) {
     pageview();
 }
