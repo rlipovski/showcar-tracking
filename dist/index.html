@@ -159,7 +159,7 @@
             if (shouldHideCmp) {
                 __tcfapi('addEventListener', 2, suppressDialogue);
 
-                if (isOnPrivacyPage || containsSuppressCmpAttribute) {
+                if (isOnPrivacyPage) {
                     window.addEventListener('load', function () {
                         __tcfapi('removeEventListener', 2, suppressDialogue);
                     });
