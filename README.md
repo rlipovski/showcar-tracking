@@ -345,6 +345,18 @@ if (tld === 'nl') {
 }
 ```
 
+## How to check for user consent for personalized cookies
+
+```js
+window.ut.push([
+    'cmp',
+    'onPersonalizedCookiesAllowed',
+    function () {
+        console.log('set-cookie');
+    },
+]);
+```
+
 ### Things to improve
 
 - Move inline CMP code from <dist/index.html> to its own file and generate minified code into <dist/index.html>, <dist/test.html> and <dist/cashstack.min.js>.
