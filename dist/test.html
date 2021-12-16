@@ -538,34 +538,34 @@
 
         <script src="//cdnjs.cloudflare.com/ajax/libs/document-register-element/0.4.3/document-register-element.js"></script>
         <script data-pagespeed-no-defer>
-            (function () { 
+            (function () {
                 'use strict';
-        
+
                 if (/disable-cmp=true/.test(document.cookie) || location.href.indexOf('disable-cmp=true') > -1) {
                     return false;
                 }
-        
+
                 ensureVisitorId();
                 setCmpCookiesIfProvidedAsQueryStrings();
-        
+
                 // TCF stub
                 // prettier-ignore
                 !function(e){var t={};function n(r){if(t[r])return t[r].exports;var a=t[r]={i:r,l:!1,exports:{}};return e[r].call(a.exports,a,a.exports,n),a.l=!0,a.exports}n.m=e,n.c=t,n.d=function(e,t,r){n.o(e,t)||Object.defineProperty(e,t,{enumerable:!0,get:r})},n.r=function(e){"undefined"!=typeof Symbol&&Symbol.toStringTag&&Object.defineProperty(e,Symbol.toStringTag,{value:"Module"}),Object.defineProperty(e,"__esModule",{value:!0})},n.t=function(e,t){if(1&t&&(e=n(e)),8&t)return e;if(4&t&&"object"==typeof e&&e&&e.__esModule)return e;var r=Object.create(null);if(n.r(r),Object.defineProperty(r,"default",{enumerable:!0,value:e}),2&t&&"string"!=typeof e)for(var a in e)n.d(r,a,function(t){return e[t]}.bind(null,a));return r},n.n=function(e){var t=e&&e.__esModule?function(){return e.default}:function(){return e};return n.d(t,"a",t),t},n.o=function(e,t){return Object.prototype.hasOwnProperty.call(e,t)},n.p="https://gdpr.privacymanager.io/1.0.10/",n(n.s=38)}({38:function(e,t){!function(){if("function"!=typeof window.__tcfapi){var e,t=[],n=window,r=n.document,a=n.__tcfapi?n.__tcfapi.start:function(){};!n.__tcfapi&&function e(){var t=!!n.frames.__tcfapiLocator;if(!t)if(r.body){var a=r.createElement("iframe");a.style.cssText="display:none",a.name="__tcfapiLocator",r.body.appendChild(a)}else setTimeout(e,5);return!t}()&&(n.__tcfapi=function(n,r,a,o){var i=[n,r,a,o];if(!i.length)return t;if("setGdprApplies"===i[0])i.length>3&&2===parseInt(i[1],10)&&"boolean"==typeof i[3]&&(e=i[3],"function"==typeof i[2]&&i[2]("set",!0));else if("ping"===i[0]){var c={gdprApplies:e,cmpLoaded:!1,apiVersion:"2.0"};"function"==typeof i[2]&&i[2](c,!0)}else t.push(i)},n.__tcfapi.commandQueue=t,n.__tcfapi.start=a,n.addEventListener("message",(function(e){var t="string"==typeof e.data,r={};try{r=t?JSON.parse(e.data):e.data}catch(e){}var a=r.__tcfapiCall;a&&n.__tcfapi(a.command,a.version,(function(n,r){if(e.source){var o={__tcfapiReturn:{returnValue:n,success:r,callId:a.callId,command:a.command}};t&&(o=JSON.stringify(o)),e.source.postMessage(o,"*")}}),a.parameter)}),!1))}}()}});
-        
+
                 var tld = window.location.hostname.split('.').pop();
-        
+
                 setCmpLanguage(tld, window.location.pathname);
                 hideCmpIfNeeded();
                 trackCmpEvents();
                 loadCmpWithoutAbTest();
-        
+
                 ////// Keep implementation for future A/B tests //////
                 // if (tld === 'it') {
                 //     loadCmpWithAbTest();
                 // } else {
                 //     loadCmpWithoutAbTest();
                 // }
-        
+
                 /** In case we don't have a visitor id we set one. */
                 function ensureVisitorId() {
                     if (!/as24Visitor/.test(document.cookie)) {
@@ -573,7 +573,7 @@
                         document.cookie = 'as24Visitor=' + uuidv4() + ';path=/;max-age=31536000;domain=' + domain;
                     }
                 }
-        
+
                 /** Apps have their own CMP. For webviews they provide the consent string through query strings. */
                 function setCmpCookiesIfProvidedAsQueryStrings() {
                     var urlParams = new URLSearchParams(window.location.search);
@@ -582,23 +582,27 @@
                     var gdprAuditId = urlParams.get('gdpr-auditId');
                     var addtlConsent = urlParams.get('addtl_consent');
                     var gdprLastInteraction = (Date.now() / 1000).toFixed(3);
-        
+
                     var domain = 'domain=' + document.location.hostname.replace('www.', '').replace('local.', '');
                     var path = 'path=/';
                     var maxAge = 'max-age=31536000';
                     var sameSite = 'samesite=Lax';
-        
+
                     if (euconsentv2 && cconsentv2 && gdprAuditId && addtlConsent) {
                         document.cookie = ['euconsent-v2=' + euconsentv2, path, maxAge, domain, sameSite].join(';');
                         document.cookie = ['cconsent-v2=' + cconsentv2, path, maxAge, domain, sameSite].join(';');
                         document.cookie = ['gdpr-auditId=' + gdprAuditId, path, maxAge, domain, sameSite].join(';');
                         document.cookie = ['addtl_consent=' + addtlConsent, path, maxAge, domain, sameSite].join(';');
-                        document.cookie = ['gdpr-last-interaction=' + gdprLastInteraction, path, maxAge, domain, sameSite].join(
-                            ';'
-                        );
+                        document.cookie = [
+                            'gdpr-last-interaction=' + gdprLastInteraction,
+                            path,
+                            maxAge,
+                            domain,
+                            sameSite,
+                        ].join(';');
                     }
                 }
-        
+
                 /**
                     We take the language from the domain and path and set it for the CMP.
                     For non-core countries we always set it to 'en'.
@@ -625,14 +629,14 @@
                                 return 'en';
                         }
                     }
-        
+
                     __tcfapi('changeLanguage', null, noOp, guessLanguage());
                 }
-        
+
                 function trackCmpEvents() {
                     function trackInGA(event) {
                         window.dataLayer = window.dataLayer || [];
-        
+
                         if (
                             dataLayer.filter(function (x) {
                                 return x.event === 'data_ready';
@@ -643,7 +647,7 @@
                             }, 100);
                             return;
                         }
-        
+
                         window.dataLayer.push({
                             event: 'event_trigger',
                             event_category: 'CMP',
@@ -661,7 +665,7 @@
                         'consentNoticeDisplayed',
                         'consentNoticeClosed',
                     ];
-        
+
                     trackedCmpEvents.forEach(function (event) {
                         window.__tcfapi(
                             'addEventListener',
@@ -673,31 +677,36 @@
                         );
                     });
                 }
-        
+
                 function loadLiveRampScript(uid) {
                     var script = document.createElement('script');
                     var ref = document.getElementsByTagName('script')[0];
                     ref.parentNode.insertBefore(script, ref);
                     script.src = 'https://gdpr-wrapper.privacymanager.io/gdpr/' + uid + '/gdpr-liveramp.js';
                 }
-        
-                function hideCmpIfNeeded() {      
+
+                function hideCmpIfNeeded() {
                     var isOnPrivacyPage = document.querySelector('as24-tracking[pageid="au-company-privacy"]');
-                    var containsSuppressCmpAttribute = document.querySelector('body[data-suppress-cmp="true"]') !== null;
-        
+                    var containsSuppressCmpAttribute =
+                        document.querySelector('body[data-suppress-cmp="true"]') !== null;
+                    var isOnDealerInfoPages = /^\/(haendler|nl\/verkopers|(fr\/)?professional|autobedrijven|garages|profesionales|concessionari)/.test(
+                        window.location.pathname
+                    );
+
                     var shouldHideCmp =
                         window.location.hostname === 'accounts.autoscout24.com' || // on Identity pages
                         isOnPrivacyPage || // on privacy pages
+                        isOnDealerInfoPages ||
                         containsSuppressCmpAttribute || // explicit suppress directive
                         window.self !== window.top; // inside an iframe
-        
+
                     var suppressDialogue = function () {
                         __tcfapi('toggleConsentTool', 2, function () {}, false);
                     };
-        
+
                     if (shouldHideCmp) {
                         __tcfapi('addEventListener', 2, suppressDialogue);
-        
+
                         if (isOnPrivacyPage) {
                             window.addEventListener('load', function () {
                                 __tcfapi('removeEventListener', 2, suppressDialogue);
@@ -705,9 +714,9 @@
                         }
                     }
                 }
-        
+
                 function noOp() {}
-        
+
                 function loadCmpWithoutAbTest() {
                     var tldToLiveRampMap = {
                         at: '3e24114e-f793-4eba-8c0f-735086de7eb6',
@@ -730,16 +739,16 @@
                         tr: 'd54e7f74-947c-49b3-9eb8-248cbad044fb',
                         ua: '730298e4-c5c4-463b-a86c-ead192d21c6f',
                     };
-        
+
                     var tld = window.location.hostname.split('.').pop();
                     var liverampTcf2Id = tldToLiveRampMap[tld];
-        
+
                     loadLiveRampScript(liverampTcf2Id);
                 }
-        
+
                 function loadCmpWithAbTest() {
                     var userId = getCookieValue('as24Visitor');
-        
+
                     fetchExperimentData(userId).then(function (data) {
                         function sendEvent(event) {
                             var url =
@@ -747,14 +756,14 @@
                                 data.userid +
                                 '/' +
                                 event;
-        
+
                             if ('sendBeacon' in navigator) {
                                 navigator.sendBeacon(url);
                             } else {
                                 new Image().src = url;
                             }
                         }
-        
+
                         function trackEventInOptimizely(cmpEvent, optimizelyEvent) {
                             window.__tcfapi(
                                 'addEventListener',
@@ -765,7 +774,7 @@
                                 cmpEvent
                             );
                         }
-        
+
                         trackEventInOptimizely('acceptAllButtonClicked', 'cmpAcceptAll');
                         trackEventInOptimizely('saveAndExitButtonClicked', 'cmpSaveAndExit');
                         trackEventInOptimizely('exitButtonClicked', 'cmpExit');
@@ -773,19 +782,19 @@
                         trackEventInOptimizely('acceptAllButtonClicked', 'cmpExit');
                         trackEventInOptimizely('consentToolShouldBeShown', 'cmpShown');
                         trackEventInOptimizely('consentNoticeDisplayed', 'cmpNoticeDisplayed');
-        
+
                         if (window.location.pathname.startsWith('/angebote/')) {
                             window.addEventListener('click', function (e) {
                                 if (!e || !e.target || !e.target.closest) {
                                     return;
                                 }
-        
+
                                 var isCallButton = !!e.target.closest('a[href^="tel:"]');
                                 if (isCallButton) {
                                     sendEvent('cmpCall');
                                     return;
                                 }
-        
+
                                 var isEmailButton = !!e.target.closest('[data-cip-id="submit"]');
                                 if (isEmailButton) {
                                     sendEvent('cmpEmail');
@@ -793,20 +802,20 @@
                                 }
                             });
                         }
-        
+
                         var liverampIdByVariation = {
                             variation_1: '7fa21d14-bb68-4b5e-b85f-b5ae26b92696', // original IT
                             variation_2: '0ea30077-436d-4294-a85e-0af92282c3ea',
                             variation_3: 'b36f31e9-ba65-47f5-b151-66c307c999d9',
                             variation_4: '00527a4c-e2b6-4933-a80f-4e8792b153d4',
                         };
-        
+
                         var liverampid = liverampIdByVariation[data.variation];
-        
+
                         loadLiveRampScript(liverampid);
                     });
                 }
-        
+
                 /**
                     Reads cookie value
                     @param {string} cookieName
@@ -816,7 +825,7 @@
                     var x = document.cookie.match('(^|;)\\s*' + cookieName + '\\s*=\\s*([^;]+)');
                     return x ? x.pop() : '';
                 }
-        
+
                 /** Generates a UUID v4
                     @return {string}
                 */
@@ -827,7 +836,7 @@
                         return v.toString(16);
                     });
                 }
-        
+
                 /**
                     @param {string} userId
                     @return {Promise<{ data: { userid: string; variation: string; } }>}
@@ -835,7 +844,7 @@
                 function fetchExperimentData(userId) {
                     var optimizelyUrl = 'https://cmp-optimizely-fs.as24-media.eu-west-1.infinity.as24.tech/activate/';
                     var experimentUrl = optimizelyUrl + 'cmp_theme_comparison_it/';
-        
+
                     return fetch(experimentUrl + userId).then(function (r) {
                         return r.json();
                     });

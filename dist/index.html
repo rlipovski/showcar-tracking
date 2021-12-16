@@ -1,5 +1,5 @@
 <script data-pagespeed-no-defer>
-    (function () { 
+    (function () {
         'use strict';
 
         if (/disable-cmp=true/.test(document.cookie) || location.href.indexOf('disable-cmp=true') > -1) {
@@ -142,13 +142,17 @@
             script.src = 'https://gdpr-wrapper.privacymanager.io/gdpr/' + uid + '/gdpr-liveramp.js';
         }
 
-        function hideCmpIfNeeded() {      
+        function hideCmpIfNeeded() {
             var isOnPrivacyPage = document.querySelector('as24-tracking[pageid="au-company-privacy"]');
             var containsSuppressCmpAttribute = document.querySelector('body[data-suppress-cmp="true"]') !== null;
+            var isOnDealerInfoPages = /^\/(haendler|nl\/verkopers|(fr\/)?professional|autobedrijven|garages|profesionales|concessionari)/.test(
+                window.location.pathname
+            );
 
             var shouldHideCmp =
                 window.location.hostname === 'accounts.autoscout24.com' || // on Identity pages
                 isOnPrivacyPage || // on privacy pages
+                isOnDealerInfoPages ||
                 containsSuppressCmpAttribute || // explicit suppress directive
                 window.self !== window.top; // inside an iframe
 
