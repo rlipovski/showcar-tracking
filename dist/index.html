@@ -145,7 +145,7 @@
         function hideCmpIfNeeded() {
             var isOnPrivacyPage = document.querySelector('as24-tracking[pageid="au-company-privacy"]');
             var containsSuppressCmpAttribute = document.querySelector('body[data-suppress-cmp="true"]') !== null;
-            var isOnDealerInfoPages = /^\/(haendler|nl\/verkopers|(fr\/)?professional|autobedrijven|garages|profesionales|concessionari)/.test(
+            var isOnDealerInfoPages = /^\/(haendler|nl\/verkopers|(fr\/)?professional|autobedrijven|garages|profesionales|concessionari|((fr|nl)\/)?dealerinfo\/admin)/.test(
                 window.location.pathname
             );
 
