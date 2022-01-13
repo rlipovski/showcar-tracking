@@ -74,24 +74,12 @@
 	            if (typeof fn === 'function') {
 	                fn.apply(gtm, args);
 	            }
-	        }
-	
-	        if (data[0] === 'dealer-gtm') {
+	        } else if (data[0] === 'dealer-gtm') {
 	            fn = dealerGtm[data[1]];
 	            args = data.slice(2);
 	            if (typeof fn === 'function') {
 	                fn.apply(dealerGtm, args);
 	            }
-	        }
-	
-	        if (data[0] === 'cmp' && window.__tcfapi && data[1] === 'onPersonalizedCookiesAllowed' && typeof data[2] === 'function') {
-	            var callback = data[2];
-	
-	            window.__tcfapi('getFullTCData', 2, function (tcData, success) {
-	                if (tcData.purpose.legitimateInterests['25'] && tcData.purpose.consents['26']) {
-	                    callback();
-	                }
-	            });
 	        }
 	    }
 	
