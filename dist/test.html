@@ -557,6 +557,7 @@
                 setCmpLanguage(tld, window.location.pathname);
                 hideCmpIfNeeded();
                 trackCmpEvents();
+                deletePersonalizationCookiesIfNeeded()
                 loadCmpWithoutAbTest();
 
                 ////// Keep implementation for future A/B tests //////
@@ -816,6 +817,31 @@
                     });
                 }
 
+                function deletePersonalizationCookiesIfNeeded() {
+                    var personalizationCookies = [
+                        'last-search-feed',
+                        'last-seen-classified-guid',
+                        'last-5-seen-classifieds'
+                    ];
+
+                    window.__tcfapi(
+                        'addEventListener',
+                        2,
+                        function () {
+                            window.__tcfapi('getFullTCData', 2, (tcData) => {
+                                const isPersonalizationCookiesAllowed = tcData.purpose.legitimateInterests['25'] && tcData.purpose.consents['26']
+                                
+                                if(!isPersonalizationCookiesAllowed) {
+                                    personalizationCookies.forEach(function(cookie) {
+                                        deleteCookie(cookie)
+                                    })
+                                }
+                            });
+                        },
+                        'consentChanged'
+                    );
+                }
+
                 /**
                     Reads cookie value
                     @param {string} cookieName
@@ -824,6 +850,27 @@
                 function getCookieValue(cookieName) {
                     var x = document.cookie.match('(^|;)\\s*' + cookieName + '\\s*=\\s*([^;]+)');
                     return x ? x.pop() : '';
+                }
+
+                /**
+                    Delete cookie value
+                    @param {string} cookieName
+                    @return {void}
+                */
+                function deleteCookie(cookieName) {
+                    var date = new Date()
+                    var ONE_DAY_IN_MS = 24 * 60 * 60 * 1000
+                    var domain = window.location.hostname.replace('www.', '').replace('local.', '');
+
+                    date.setTime(date.getTime() + -1 * ONE_DAY_IN_MS) // Set it expire in -1 days
+
+                    document.cookie =
+                        cookieName +
+                        '=; expires=' +
+                        date.toUTCString() +
+                        '; domain=' +
+                        domain +
+                        '; path=/'
                 }
 
                 /** Generates a UUID v4
