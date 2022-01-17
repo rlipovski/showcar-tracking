@@ -18,8 +18,8 @@
         setCmpLanguage(tld, window.location.pathname);
         hideCmpIfNeeded();
         trackCmpEvents();
-        deletePersonalizationCookiesIfNeeded(tld)
         loadCmpWithoutAbTest();
+        deletePersonalizationCookiesIfNeeded(tld)
 
         ////// Keep implementation for future A/B tests //////
         // if (tld === 'it') {
