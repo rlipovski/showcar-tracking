@@ -18,7 +18,7 @@
         setCmpLanguage(tld, window.location.pathname);
         hideCmpIfNeeded();
         trackCmpEvents();
-        deletePersonalizationCookiesIfNeeded()
+        deletePersonalizationCookiesIfNeeded(tld)
         loadCmpWithoutAbTest();
 
         ////// Keep implementation for future A/B tests //////
@@ -273,29 +273,31 @@
             });
         }
 
-        function deletePersonalizationCookiesIfNeeded() {
+        function deletePersonalizationCookiesIfNeeded(tld) {
             var personalizationCookies = [
                 'last-search-feed',
                 'last-seen-classified-guid',
                 'last-5-seen-classifieds'
             ];
 
-            window.__tcfapi(
-                'addEventListener',
-                2,
-                function () {
-                    window.__tcfapi('getFullTCData', 2, (tcData) => {
-                        const isPersonalizationCookiesAllowed = tcData.purpose.legitimateInterests['25'] && tcData.purpose.consents['26']
-                        
-                        if(!isPersonalizationCookiesAllowed) {
-                            personalizationCookies.forEach(function(cookie) {
-                                deleteCookie(cookie)
-                            })
-                        }
-                    });
-                },
-                'consentChanged'
-            );
+            if (tld === 'nl') {
+                window.__tcfapi(
+                    'addEventListener',
+                    2,
+                    function () {
+                        window.__tcfapi('getFullTCData', 2, (tcData) => {
+                            const isPersonalizationCookiesAllowed = tcData.purpose.legitimateInterests['25'] && tcData.purpose.consents['26']
+                            
+                            if(!isPersonalizationCookiesAllowed) {
+                                personalizationCookies.forEach(function(cookie) {
+                                    deleteCookie(cookie)
+                                })
+                            }
+                        });
+                    },
+                    'consentChanged'
+                );
+            }
         }
 
         /**
