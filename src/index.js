@@ -28,13 +28,23 @@ const startTracking = () => {
         }
         
         if (data[0] === 'cmp' && window.__tcfapi && data[1] === 'onPersonalizedCookiesAllowed' && typeof data[2] === 'function') {
-            var callback = data[2];
+            var userCallback = data[2];
             
-            window.__tcfapi('getFullTCData', 2, (tcData, success) => {
-                if(tcData.purpose.legitimateInterests['25'] && tcData.purpose.consents['26']) {
-                    callback();
+            var callback = (partialTcData, success) => {
+                if (
+                    success &&
+                    (partialTcData.eventStatus === 'tcloaded' || partialTcData.eventStatus === 'useractioncomplete')
+                ) {
+                    window.__tcfapi('getFullTCData', 2, (tcData) => {
+                        if (tcData.purpose.legitimateInterests['25'] && tcData.purpose.consents['26']) {
+                            userCallback();
+                        }
+                        window.__tcfapi('removeEventListener', 2, callback);
+                    });
                 }
-            });
+            };
+
+            window.__tcfapi('addEventListener', 2, callback);
         }
     }
 
