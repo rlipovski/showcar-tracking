@@ -281,27 +281,31 @@
             ];
 
             if (tld === 'nl') {
-                window.__tcfapi(
-                    'addEventListener',
-                    2,
-                    function (partialTcData, success) {
-                        if (
-                            success &&
-                            (partialTcData.eventStatus === 'tcloaded' || partialTcData.eventStatus === 'useractioncomplete')
-                        ) {
-                            window.__tcfapi('getFullTCData', 2, (tcData) => {
-                                var isPersonalizationCookieAllowed = tcData.purpose.legitimateInterests['25'] && tcData.purpose.consents['26']
-                                
-                                if(!isPersonalizationCookieAllowed) {
-                                    personalizationCookies.forEach(function(cookie) {
-                                        deleteCookie(cookie)
-                                    })
-                                }
-                            });
+                onCmpDataLoadOrConsentChange(function () {
+                    window.__tcfapi('getFullTCData', 2, (tcData) => {
+                        var isPersonalizationCookieAllowed = tcData.purpose.legitimateInterests['25'] && tcData.purpose.consents['26']
+                        
+                        if(!isPersonalizationCookieAllowed) {
+                            personalizationCookies.forEach(function(cookie) {
+                                deleteCookie(cookie)
+                            })
                         }
-                    }
-                );
+                    });
+                })
             }
+        }
+
+        function onCmpDataLoadOrConsentChange(callback) {
+            window.__tcfapi(
+                'addEventListener',
+                2,
+                function (partialTcData, success) {
+                    if (
+                        success &&
+                        (partialTcData.eventStatus === 'tcloaded' || partialTcData.eventStatus === 'useractioncomplete')
+                    ) callback();
+                }
+            );
         }
 
         /**
