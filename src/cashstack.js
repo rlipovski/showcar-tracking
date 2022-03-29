@@ -79,6 +79,15 @@
                 case 'nl':
                 case 'fr':
                 case 'es':
+                case 'pl':
+                case 'ro':
+                case 'bg':
+                case 'cz':
+                case 'hr':
+                case 'se':
+                case 'hu':
+                case 'ru':
+                case 'tr':
                     return tld;
                 default:
                     return 'en';
