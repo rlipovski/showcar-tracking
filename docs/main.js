@@ -74,12 +74,31 @@
 	            if (typeof fn === 'function') {
 	                fn.apply(gtm, args);
 	            }
-	        } else if (data[0] === 'dealer-gtm') {
+	        }
+	
+	        if (data[0] === 'dealer-gtm') {
 	            fn = dealerGtm[data[1]];
 	            args = data.slice(2);
 	            if (typeof fn === 'function') {
 	                fn.apply(dealerGtm, args);
 	            }
+	        }
+	
+	        if (data[0] === 'cmp' && window.__tcfapi && data[1] === 'onPersonalizedCookiesAllowed' && typeof data[2] === 'function') {
+	            var userCallback = data[2];
+	
+	            var callback = function callback(partialTcData, success) {
+	                if (success && (partialTcData.eventStatus === 'tcloaded' || partialTcData.eventStatus === 'useractioncomplete')) {
+	                    window.__tcfapi('getFullTCData', 2, function (tcData) {
+	                        if (tcData.purpose.legitimateInterests['25'] && tcData.purpose.consents['26']) {
+	                            userCallback();
+	                        }
+	                        window.__tcfapi('removeEventListener', 2, callback);
+	                    });
+	                }
+	            };
+	
+	            window.__tcfapi('addEventListener', 2, callback);
 	        }
 	    }
 	
@@ -316,7 +335,7 @@
 	            };
 	            window.__tcfapi('addEventListener', 2, callback);
 	        }
-
+	
 	        function loadContainer() {
 	            (function (w, d, s, l, i) {
 	                w[l] = w[l] || [];
