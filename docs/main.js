@@ -303,8 +303,7 @@
 	
 	        document.documentElement.className += ' ' + gtmAlreadyLoadedClassName;
 	
-	        var tld = window.location.hostname.split('.').pop();
-	        if (tld === 'nl' && window.__tcfapi) {
+	        if (window.__tcfapi) {
 	            var callback = function callback(tcData, success) {
 	                if (success && (tcData.eventStatus === 'tcloaded' || tcData.eventStatus === 'useractioncomplete')) {
 	                    window.__tcfapi('removeEventListener', 2, function () {}, tcData.listenerId);
@@ -316,10 +315,8 @@
 	                }
 	            };
 	            window.__tcfapi('addEventListener', 2, callback);
-	        } else {
-	            loadContainer();
 	        }
-	
+
 	        function loadContainer() {
 	            (function (w, d, s, l, i) {
 	                w[l] = w[l] || [];

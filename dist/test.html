@@ -833,7 +833,7 @@
                         'last-5-seen-classifieds'
                     ];
 
-                    if (tld === 'nl') {
+                    if (window.__tcfapi) {
                         onCmpDataLoadOrConsentChange(function () {
                             window.__tcfapi('getFullTCData', 2, (tcData) => {
                                 var isPersonalizationCookieAllowed = tcData.purpose.legitimateInterests['25'] && tcData.purpose.consents['26']

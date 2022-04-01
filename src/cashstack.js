@@ -315,7 +315,7 @@
 
         const containerId = containerIdsByTld[tld] || containerIdsByTld['com'];
 
-        if (tld === 'nl') {
+        if (window.__tcfapi) {
             const callback = (tcData, success) => {
                 if (success && (tcData.eventStatus === 'tcloaded' || tcData.eventStatus === 'useractioncomplete')) {
                     window.__tcfapi('removeEventListener', 2, () => {}, tcData.listenerId);
@@ -340,8 +340,6 @@
             };
 
             window.__tcfapi('addEventListener', 2, callback);
-        } else {
-            loadContainer();
         }
 
         function loadContainer() {

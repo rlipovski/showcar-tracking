@@ -14,8 +14,7 @@ module.exports = {
 
         document.documentElement.className += ' ' + gtmAlreadyLoadedClassName;
 
-        var tld = window.location.hostname.split('.').pop();
-        if (tld === 'nl' && window.__tcfapi) {
+        if (window.__tcfapi) {
             const callback = (tcData, success) => {
                 if (success && (tcData.eventStatus === 'tcloaded' || tcData.eventStatus === 'useractioncomplete')) {
                     window.__tcfapi('removeEventListener', 2, () => {}, tcData.listenerId);
@@ -39,8 +38,6 @@ module.exports = {
                 }
             };
             window.__tcfapi('addEventListener', 2, callback);
-        } else {
-            loadContainer();
         }
 
         function loadContainer() {
