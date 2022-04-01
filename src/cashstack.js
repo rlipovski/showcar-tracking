@@ -315,32 +315,30 @@
 
         const containerId = containerIdsByTld[tld] || containerIdsByTld['com'];
 
-        if (window.__tcfapi) {
-            const callback = (tcData, success) => {
-                if (success && (tcData.eventStatus === 'tcloaded' || tcData.eventStatus === 'useractioncomplete')) {
-                    window.__tcfapi('removeEventListener', 2, () => {}, tcData.listenerId);
+        const callback = (tcData, success) => {
+            if (success && (tcData.eventStatus === 'tcloaded' || tcData.eventStatus === 'useractioncomplete')) {
+                window.__tcfapi('removeEventListener', 2, () => {}, tcData.listenerId);
 
-                    __tcfapi('getTCData', 2, function (tcData, success) {
-                        if (
-                            tcData.purpose.consents[1] &&
-                            tcData.purpose.consents[2] &&
-                            tcData.purpose.consents[3] &&
-                            tcData.purpose.consents[4] &&
-                            tcData.purpose.consents[5] &&
-                            tcData.purpose.consents[6] &&
-                            tcData.purpose.consents[7] &&
-                            tcData.purpose.consents[8] &&
-                            tcData.purpose.consents[9] &&
-                            tcData.purpose.consents[10]
-                        ) {
-                            loadContainer();
-                        }
-                    });
-                }
-            };
+                __tcfapi('getTCData', 2, function (tcData, success) {
+                    if (
+                        tcData.purpose.consents[1] &&
+                        tcData.purpose.consents[2] &&
+                        tcData.purpose.consents[3] &&
+                        tcData.purpose.consents[4] &&
+                        tcData.purpose.consents[5] &&
+                        tcData.purpose.consents[6] &&
+                        tcData.purpose.consents[7] &&
+                        tcData.purpose.consents[8] &&
+                        tcData.purpose.consents[9] &&
+                        tcData.purpose.consents[10]
+                    ) {
+                        loadContainer();
+                    }
+                });
+            }
+        };
 
-            window.__tcfapi('addEventListener', 2, callback);
-        }
+        window.__tcfapi('addEventListener', 2, callback);
 
         function loadContainer() {
             (function (w, d, s, l, i) {
