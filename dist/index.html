@@ -19,7 +19,7 @@
         hideCmpIfNeeded();
         trackCmpEvents();
         loadCmpWithoutAbTest();
-        deletePersonalizationCookiesIfNeeded(tld)
+        deletePersonalizationCookiesIfNeeded()
 
         ////// Keep implementation for future A/B tests //////
         // if (tld === 'it') {
@@ -282,26 +282,24 @@
             });
         }
 
-        function deletePersonalizationCookiesIfNeeded(tld) {
+        function deletePersonalizationCookiesIfNeeded() {
             var personalizationCookies = [
                 'last-search-feed',
                 'last-seen-classified-guid',
                 'last-5-seen-classifieds'
             ];
 
-            if (tld === 'nl') {
-                onCmpDataLoadOrConsentChange(function () {
-                    window.__tcfapi('getFullTCData', 2, (tcData) => {
-                        var isPersonalizationCookieAllowed = tcData.purpose.legitimateInterests['25'] && tcData.purpose.consents['26']
-                        
-                        if(!isPersonalizationCookieAllowed) {
-                            personalizationCookies.forEach(function(cookie) {
-                                deleteCookie(cookie)
-                            })
-                        }
-                    });
-                })
-            }
+            onCmpDataLoadOrConsentChange(function () {
+                window.__tcfapi('getFullTCData', 2, (tcData) => {
+                    var isPersonalizationCookieAllowed = tcData.purpose.legitimateInterests['25'] && tcData.purpose.consents['26']
+
+                    if(!isPersonalizationCookieAllowed) {
+                        personalizationCookies.forEach(function(cookie) {
+                            deleteCookie(cookie)
+                        })
+                    }
+                });
+            })
         }
 
         function onCmpDataLoadOrConsentChange(callback) {
