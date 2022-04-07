@@ -1,5 +1,6 @@
 var dataLayer = (window.dataLayer = window.dataLayer || []);
 var useNewArrayLogic = window.location.href.indexOf('tracking-arrays=true') >= 0;
+var domainsThatRequireConsent = ['at', 'fr', 'nl'];
 
 module.exports = {
     loadContainer: function (containerId) {
@@ -15,10 +16,10 @@ module.exports = {
         document.documentElement.className += ' ' + gtmAlreadyLoadedClassName;
 
         var tld = window.location.hostname.split('.').pop();
-        if (tld === 'nl' && window.__tcfapi) {
+        if (domainsThatRequireConsent.includes(tld) && window.__tcfapi) {
             const callback = (tcData, success) => {
                 if (success && (tcData.eventStatus === 'tcloaded' || tcData.eventStatus === 'useractioncomplete')) {
-                    window.__tcfapi('removeEventListener', 2, () => {}, tcData.listenerId);
+                    window.__tcfapi('removeEventListener', 2, () => { }, tcData.listenerId);
                     __tcfapi('getTCData', 2, function (tcData, success) {
                         if (
                             success &&
