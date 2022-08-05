@@ -51,6 +51,16 @@
                 document.cookie = ['gdpr-last-interaction=' + gdprLastInteraction, path, maxAge, domain, sameSite].join(
                     ';'
                 );
+
+                // We need to delete consent params from the URL
+                // so that they don't corrupt GA tracking and other tools.
+                urlParams.delete('euconsent-v2');
+                urlParams.delete('cconsent-v2');
+                urlParams.delete('gdpr-auditId');
+                urlParams.delete('addtl_consent');
+                urlParams.delete('gdpr-last-interaction');
+
+                history.replaceState(null, '', `?${urlParams.toString()}`);
             }
         }
 
