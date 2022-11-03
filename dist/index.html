@@ -16,6 +16,7 @@
 
         loadAs24Cmp().then(() => {
             if (window.__as24CmpEnabled) {
+                deletePersonalizationCookiesIfNeeded();
                 return;
             }
             
