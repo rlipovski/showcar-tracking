@@ -155,8 +155,9 @@
             ref.parentNode.insertBefore(script, ref);
             var culture = getCulture(window.location.hostname, window.location.pathname);
             script.src = 'https://www.autoscout24.com/assets/as24-cmp/consent-banner/' + culture + '.js';
-
-            resolve();
+            script.onload = function() {
+                resolve();
+            };
         });
     }
 
