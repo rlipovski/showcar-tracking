@@ -309,6 +309,7 @@
 	
 	var dataLayer = window.dataLayer = window.dataLayer || [];
 	var useNewArrayLogic = window.location.href.indexOf('tracking-arrays=true') >= 0;
+	var domainsThatRequireConsent = ['at', 'fr', 'nl'];
 	
 	module.exports = {
 	    loadContainer: function loadContainer(containerId) {
@@ -323,7 +324,7 @@
 	        document.documentElement.className += ' ' + gtmAlreadyLoadedClassName;
 	
 	        var tld = window.location.hostname.split('.').pop();
-	        if (tld === 'nl' && window.__tcfapi) {
+	        if (domainsThatRequireConsent.includes(tld) && window.__tcfapi) {
 	            var callback = function callback(tcData, success) {
 	                if (success && (tcData.eventStatus === 'tcloaded' || tcData.eventStatus === 'useractioncomplete')) {
 	                    window.__tcfapi('removeEventListener', 2, function () {}, tcData.listenerId);
