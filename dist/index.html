@@ -148,6 +148,67 @@
             });
         }
 
+        function loadAs24Cmp() {
+            return new Promise(resolve => {
+                var script = document.createElement('script');
+                var ref = document.getElementsByTagName('script')[0];
+                ref.parentNode.insertBefore(script, ref);
+                var culture = getCulture(window.location.hostname, window.location.pathname);
+                script.src = 'https://www.autoscout24.com/assets/as24-cmp/consent-banner/' + culture + '.js';
+
+                resolve();
+            });
+        }
+
+        function getCulture(hostname, path) {
+            const tld = hostname.split('.').pop();
+            
+            switch (tld) {
+                case 'de':
+                    return 'de-DE';
+                case 'at':
+                    return 'de-AT';
+                case 'it':
+                    return 'it-IT';
+                case 'es':
+                    return 'es-ES';
+                case 'fr':
+                    return 'fr-FR';
+                case 'nl':
+                    return 'nl-NL';
+                case 'lu':
+                    return 'fr-LU';
+                case 'com':
+                    return 'en-GB';
+                case 'bg':
+                    return 'bg-BG';
+                case 'hu':
+                    return 'hu-HU';
+                case 'pl':
+                    return 'pl-PL';
+                case 'ro':
+                    return 'ro-RO';
+                case 'hr':
+                    return 'hr-HR';
+                case 'cz':
+                    return 'cs-CZ';
+                case 'ua':
+                    return 'uk-UA';
+                case 'se':
+                    return 'sv-SE';
+                case 'ru':
+                    return 'ru-RU';
+                case 'tr':
+                    return 'tr-TR';     
+                case 'be':
+                    return path.startsWith('/nl/') ? 'nl-BE' : 'fr-BE';
+                case 'localhost':
+                case 'tech':
+                default:
+                    return 'en-GB';
+            }
+        }
+
         function loadLiveRampScript(uid) {
             var script = document.createElement('script');
             var ref = document.getElementsByTagName('script')[0];
