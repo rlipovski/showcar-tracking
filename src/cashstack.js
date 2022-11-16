@@ -154,6 +154,7 @@
             var ref = document.getElementsByTagName('script')[0];
             ref.parentNode.insertBefore(script, ref);
             var culture = getCulture(window.location.hostname, window.location.pathname);
+            script.type = 'module';
             script.onload = resolve;
             script.src = 'https://www.autoscout24.com/assets/as24-cmp/consent-banner/' + culture + '.js';
         });
