@@ -27,6 +27,13 @@
             trackCmpEvents();
             loadCmpWithoutAbTest();
             deletePersonalizationCookiesIfNeeded()
+        }).catch(_ => {
+            var tld = window.location.hostname.split('.').pop();
+            setCmpLanguage(tld, window.location.pathname);
+            hideCmpIfNeeded();
+            trackCmpEvents();
+            loadCmpWithoutAbTest();
+            deletePersonalizationCookiesIfNeeded();
         });
 
         /** In case we don't have a visitor id we set one. */

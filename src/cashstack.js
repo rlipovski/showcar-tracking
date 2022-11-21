@@ -23,6 +23,13 @@
         hideCmpIfNeeded();
         trackCmpEvents();
         loadCmpWithoutAbTest();
+    }).catch(_ => {
+        var tld = window.location.hostname.split('.').pop();
+        setCmpLanguage(tld, window.location.pathname);
+        hideCmpIfNeeded();
+        trackCmpEvents();
+        loadCmpWithoutAbTest();
+        deletePersonalizationCookiesIfNeeded();
     });
 
     // if (tld === 'it') {
