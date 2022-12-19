@@ -237,8 +237,10 @@
             var isOnDealerInfoPages = /^\/(haendler|nl\/verkopers|(fr\/)?professional|autobedrijven|garages|profesionales|concessionari|((fr|nl)\/)?dealerinfo\/admin)/.test(
                 window.location.pathname
             );
+            var isEntryLogoutPage = /^\/(entry)/.test(window.location.pathname);
 
             var shouldHideCmp =
+                isEntryLogoutPage || // on entry logout page
                 window.location.hostname === 'accounts.autoscout24.com' || // on Identity pages
                 isOnPrivacyPage || // on privacy pages
                 isOnDealerInfoPages ||
